@@ -1,0 +1,90 @@
+runs: 1
+/*
+You can have much more elaborate parameter files than this one. Please read the "Repast How Tos" 
+in order to get an idea what jobs you can schedula at once. You can test, for instance, whole 
+parameter ranges and repeat each parameter setting for 25 runs.
+Here are two problems that I have encountered:
+1. First, the : must follow immediately the set commands. This is obviusly required 
+   by the Repast-parameter file reader.
+2. You need to have at least one set_list: command in the parameter file. Otherwise the batch 
+   runs don't stop after the specified number of runs. This is a Repast bug which will hopefully
+   remedied in future versions. 
+*/
+NumberOfSFIAgents {
+   set: 0
+}
+NumberOfNESFIAgents {
+   set: 25
+}
+fracClassifierAgents {
+   set: 1.0
+}
+fracTechnicians {
+   set: 1.0
+}
+fracFastAgents {
+   set: 0.0
+}
+gaInterval {
+   set_list: 25
+}
+gaIntervalFastAgents {
+   set: 10
+}
+firstGATime {
+   set: 250
+}
+numberOfPeriods {
+   set: 2500
+}
+stopAtZeroBit {
+   set_boolean: false
+}
+interestRate {
+   set: 0.1
+}
+memory {
+   set: 2500
+}
+Hree {
+  set_boolean: false
+}
+showDisplays {
+   set_boolean: true
+}
+recordData {
+   set_boolean: true
+}
+/*
+If you want the model to start with identical random seeds, uncomment the next section.
+*/
+//RngSeed {
+//   set: 1
+//}
+
+/*
+The following lines set parameters that don't show up in the main NESFI-ASM Settings 
+window. This is because these variable names are not contained in the string returned 
+by getInitParam() if the model is run in GUI mode, even though their appropriate 
+set-accessor methods are contained in AsmModel.java. When the model is run in batch-mode, 
+these variable names are returned by getInitParam() such that they can be recognized by
+the parameter reader  
+*/
+crossoverProbability {
+   set: 0.3
+}
+bitCost {
+   set: 0.01
+}
+maxNonActive {
+   set: 2000
+}
+riskAversion {
+   set: 0.3
+}
+recorderOutputFile {
+   set_string: TimeSeries.txt
+}
+recorderParamFile {
+   set_string: recorder.pf 
+}
