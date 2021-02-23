@@ -1,0 +1,6 @@
+javac -d classes -classpath  .;d:/repast/lib/repast.jar;d:/repast/lib/colt.jar;d:/repast/lib/jgl3.1.0.jar;d:/repast/lib/plot.jar;d:/repast/lib/jmf.jar;d:/repast/lib/jfreechart-0.9.10.jar;d:/repast/lib/jcommon-0.8.5.jar;d:/repast/lib/junit.jar;d:/repast/lib/servlet.jar;d:/repast/lib/jcchart.jar *.java
+
+
+D:\NSFI\NESFIOneStock2003version - Copia\NESFIOneStock\classes
+
+javac -d "D:\NSFI\NESFIOneStock2003version - Copia\NESFIOneStock\classes" -classpath  .;d:/repast/lib/repast.jar;d:/repast/lib/colt.jar;d:/repast/lib/jgl3.1.0.jar;d:/repast/lib/plot.jar;d:/repast/lib/jmf.jar;d:/repast/lib/jfreechart-0.9.10.jar;d:/repast/lib/jcommon-0.8.5.jar;d:/repast/lib/junit.jar;d:/repast/lib/servlet.jar;d:/repast/lib/jcchart.jar *.java
