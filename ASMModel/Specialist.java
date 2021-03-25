@@ -25,6 +25,8 @@ class Specialist {
    private final double MINPRICE = 0.1;
    private double slopeTotal, bidTotal, offerTotal, imbalance;
    public static double bidFrac, offerFrac, volume;
+   public static double bLiq, qAgent, qOrder;
+   public static int[] qArray;
 
    protected static double reF; // holds parameters f for the hree-mode for each stock
    protected static double reG; // holds parameters g for the hree-mode
@@ -38,6 +40,7 @@ class Specialist {
    public static final int FIXEDETASPECIALIST = 1 ;
    public static final int ADAPTIVEETASPECIALIST = 2 ;
    public static final int VCVARSPECIALIST = 3 ;
+   public static final int LMSRSPECIALIST = 5 ;
 
    public static int type = SLOPESPECIALIST ;
 
@@ -56,6 +59,52 @@ class Specialist {
       reB = (1-reA)*((1+reF)*stock.getDividendMean()+reG);
       // System.out.println("f= "+reF+ "   g= "+reG+ "   a= "+reA+ "   b= "+reB);
    }  // end of constructor
+
+   public double getPriceLMSR(double order) { // calculates cost function, used for price setting
+      double costFunction;
+      int qTotal = 0;
+
+      for (int value : qArray) {
+         qTotal += value;
+
+      }
+
+      costFunction = bLiq*Math.log(Math.exp((qTotal + order)/bLiq));
+
+      return costFunction;
+   }
+
+   public void adjustPricePrediction() { // different price adjustment for LMSR, determined by cost function
+      Agent agent;
+      int iteration;
+      boolean done;
+      double priceLMSR = 0; // = new double[World.differentStocks];
+
+      iteration = 0;
+      done = false;
+      stock = World.Stocks;
+
+      while (iteration < MAXITERATIONS && !done) {
+         switch (type) {
+            case LMSRSPECIALIST:
+               priceLMSR = getPriceLMSR(qOrder) - getPriceLMSR(0);
+               break;
+            default:
+               break;
+         }
+         // Get each agent's requests
+         for (int i = 0 ; i < World.numberOfAgents ; i++) {
+            agent = World.Agents[i];
+            agent.setDemandAndSlope(priceLMSR);
+            tradeMatrix[i][0] = agent.getDemand();
+
+         }
+      }  // while
+
+      stock.setPrice(priceLMSR);
+      stock.setTradingVolume(volume);
+      // System.out.println(volume);
+   }  // adjustPrice
 
 
    public void adjustPrice() {
