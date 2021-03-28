@@ -56,6 +56,7 @@ public class AsmModel extends SimModelImpl {
    private static boolean tBitsZero=false;   // recording only once the period that technical bits approached zero in conditionalStop()
    private static boolean fBitsZero=false;   // dito
    protected static boolean hree = false ;
+   protected static boolean LMSR = false ;
    protected static OpenSequenceGraph logReturnGraph;
    protected static OpenSequenceGraph priceGraph;
    protected static OpenSequenceGraph hreePrice_PriceGraph;
@@ -72,6 +73,7 @@ public class AsmModel extends SimModelImpl {
    protected static TradingRule tradingRule;
    protected SFIAgent staticSFIAgent;
    protected NESFIAgent staticNESFIAgent;
+   protected LMSRAgent staticLMSRAgent;
 
    protected static ObserverOptions observer;
    private Schedule schedule;
@@ -81,6 +83,7 @@ public class AsmModel extends SimModelImpl {
    private static RandomElement generator;
    private static final int DIGITS = 4;
    protected Stock stock;
+   protected LMSRStock stockLMSR;
    protected static boolean stopNow = false;
 
    public AsmModel () {
@@ -93,6 +96,8 @@ public class AsmModel extends SimModelImpl {
 //      descriptors.put("CheckRules", bd5);
       BooleanPropertyDescriptor bd4 = new BooleanPropertyDescriptor("StopAtZeroBit", true);
       descriptors.put("stopAtZeroBit", bd4);
+      BooleanPropertyDescriptor bd5 = new BooleanPropertyDescriptor("LMSR", true);
+      descriptors.put("LMSR", bd5);
 
       // adds a List to choose an option
       Hashtable h3 = new Hashtable();
@@ -117,9 +122,11 @@ public class AsmModel extends SimModelImpl {
       // create objects to set parameters that are common to all other
       // instances of these classes.
       stock = new Stock();
+      stockLMSR = new LMSRStock();
       tradingRule = new TradingRule();   // create tradingrule to set static parameters
       staticSFIAgent = new SFIAgent(-1);     // create "pseudo-static" agent to set static parameters for SFI-Agents
       staticNESFIAgent = new NESFIAgent(-1);     // create "pseudo-static" agent to set static parameters for NESFI-Agents
+      staticLMSRAgent = new LMSRAgent(-1);
    }  // constructor AsmModel
 
    private void buildModel() {
@@ -133,6 +140,7 @@ public class AsmModel extends SimModelImpl {
       normalNormal = new Normal(0.0, 1.0, new MersenneTwister((int)getRngSeed()) );
       stockNormal =  new Normal(0.0, Math.sqrt(stock.noiseVar), new MersenneTwister((int)getRngSeed()) );
       stock.initialize();
+      stockLMSR.initialize();
       world = new World();
       World.Stocks = stock;
       specialist = new Specialist();
@@ -1124,6 +1132,8 @@ public class AsmModel extends SimModelImpl {
    public void setGaIntervalFastAgents(int val) {World.gaIntervalFastLearner = val; }
    public boolean getStopAtZeroBit() { return stopAtZeroBit; }
    public void setStopAtZeroBit(boolean val) { this.stopAtZeroBit = val; }
+   public boolean getLMSR() { return LMSR; }
+   public void setLMSR(boolean val) { this.LMSR = val; }
 
    public double getInitBitProb() { return TradingRule.bitProb ; }
    public void setInitBitProb(double val ) {
@@ -1151,6 +1161,8 @@ public class AsmModel extends SimModelImpl {
 //   public Agent getAgent() { return staticAgent ; }
    public Stock getStock() { return stock; }
    public void setStock(Stock val) { this.stock = val; }
+   public LMSRStock getLMSRStock() { return stockLMSR; }
+   public void setLMSRStock(LMSRStock val) { this.stockLMSR = val; }
 
 
 
@@ -1182,7 +1194,7 @@ public class AsmModel extends SimModelImpl {
          return params;
       } else {
          Controller.ALPHA_ORDER= false;   // show the variable not in alphabetical order but in the order as they are in the string array.
-         String[] params = {"SFIAgent","numberOfSFIAgents","NESFIAgent","numberOfNESFIAgents","selectionMethod","fracClassifierAgents","numberOfTechnicians","fracFastAgents","gaIntervalFastAgents","gaInterval","firstGATime","numberOfPeriods","stopAtZeroBit","interestRate","memory","hree","stock","tradingRule","showDisplays","observer","recordData","recorderOptions","reInitializeAt"};
+         String[] params = {"SFIAgent","numberOfSFIAgents","NESFIAgent","numberOfNESFIAgents","selectionMethod","fracClassifierAgents","numberOfTechnicians","fracFastAgents","gaIntervalFastAgents","gaInterval","firstGATime","numberOfPeriods","stopAtZeroBit","interestRate","memory","hree","LMSR","stock","stockLMSR","tradingRule","showDisplays","observer","recordData","recorderOptions","reInitializeAt"};
          return params;
       }
    }  // getInitParam()

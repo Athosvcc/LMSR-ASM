@@ -63,15 +63,15 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public LMSRStock() { // constructor to initialize different value processes
-      Hashtable h1 = new Hashtable();
-      h1.put(new Integer(LMSRStock.OUP), "Ohrnst.-Uhlenbeck");
-      h1.put(new Integer(LMSRStock.RANDOMWALK), "Random Walk");
-      h1.put(new Integer(LMSRStock.CONSTANT),"Const. Dividend");
-      h1.put(new Integer(LMSRStock.SQUARE),"Square Wave");
-      h1.put(new Integer(LMSRStock.TRIANGULAR),"Triangular Wave");
-      h1.put(new Integer(LMSRStock.SINUS),"Sinus Wave");
-      ListPropertyDescriptor pd = new ListPropertyDescriptor("DividendProcess", h1);
-      descriptors.put("DividendProcess", pd);
+      Hashtable h2 = new Hashtable();
+      h2.put(new Integer(LMSRStock.OUP), "Ohrnst.-Uhlenbeck");
+      h2.put(new Integer(LMSRStock.RANDOMWALK), "Random Walk");
+      h2.put(new Integer(LMSRStock.CONSTANT),"Const. Dividend");
+      h2.put(new Integer(LMSRStock.SQUARE),"Square Wave");
+      h2.put(new Integer(LMSRStock.TRIANGULAR),"Triangular Wave");
+      h2.put(new Integer(LMSRStock.SINUS),"Sinus Wave");
+      ListPropertyDescriptor pd = new ListPropertyDescriptor("DividendProcess1", h2);
+      descriptors.put("DividendProcess1", pd);
    }  // constructor
 
    protected void initialize() {
