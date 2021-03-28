@@ -26,7 +26,7 @@ class Specialist {
    private double slopeTotal, bidTotal, offerTotal, imbalance;
    public static double bidFrac, offerFrac, volume;
    public static double bLiq, qAgent, qOrder;
-   public static int[] qArray;
+   public static int[] qArray; //mudar
 
    protected static double reF; // holds parameters f for the hree-mode for each stock
    protected static double reG; // holds parameters g for the hree-mode
@@ -62,14 +62,17 @@ class Specialist {
 
    public double getPriceLMSR(double order) { // calculates cost function, used for price setting
       double costFunction;
+      double teste;
+      int i;
       int qTotal = 0;
 
-      for (int value : qArray) {
-         qTotal += value;
-
+      for (i = 0; i < qArray.length; i++) {
+         qTotal += i;
       }
 
-      costFunction = bLiq*Math.log(Math.exp((qTotal + order)/bLiq));
+      teste = Math.exp((qTotal + order)/bLiq);
+
+      costFunction = bLiq*Math.log(teste);
 
       return costFunction;
    }
