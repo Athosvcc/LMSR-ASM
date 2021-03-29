@@ -111,88 +111,92 @@ class Specialist {
 
 
    public void adjustPrice() {
-      Agent agent;
-      int iteration;
-      boolean done;
-      double trialPrice = 0; // = new double[World.differentStocks];
-      double rePrice;   // = new double[World.differentStocks];
+      if (AsmModel.LMSR) { //changes price setting in case LMSR is chosen in GUI
+         adjustPricePrediction();
+      } else {
 
-      iteration = 0;
-      done = false;
-      stock = World.Stocks;
-      rePrice = reF*(stock.getDividend())+reG;
-      while (iteration < MAXITERATIONS && !done) {
-         switch (type) {
-            case RESPECIALIST:
-               trialPrice = rePrice;
+         Agent agent;
+         int iteration;
+         boolean done;
+         double trialPrice = 0; // = new double[World.differentStocks];
+         double rePrice;   // = new double[World.differentStocks];
+
+         iteration = 0;
+         done = false;
+         stock = World.Stocks;
+         rePrice = reF * (stock.getDividend()) + reG;
+         while (iteration < MAXITERATIONS && !done) {
+            switch (type) {
+               case RESPECIALIST:
+                  trialPrice = rePrice;
+                  done = true;
+                  break;
+               case SLOPESPECIALIST:
+                  if (iteration == 0) {
+                     trialPrice = stock.getPrice();
+                  } else {
+                     trialPrice -= imbalance / slopeTotal;
+                  }
+                  iteration++;
+                  break;
+               case FIXEDETASPECIALIST:
+                  break;
+               default:
+                  break;
+            }
+            // now clip trialPrice
+            if (trialPrice < MINPRICE) trialPrice = MINPRICE;
+            if (stock.getDividendProcess() != Stock.RANDOMWALK) {
+               if (trialPrice > MAXPRICE) trialPrice = MAXPRICE;
+            }
+            // Get each agent's requests and sum up bids, offers, and slopes
+            bidTotal = 0.0;
+            offerTotal = 0.0;
+            slopeTotal = 0.0;
+            for (int i = 0; i < World.numberOfAgents; i++) {
+               agent = World.Agents[i];
+               agent.setDemandAndSlope(trialPrice);
+               tradeMatrix[i][0] = agent.getDemand();
+               tradeMatrix[i][1] = agent.getSlope();
+               if (tradeMatrix[i][0] > 0) {
+                  bidTotal += tradeMatrix[i][0];
+               } else {
+                  offerTotal -= tradeMatrix[i][0];
+               }
+               slopeTotal += tradeMatrix[i][1];
+            }
+            imbalance = bidTotal - offerTotal;
+            // System.out.println("Bids: "+bidTotal+"  Offers: "+offerTotal+"  Imbalance: "+imbalance+"  SlopeTotal: "+slopeTotal);
+            if (imbalance <= minExcess && imbalance >= -minExcess) {
                done = true;
                break;
-            case SLOPESPECIALIST:
-               if (iteration == 0) {
-                  trialPrice = stock.getPrice();
-               } else {
-                  trialPrice -= imbalance/slopeTotal;
-               }
-               iteration++;
-               break;
-            case FIXEDETASPECIALIST:
-               break;
-            default:
-               break;
-         }
-         // now clip trialPrice
-         if (trialPrice < MINPRICE) trialPrice = MINPRICE;
-         if (stock.getDividendProcess() != Stock.RANDOMWALK) {
-            if (trialPrice > MAXPRICE) trialPrice = MAXPRICE;
-         }
-         // Get each agent's requests and sum up bids, offers, and slopes
-         bidTotal = 0.0;
-         offerTotal = 0.0;
-         slopeTotal = 0.0;
-         for (int i = 0 ; i < World.numberOfAgents ; i++) {
-            agent = World.Agents[i];
-            agent.setDemandAndSlope(trialPrice);
-            tradeMatrix[i][0] = agent.getDemand();
-            tradeMatrix[i][1] = agent.getSlope();
-            if (tradeMatrix[i][0]>0) {
-               bidTotal += tradeMatrix[i][0];
             }
-            else {
-               offerTotal -= tradeMatrix[i][0];
-            }
-            slopeTotal += tradeMatrix[i][1];
+         }  // while
+         // Match up the bids and offers, this tertiary operator is quite slow in JAVA, could make it faster with if-clauses
+         //         volume = (bidTotal > offerTotal ? offerTotal : bidTotal);
+         //         bidFrac = (bidTotal > 0.0 ? volume / bidTotal : 0.0);
+         //         offerFrac = (offerTotal > 0.0 ? volume / offerTotal : 0.0);
+         if (bidTotal > offerTotal) {
+            volume = offerTotal;
+         } else {
+            volume = bidTotal;
          }
-         imbalance = bidTotal - offerTotal;
-         // System.out.println("Bids: "+bidTotal+"  Offers: "+offerTotal+"  Imbalance: "+imbalance+"  SlopeTotal: "+slopeTotal);
-         if (imbalance <= minExcess && imbalance >= -minExcess) {
-            done = true;
-            break;
+         if (bidTotal > 0.0) {
+            bidFrac = volume / bidTotal;
+         } else {
+            bidFrac = 0.0;
          }
-      }  // while
-      // Match up the bids and offers, this tertiary operator is quite slow in JAVA, could make it faster with if-clauses
-//         volume = (bidTotal > offerTotal ? offerTotal : bidTotal);
-//         bidFrac = (bidTotal > 0.0 ? volume / bidTotal : 0.0);
-//         offerFrac = (offerTotal > 0.0 ? volume / offerTotal : 0.0);
-      if(bidTotal > offerTotal) {
-         volume = offerTotal;
-      } else {
-         volume = bidTotal;
-      }
-      if(bidTotal > 0.0) {
-         bidFrac = volume / bidTotal;
-      } else {
-         bidFrac = 0.0;
-      }
-      if(offerTotal > 0.0) {
-         offerFrac = volume / offerTotal;
-      } else {
-         offerFrac = 0.0;
-      }
-      stock.setRePrice(rePrice);    //hreePrice has to be set before normal price because of updatePriceHistory
-      stock.setPrice(trialPrice);
-      stock.setTradingVolume(volume);
-      // System.out.println(volume);
-   }  // adjustPrice
+         if (offerTotal > 0.0) {
+            offerFrac = volume / offerTotal;
+         } else {
+            offerFrac = 0.0;
+         }
+         stock.setRePrice(rePrice);    //hreePrice has to be set before normal price because of updatePriceHistory
+         stock.setPrice(trialPrice);
+         stock.setTradingVolume(volume);
+         // System.out.println(volume);
+      }  // adjustPrice
 
+   }
 
 }

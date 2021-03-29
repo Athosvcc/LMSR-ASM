@@ -1080,6 +1080,13 @@ public class AsmModel extends SimModelImpl {
       world.numberOfNESFIAgents = val;
       world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents;
    }
+   public int getNumberOfLMSRAgents() { //mudar
+      return world.numberOfNESFIAgents;
+   }
+   public void setNumberOfLMSRAgents(int val) { //mudar
+      world.numberOfNESFIAgents = val;
+      world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents;
+   }
    public boolean getShowDisplays() { return showDisplays; }
    public void setShowDisplays(boolean showDisplays) {
       this.showDisplays = showDisplays;
@@ -1093,6 +1100,12 @@ public class AsmModel extends SimModelImpl {
       this.hree = hree;
       if (hree) Specialist.type = Specialist.RESPECIALIST;
    }
+   public boolean getLMSR() { return LMSR; }
+   public void setLMSR(boolean LMSR) {
+      this.LMSR = LMSR;
+      //if (LMSR) this.stock = this.stock; //mudar
+   }
+
    public int getNumberOfPeriods() { return world.numberOfPeriods; }
    public void setNumberOfPeriods(int numberOfPeriods) { world.numberOfPeriods = numberOfPeriods;   }
    public double getInterestRate() { return World.interestRate; }
@@ -1132,8 +1145,7 @@ public class AsmModel extends SimModelImpl {
    public void setGaIntervalFastAgents(int val) {World.gaIntervalFastLearner = val; }
    public boolean getStopAtZeroBit() { return stopAtZeroBit; }
    public void setStopAtZeroBit(boolean val) { this.stopAtZeroBit = val; }
-   public boolean getLMSR() { return LMSR; }
-   public void setLMSR(boolean val) { this.LMSR = val; }
+
 
    public double getInitBitProb() { return TradingRule.bitProb ; }
    public void setInitBitProb(double val ) {
@@ -1157,12 +1169,14 @@ public class AsmModel extends SimModelImpl {
    public SFIAgent getSFIAgent() { return staticSFIAgent ; }
    public void setNESFIAgent(NESFIAgent val) { }
    public NESFIAgent getNESFIAgent() { return staticNESFIAgent ; }
+   public void setLMSRAgent(LMSRAgent val) { }
+   public LMSRAgent getLMSRAgent() { return staticLMSRAgent ; }
 //   public void setAgent(Agent val) {}
 //   public Agent getAgent() { return staticAgent ; }
    public Stock getStock() { return stock; }
    public void setStock(Stock val) { this.stock = val; }
-   public LMSRStock getLMSRStock() { return stockLMSR; }
-   public void setLMSRStock(LMSRStock val) { this.stockLMSR = val; }
+   public LMSRStock getStockLMSR() { return stockLMSR; }
+   public void setStockLMSR(LMSRStock val) { this.stockLMSR = val; }
 
 
 
@@ -1194,7 +1208,7 @@ public class AsmModel extends SimModelImpl {
          return params;
       } else {
          Controller.ALPHA_ORDER= false;   // show the variable not in alphabetical order but in the order as they are in the string array.
-         String[] params = {"SFIAgent","numberOfSFIAgents","NESFIAgent","numberOfNESFIAgents","selectionMethod","fracClassifierAgents","numberOfTechnicians","fracFastAgents","gaIntervalFastAgents","gaInterval","firstGATime","numberOfPeriods","stopAtZeroBit","interestRate","memory","hree","LMSR","stock","stockLMSR","tradingRule","showDisplays","observer","recordData","recorderOptions","reInitializeAt"};
+         String[] params = {"SFIAgent","numberOfSFIAgents","NESFIAgent","numberOfNESFIAgents","LMSRAgent","numberOfLMSRAgents","selectionMethod","fracClassifierAgents","numberOfTechnicians","fracFastAgents","gaIntervalFastAgents","gaInterval","firstGATime","numberOfPeriods","stopAtZeroBit","interestRate","memory","hree","LMSR","stock","stockLMSR","tradingRule","showDisplays","observer","recordData","recorderOptions","reInitializeAt"};
          return params;
       }
    }  // getInitParam()
