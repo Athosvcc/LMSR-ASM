@@ -62,7 +62,6 @@ class Specialist {
 
    public double getPriceLMSR(double order) { // calculates cost function, used for price setting
       double costFunction;
-      double teste;
       int i;
       int qTotal = 0;
 
@@ -70,9 +69,7 @@ class Specialist {
          qTotal += i;
       }
 
-      teste = Math.exp((qTotal + order)/bLiq);
-
-      costFunction = bLiq*Math.log(teste);
+      costFunction = bLiq*Math.log(Math.exp((qTotal + order)/bLiq));
 
       return costFunction;
    }
@@ -81,7 +78,7 @@ class Specialist {
       Agent agent;
       int iteration;
       boolean done;
-      double priceLMSR = 0; // = new double[World.differentStocks];
+      double priceLMSR = 0; // = new double[World.differentStocks]; //mudar
 
       iteration = 0;
       done = false;

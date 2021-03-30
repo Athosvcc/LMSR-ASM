@@ -32,7 +32,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
    }
 
    public LMSRAgent(int traderType) {
-      nesfiAgent = true;
+      nesfiAgent = false;
       minActiveRules = 1;  // minimum # of rules to be activated before using roulette, if less, then use average values
       techTrader = true ; // no usage of technical trading bits, false only fundamental bits, initialized in constructr to set parameter
       useClassifier = true;   // use of classifier system or no condition checking
@@ -54,8 +54,8 @@ public class LMSRAgent extends Agent implements CustomProbeable {
          }
          initializeXBits();
          cash = initialCash;
-         numberOfStocks = 1;    // initial endowment of stocks
-         stock = World.Stocks;   //(Stock)World.stockList.get(type);
+         numberOfStocks =0;    // initial endowment of stocks
+         stock = World.Stocks;   //(Stock)World.stockList.get(type); //mudar
          stock.totalSupply += 1;
          wealth = cash + stock.getPrice();
          World.setTotalWealth(World.getTotalWealth()+wealth);

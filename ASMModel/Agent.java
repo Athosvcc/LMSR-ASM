@@ -78,6 +78,7 @@ public class Agent implements Drawable {
    protected double fcVar ; // = new double[World.differentStocks];
    protected double divisor ; // = new double[World.differentStocks];
    protected Stock stock;
+   protected LMSRStock LMSRStock;
    protected int x;  // for graphical display
    protected int y;  // for graphical display
 
@@ -141,21 +142,41 @@ public class Agent implements Drawable {
    }
 
    public void executeOrder() {
-      double bfp, ofp;
-      stock = World.Stocks;
-      bfp = Specialist.bidFrac*stock.getPrice();
-      ofp = Specialist.offerFrac*stock.getPrice();
-      if (order > 0.0) {
-         numberOfStocks += order*Specialist.bidFrac;
-         cash -= order*bfp;
+      if (AsmModel.LMSR) {
+
+         double priceLMSR;
+         stock = World.Stocks;
+         priceLMSR = stock.getPrice();
+         if (order > 0.0) {
+            numberOfStocks += order;
+            cash -= order*priceLMSR;
+         }
+         else if (order < 0.0) {
+            numberOfStocks += order;
+            cash -= order*priceLMSR;
+         }
+         cumulatedNumberOfStocks += numberOfStocks;
+         averageNumberOfStocks = cumulatedNumberOfStocks / World.period ;
+         // wealth is updated in getEarnings... etc   // ?
+
+      } else {
+         double bfp, ofp;
+         stock = World.Stocks;
+         bfp = Specialist.bidFrac*stock.getPrice();
+         ofp = Specialist.offerFrac*stock.getPrice();
+         if (order > 0.0) {
+            numberOfStocks += order*Specialist.bidFrac;
+            cash -= order*bfp;
+         }
+         else if (order < 0.0) {
+            numberOfStocks += order*Specialist.offerFrac;
+            cash -= order*ofp;
+         }
+         cumulatedNumberOfStocks += numberOfStocks;
+         averageNumberOfStocks = cumulatedNumberOfStocks / World.period ;
+         // wealth is updated in getEarnings... etc   // ?
       }
-      else if (order < 0.0) {
-         numberOfStocks += order*Specialist.offerFrac;
-         cash -= order*ofp;
-      }
-      cumulatedNumberOfStocks += numberOfStocks;
-      averageNumberOfStocks = cumulatedNumberOfStocks / World.period ;
-      // wealth is updated in getEarnings... etc   // ?
+
    }  // executeOrder()
 
    /**
@@ -175,12 +196,21 @@ public class Agent implements Drawable {
     *	cash -= numberOfStocks*(interestRate*price - dividend)
     */
    public void getEarningsAndPayTaxes() {
-      stock = World.Stocks;
-      cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend());
-      if (cash < MINCASH) {
-         cash = MINCASH;
+      if (AsmModel.LMSR) {
+         LMSRStock = World.LMSRStocks;
+         cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend()); //mudar
+         if (cash < MINCASH) {
+            cash = MINCASH;
+         }
+         wealth = cash + numberOfStocks*LMSRStock.getPrice();;     // update wealth
+      } else {
+         stock = World.Stocks;
+         cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend());
+         if (cash < MINCASH) {
+            cash = MINCASH;
+         }
+         wealth = cash + numberOfStocks*stock.getPrice();;     // update wealth
       }
-      wealth = cash + numberOfStocks*stock.getPrice();;     // update wealth
    } // receiveInterestAndDividend
 
 
