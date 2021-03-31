@@ -53,11 +53,9 @@ class Specialist {
          forecast types. To figure out how these formulas were are actually derived, please
          refer to the appendix.
       */
-      if (AsmModel.LMSR) {
-         stockLMSR = World.LMSRStocks;
-      } else {
-         stock = World.Stocks;
-      }
+
+      stockLMSR = World.LMSRStocks;
+      stock = World.Stocks;
       reF = stock.getRho()/(World.interestRatep1-stock.getRho());
       reG = ( (1 + reF)*(stock.getDividendMean()*(1-stock.getRho())-Agent.riskAversion*stock.getNoiseVar()*(1 + reF) ) ) / World.interestRate;
       reA = stock.getRho();

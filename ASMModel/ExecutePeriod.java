@@ -34,6 +34,7 @@ abstract class ExecutePeriod {
          double totalWealth = 0;
          World.period++;       // initial values for period 0 are set and shouldn't be altered anymore
          stockLMSR = World.LMSRStocks;
+         stock = World.Stocks;
          stock.updateDividend(); // new dividend announced, updating of all statistics and state-of-the-stock
          Agent.activatedRules = 0;  // for debugging, how many rules are activated in total in this period
          NESFIAgent.NESFIActivatedRules = 0;

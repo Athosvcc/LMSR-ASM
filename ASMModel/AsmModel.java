@@ -145,6 +145,7 @@ public class AsmModel extends SimModelImpl {
       stockLMSR.initialize();
       world = new World();
       World.Stocks = stock;
+      World.LMSRStocks = stockLMSR;
       specialist = new Specialist();
       World.createAgents();
       Agent.initMinMaxs();
@@ -479,6 +480,7 @@ public class AsmModel extends SimModelImpl {
    private void buildDisplay() {
       if(showDisplays) {
          final Stock stock = World.Stocks;
+         final LMSRStock stockLMSR = World.LMSRStocks;
          if(observer.showStocks) {
             priceGraph = new OpenSequenceGraph("Prices and MA's", this);
             priceGraph.setYRange(95 , 105);
