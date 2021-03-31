@@ -36,8 +36,12 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    private double cumulatedTradingVolume = 0;
    private double meanTradingVolume = 0;
    protected double noiseVar = 0.07429;
-   protected double bLiq = 100;
    protected double noise = 0;
+   protected double bLiq = 100;
+   protected double probability = 0.5;
+   protected double initialPrice = 0.5;
+   protected double probAfterShock = 0.2;
+   protected int periodShock = 100;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
    private double[] dRatios =  {0.6, 0.8, 0.9, 1.0, 1.1, 1.12, 1.4};
@@ -170,7 +174,6 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       updateDividendHistory();
       updateState();
    }  // updateValue
-
 
 
    /**
@@ -396,18 +399,31 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public double getNoiseVar() {
       return noiseVar;
    }
-   public void setBLiq(double value) {
-      this.bLiq = value;
-   }
-   public double getBLiq() {
-      return bLiq;
-   }
    public double getDividendMean() {
       return dividendMeanTheoretical;
    }
    public void setDividendMean(double value) {
       this.dividendMeanTheoretical = value;
    }
+   public double getBLiq() { return bLiq; }
+   public void setBLiq(double value) {
+      this.bLiq = value;
+   }
+   public double getProbability() { return probability; }
+   public void setProbability(double value) {
+      this.probability = value;
+   }
+   public double getInitialPrice() { return initialPrice; }
+   public void setInitialPrice(double value) {
+      this.initialPrice = value;
+   }
+   public double getProbAfterShock() { return probAfterShock; }
+   public void setProbAfterShock(double value) {
+      this.probAfterShock = value;
+   }
+   public double getPeriodShock() { return periodShock; }
+   public void setPeriodShock(int value) { this.periodShock = value; } // mudar com double funciona sl pq
+
 
    public double getTradingVolume() {
       return tradingVolume;
@@ -431,7 +447,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public String[] getProbedProperties() {
-      return new String[] {"dividendProcess","dividendMean","rho","noiseVar"};
+      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess"};
    }
 
 
