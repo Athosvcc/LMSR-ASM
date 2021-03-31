@@ -48,6 +48,7 @@ public abstract class Asset {
    protected double dividendMean;
    protected double pricePlusDivMean;
    protected double hreePrice;
+   protected double unitPrice;
 
    protected double hreePriceMean;
    protected double pricePlusDiv;

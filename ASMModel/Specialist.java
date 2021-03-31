@@ -18,6 +18,7 @@ class Specialist {
 
    private static double[][] tradeMatrix;       // holds individual demands and slopes of individual agents
    private Stock stock;
+   private LMSRStock stockLMSR;
    private double minExcess = 0.1;
    // private double eta = 0.0005;  // for price-adjustment
    protected static final int MAXITERATIONS = 10;
@@ -52,7 +53,11 @@ class Specialist {
          forecast types. To figure out how these formulas were are actually derived, please
          refer to the appendix.
       */
-      stock = World.Stocks;
+      if (AsmModel.LMSR) {
+         stockLMSR = World.LMSRStocks;
+      } else {
+         stock = World.Stocks;
+      }
       reF = stock.getRho()/(World.interestRatep1-stock.getRho());
       reG = ( (1 + reF)*(stock.getDividendMean()*(1-stock.getRho())-Agent.riskAversion*stock.getNoiseVar()*(1 + reF) ) ) / World.interestRate;
       reA = stock.getRho();
@@ -60,7 +65,7 @@ class Specialist {
       // System.out.println("f= "+reF+ "   g= "+reG+ "   a= "+reA+ "   b= "+reB);
    }  // end of constructor
 
-   public double getPriceLMSR(double order) { // calculates cost function, used for price setting
+   public double getCostLMSR(double order) { // calculates cost function, used for price setting
       double costFunction;
       int i;
       int qTotal = 0;
@@ -69,7 +74,7 @@ class Specialist {
          qTotal += i;
       }
 
-      costFunction = bLiq*Math.log(Math.exp((qTotal + order)/bLiq));
+      costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((qTotal + order)/stockLMSR.getBLiq()));
 
       return costFunction;
    }
@@ -82,12 +87,12 @@ class Specialist {
 
       iteration = 0;
       done = false;
-      stock = World.Stocks;
+      stockLMSR = World.LMSRStocks;
 
       while (iteration < MAXITERATIONS && !done) {
          switch (type) {
             case LMSRSPECIALIST:
-               priceLMSR = getPriceLMSR(qOrder) - getPriceLMSR(0);
+               priceLMSR = getCostLMSR(1) - getCostLMSR(0);
                break;
             default:
                break;
@@ -97,12 +102,13 @@ class Specialist {
             agent = World.Agents[i];
             agent.setDemandAndSlope(priceLMSR);
             tradeMatrix[i][0] = agent.getDemand();
+            volume += tradeMatrix[i][0];
 
          }
       }  // while
 
-      stock.setPrice(priceLMSR);
-      stock.setTradingVolume(volume);
+      stockLMSR.setPrice(priceLMSR);
+      stockLMSR.setTradingVolume(volume);
       // System.out.println(volume);
    }  // adjustPrice
 

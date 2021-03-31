@@ -72,13 +72,15 @@ public class Agent implements Drawable {
 
    protected double order ; // = new double[World.differentStocks];
    protected double slope ; // = new double[World.differentStocks];
+   protected double optimalDemand;
+   protected double difDemand;
    protected double numberOfStocks ;
    protected double cumulatedNumberOfStocks; // introduced to check the theoretically derived hypothesis that wealthier agents hold, on average, more stock than poorer agents.
    protected double averageNumberOfStocks ;  // introduced to check the theoretically derived hypothesis that wealthier agents hold, on average, more stock than poorer agents.
    protected double fcVar ; // = new double[World.differentStocks];
    protected double divisor ; // = new double[World.differentStocks];
    protected Stock stock;
-   protected LMSRStock LMSRStock;
+   protected LMSRStock stockLMSR;
    protected int x;  // for graphical display
    protected int y;  // for graphical display
 
@@ -145,8 +147,8 @@ public class Agent implements Drawable {
       if (AsmModel.LMSR) {
 
          double priceLMSR;
-         stock = World.Stocks;
-         priceLMSR = stock.getPrice();
+         stockLMSR = World.LMSRStocks;
+         priceLMSR = stockLMSR.getPrice();
          if (order > 0.0) {
             numberOfStocks += order;
             cash -= order*priceLMSR;
@@ -197,12 +199,12 @@ public class Agent implements Drawable {
     */
    public void getEarningsAndPayTaxes() {
       if (AsmModel.LMSR) {
-         LMSRStock = World.LMSRStocks;
+         stockLMSR = World.LMSRStocks;
          cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend()); //mudar
          if (cash < MINCASH) {
             cash = MINCASH;
          }
-         wealth = cash + numberOfStocks*LMSRStock.getPrice();;     // update wealth
+         wealth = cash + numberOfStocks*stockLMSR.getPrice();     // update wealth
       } else {
          stock = World.Stocks;
          cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend());
@@ -235,11 +237,19 @@ public class Agent implements Drawable {
    public void setDemandAndSlope(double trialPrice) {
       order = 0;     // if trader don't trade in that stock, then
       slope = 0;     // set order and slope to zero
+      optimalDemand = 0;
+      difDemand = 0;
       stock = World.Stocks;
+      stockLMSR = World.LMSRStocks;
       if (AsmModel.hree) {
          forecast = trialPrice * World.interestRatep1 +
             (Agent.riskAversion*World.interestRatep1*stock.getNoiseVar()) /
             (World.interestRatep1 - stock.getRho());
+      } else if (AsmModel.LMSR) {
+         //optimalDemand = cash*(1/(World.interestRatep1)); // Result from logarithmic utility //mudar
+         //difDemand = optimalDemand-numberOfStocks*stockLMSR.getUnitPrice();// Deviation from optimal //mudar
+         forecast = trialPrice + offset;
+         order = (forecast-trialPrice)/(divisor) - numberOfStocks; //mudar
       } else {
          forecast = (trialPrice+stock.getDividend())*pdCoeff + offset;
       }

@@ -22,7 +22,7 @@ abstract class ExecutePeriod {
    private static int recordPeriod = 0;
    private static Agent agent;
    private static Stock stock;
-   private static LMSRStock LMSRStock;
+   private static LMSRStock stockLMSR;
 
    public ExecutePeriod() {  // constructor
    }
@@ -33,7 +33,7 @@ abstract class ExecutePeriod {
 
          double totalWealth = 0;
          World.period++;       // initial values for period 0 are set and shouldn't be altered anymore
-         LMSRStock = World.LMSRStocks;
+         stockLMSR = World.LMSRStocks;
          stock.updateDividend(); // new dividend announced, updating of all statistics and state-of-the-stock
          Agent.activatedRules = 0;  // for debugging, how many rules are activated in total in this period
          NESFIAgent.NESFIActivatedRules = 0;

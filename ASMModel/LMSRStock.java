@@ -36,6 +36,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    private double cumulatedTradingVolume = 0;
    private double meanTradingVolume = 0;
    protected double noiseVar = 0.07429;
+   protected double bLiq = 100;
    protected double noise = 0;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
@@ -395,6 +396,12 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public double getNoiseVar() {
       return noiseVar;
    }
+   public void setBLiq(double value) {
+      this.bLiq = value;
+   }
+   public double getBLiq() {
+      return bLiq;
+   }
    public double getDividendMean() {
       return dividendMeanTheoretical;
    }
@@ -418,6 +425,9 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
    public double getPVCorr() {
       return pvCorr;
+   }
+   public double getUnitPrice() {
+      return unitPrice;
    }
 
    public String[] getProbedProperties() {

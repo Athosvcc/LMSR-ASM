@@ -95,7 +95,11 @@ public class TradingRule implements Comparable, CustomProbeable {
       ruleID = ruleCounter;
       forecastPart = new double[2];   // holds forecast-parameters a, b, c, and d
       forecastPart[0] = Specialist.reA + subrange*(a_max-a_min)*AsmModel.normalNormal.nextDouble();
-      forecastPart[1] = Specialist.reB + subrange*(b_max-b_min)*AsmModel.normalNormal.nextDouble();
+      if (AsmModel.LMSR) {
+         forecastPart[1] = AsmModel.LMSRNormal.nextDouble();
+      } else {
+         forecastPart[1] = Specialist.reB + subrange*(b_max-b_min)*AsmModel.normalNormal.nextDouble();
+      }
       initVar = (1 + Specialist.reF)*(1 + Specialist.reF)*World.Stocks.getNoiseVar();
       /* Initialize all conditions to don't care (#, coded as binary "00") */
       conditionWords[0] = 0l;
