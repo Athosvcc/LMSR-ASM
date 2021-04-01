@@ -41,7 +41,7 @@ public class Agent implements Drawable {
    *  Then, the performance of all rules are updated.
    */
 
-   protected static double MAXHOLDINGS; // no one can own or owe more than the absolute number of stocks available in the economy
+   protected static double MAXHOLDINGS = 1000000000; // no one can own or owe more than the absolute number of stocks available in the economy
    protected static int traders = 0;   // needed for ID-initialization in constructor
    protected static int instancesOfTechnicians = 0;
 
@@ -70,6 +70,8 @@ public class Agent implements Drawable {
    protected int[] oldRuleSet ;
    protected int selectedRule;  // ID of selected Rule in activeRuleSet[]
 
+   protected double demand; // used in LSMR
+   protected double supply; // used in LSMR
    protected double order ; // = new double[World.differentStocks];
    protected double slope ; // = new double[World.differentStocks];
    protected double optimalDemand;
@@ -81,6 +83,7 @@ public class Agent implements Drawable {
    protected double divisor ; // = new double[World.differentStocks];
    protected Stock stock;
    protected LMSRStock stockLMSR;
+   protected Specialist specialist;
    protected int x;  // for graphical display
    protected int y;  // for graphical display
 
@@ -145,19 +148,20 @@ public class Agent implements Drawable {
 
    public void executeOrder() {
       if (AsmModel.LMSR) {
-
-         double priceLMSR;
+         double costLMSR;
          stockLMSR = World.LMSRStocks;
-         priceLMSR = stockLMSR.getPrice();
+         specialist = AsmModel.specialist;
+         costLMSR = specialist.getCostLMSR(order);
          if (order > 0.0) {
             numberOfStocks += order;
-            cash -= order*priceLMSR;
+            cash -= costLMSR;
          }
          else if (order < 0.0) {
             numberOfStocks += order;
-            cash -= order*priceLMSR;
+            cash -= costLMSR;
          }
          cumulatedNumberOfStocks += numberOfStocks;
+         System.out.println("total acoes: " + stockLMSR.qStocksLMSR);
          averageNumberOfStocks = cumulatedNumberOfStocks / World.period ;
          // wealth is updated in getEarnings... etc   // ?
 
@@ -237,7 +241,7 @@ public class Agent implements Drawable {
    public void setDemandAndSlope(double trialPrice) {
       order = 0;     // if trader don't trade in that stock, then
       slope = 0;     // set order and slope to zero
-      optimalDemand = 0;
+      // optimalDemand = 0;
       difDemand = 0;
       stock = World.Stocks;
       stockLMSR = World.LMSRStocks;
@@ -246,24 +250,38 @@ public class Agent implements Drawable {
             (Agent.riskAversion*World.interestRatep1*stock.getNoiseVar()) /
             (World.interestRatep1 - stock.getRho());
       } else if (AsmModel.LMSR) {
-         //optimalDemand = cash*(1/(World.interestRatep1)); // Result from logarithmic utility //mudar
-         //difDemand = optimalDemand-numberOfStocks*stockLMSR.getUnitPrice();// Deviation from optimal //mudar
-         forecast = trialPrice + offset;
-         order = (forecast-trialPrice)/(divisor) - numberOfStocks; //mudar
+
+         forecast = stockLMSR.probability + offset;
+         demand = 100*((forecast-trialPrice)/(divisor) - numberOfStocks); //mudar parametro arbitrario
+         if (demand < 0) {
+            supply = demand + numberOfStocks;
+            if (supply > 0) {
+               order = demand;
+            } else {
+               order -= numberOfStocks;
+            }
+         } else {
+            order = demand;
+         }
+         System.out.println("order: " + order);
+         System.out.println("trial price: " + trialPrice);
+         System.out.println("numberofstocks" + numberOfStocks);
       } else {
          forecast = (trialPrice+stock.getDividend())*pdCoeff + offset;
       }
-      if (forecast >= 0.0) {
-         order = (forecast-trialPrice*World.interestRatep1)/(divisor) - numberOfStocks;
-         slope = (pdCoeff - World.interestRatep1)/(divisor);
-      } else {
-         forecast = 0.0;
-         order = -trialPrice*World.interestRatep1/divisor - numberOfStocks;
-         slope = -World.interestRatep1/divisor;
+      if (!AsmModel.LMSR) {
+         if (forecast >= 0.0) {
+            order = (forecast-trialPrice*World.interestRatep1)/(divisor) - numberOfStocks;
+            slope = (pdCoeff - World.interestRatep1)/(divisor);
+         } else {
+            forecast = 0.0;
+            order = -trialPrice*World.interestRatep1/divisor - numberOfStocks;
+            slope = -World.interestRatep1/divisor;
+         }
+         // clip bids or offers such that (-)MAXHOLDINGS will not be violated
+         clipBidOffer();
+         constrainDemand(trialPrice );    // make sure that budget constraints are not violated
       }
-      // clip bids or offers such that (-)MAXHOLDINGS will not be violated
-      clipBidOffer();
-      constrainDemand(trialPrice );    // make sure that budget constraints are not violated
    }	 // setDemandAndSlope
 
 

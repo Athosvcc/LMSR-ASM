@@ -9,6 +9,8 @@
 
 package ASMModel;
 
+import java.math.BigDecimal;
+
 /**
  * The specialist handles market clearing. There is one instance created and the object
  * finds a market clearing price. From the various types of the original SFI-ASM,
@@ -26,8 +28,6 @@ class Specialist {
    private final double MINPRICE = 0.1;
    private double slopeTotal, bidTotal, offerTotal, imbalance;
    public static double bidFrac, offerFrac, volume;
-   public static double bLiq, qAgent, qOrder;
-   public static int[] qArray; //mudar
 
    protected static double reF; // holds parameters f for the hree-mode for each stock
    protected static double reG; // holds parameters g for the hree-mode
@@ -46,7 +46,7 @@ class Specialist {
    public static int type = SLOPESPECIALIST ;
 
    public Specialist() { // constructor
-      World.numberOfAgents = World.numberOfSFIAgents + World.numberOfNESFIAgents;
+      World.numberOfAgents = World.numberOfSFIAgents + World.numberOfNESFIAgents + World.numberOfLMSRAgents;
       tradeMatrix = new double[World.numberOfAgents][2];
 
       /* Now determine the hree-forecast parameters. They are highly on the dividend process and agent
@@ -65,14 +65,9 @@ class Specialist {
 
    public double getCostLMSR(double order) { // calculates cost function, used for price setting
       double costFunction;
-      int i;
-      int qTotal = 0;
+      stockLMSR = World.LMSRStocks;
 
-      for (i = 0; i < qArray.length; i++) {
-         qTotal += i;
-      }
-
-      costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((qTotal + order)/stockLMSR.getBLiq()));
+      costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQStocksLMSR()+order)/stockLMSR.getBLiq())+Math.exp(0/stockLMSR.getBLiq()));
 
       return costFunction;
    }
@@ -82,6 +77,7 @@ class Specialist {
       int iteration;
       boolean done;
       double priceLMSR = 0; // = new double[World.differentStocks]; //mudar
+      type = LMSRSPECIALIST; //mudar
 
       iteration = 0;
       done = false;
@@ -91,12 +87,14 @@ class Specialist {
          switch (type) {
             case LMSRSPECIALIST:
                priceLMSR = getCostLMSR(1) - getCostLMSR(0);
+               //done = true;
+               iteration = MAXITERATIONS;
                break;
             default:
                break;
          }
          // Get each agent's requests
-         for (int i = 0 ; i < World.numberOfAgents ; i++) {
+         for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
             agent = World.Agents[i];
             agent.setDemandAndSlope(priceLMSR);
             tradeMatrix[i][0] = agent.getDemand();
@@ -107,8 +105,9 @@ class Specialist {
 
       stockLMSR.setPrice(priceLMSR);
       stockLMSR.setTradingVolume(volume);
+      stockLMSR.setqStocksLMSR(volume);
       // System.out.println(volume);
-   }  // adjustPrice
+   }  // adjustPricePrediction
 
 
    public void adjustPrice() {

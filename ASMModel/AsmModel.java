@@ -49,14 +49,14 @@ public class AsmModel extends SimModelImpl {
 
    protected static World world;
    protected static Specialist specialist;
-   protected static boolean showDisplays = true;
+   protected static boolean showDisplays = false; //mudar
    protected static boolean recordData = false ;
    private static String recorderParamFile = "recorder.pf" ;
    protected static boolean stopAtZeroBit = true ;  // stops the simulation when the zero bit level is reached,
    private static boolean tBitsZero=false;   // recording only once the period that technical bits approached zero in conditionalStop()
    private static boolean fBitsZero=false;   // dito
    protected static boolean hree = false ;
-   protected static boolean LMSR = false ;
+   protected static boolean LMSR = true ; //mudar
    protected static OpenSequenceGraph logReturnGraph;
    protected static OpenSequenceGraph priceGraph;
    protected static OpenSequenceGraph hreePrice_PriceGraph;
@@ -139,16 +139,19 @@ public class AsmModel extends SimModelImpl {
       // rngSeed is set by the gui
       Random.createUniform();
       normalNormal = new Normal(0.0, 1.0, new MersenneTwister((int)getRngSeed()) );
-      LMSRNormal = new Normal(0.0, 0.05, new MersenneTwister((int)getRngSeed()) ); // as set in Prediction Market Liquidity
+      LMSRNormal = new Normal(0.0, 0.1, new MersenneTwister((int)getRngSeed()) ); // as set in Prediction Market Liquidity
       stockNormal =  new Normal(0.0, Math.sqrt(stock.noiseVar), new MersenneTwister((int)getRngSeed()) );
       stock.initialize();
       stockLMSR.initialize();
+
       world = new World();
       World.Stocks = stock;
       World.LMSRStocks = stockLMSR;
       specialist = new Specialist();
       World.createAgents();
-      Agent.initMinMaxs();
+      if (!LMSR) {
+         Agent.initMinMaxs();
+      }
       if (recordData) {	// writes data to an ascii-file
          recorder = new DataRecorder(recorderOptions.getRecorderOutputFile(), this, "Data Recording of NEFSI-ASM" );
          recorder.setDelimiter(";");
@@ -1075,21 +1078,21 @@ public class AsmModel extends SimModelImpl {
    }
    public void setNumberOfSFIAgents(int val) {
       world.numberOfSFIAgents = val;
-      world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents;
+      world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents + world.numberOfLMSRAgents;
    }
    public int getNumberOfNESFIAgents() {
       return world.numberOfNESFIAgents;
    }
    public void setNumberOfNESFIAgents(int val) {
       world.numberOfNESFIAgents = val;
-      world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents;
+      world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents + world.numberOfLMSRAgents;
    }
    public int getNumberOfLMSRAgents() { //mudar
-      return world.numberOfNESFIAgents;
+      return world.numberOfLMSRAgents;
    }
    public void setNumberOfLMSRAgents(int val) { //mudar
       world.numberOfNESFIAgents = val;
-      world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents;
+      world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents + world.numberOfLMSRAgents;
    }
    public boolean getShowDisplays() { return showDisplays; }
    public void setShowDisplays(boolean showDisplays) {
@@ -1107,7 +1110,7 @@ public class AsmModel extends SimModelImpl {
    public boolean getLMSR() { return LMSR; }
    public void setLMSR(boolean LMSR) {
       this.LMSR = LMSR;
-      //if (LMSR) this.stock = this.stock; //mudar
+      if (LMSR) { Specialist.type = Specialist.LMSRSPECIALIST; }
    }
 
    public int getNumberOfPeriods() { return world.numberOfPeriods; }
@@ -1173,8 +1176,8 @@ public class AsmModel extends SimModelImpl {
    public SFIAgent getSFIAgent() { return staticSFIAgent ; }
    public void setNESFIAgent(NESFIAgent val) { }
    public NESFIAgent getNESFIAgent() { return staticNESFIAgent ; }
-   public void setLMSRAgent(LMSRAgent val) { }
-   public LMSRAgent getLMSRAgent() { return staticLMSRAgent ; }
+   public void setLMSRAgent(LMSRAgent val) { } //mudar para dentro de lmsragent
+   public LMSRAgent getLMSRAgent() { return staticLMSRAgent ; } //mudar para dentro de lmsragent
 //   public void setAgent(Agent val) {}
 //   public Agent getAgent() { return staticAgent ; }
    public Stock getStock() { return stock; }

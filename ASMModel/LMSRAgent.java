@@ -342,6 +342,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
       }  // Select Best
       if (done) {
          ruleSet[selected].use();   // sets lastUsed and Counter
+         System.out.println(ruleSet[selected]);
          pdCoeff = ruleSet[selected].getAij();
          offset = ruleSet[selected].getBij();
          fcVar = ruleSet[selected].getForecastVar();

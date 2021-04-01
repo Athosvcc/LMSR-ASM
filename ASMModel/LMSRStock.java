@@ -38,10 +38,11 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double noiseVar = 0.07429;
    protected double noise = 0;
    protected double bLiq = 100;
-   protected double probability = 0.5;
-   protected double initialPrice = 0.5;
+   protected double probability = 0.8;
+   protected double initialPrice = 0.6;
    protected double probAfterShock = 0.2;
    protected int periodShock = 100;
+   protected int qStocksLMSR = 0;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
    private double[] dRatios =  {0.6, 0.8, 0.9, 1.0, 1.1, 1.12, 1.4};
@@ -120,6 +121,43 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
          // time = waveLength/4;
       }
    }  // initialize()
+
+   protected double firstPrice (int qPos,int qNeg, double bLiq) { // gets price of buying one stock
+      double costFunc;
+      double costFuncPost;
+      double cost;
+
+      costFunc = getBLiq()*Math.log(Math.exp(qPos/getBLiq())+Math.exp(qNeg/getBLiq()));
+      costFuncPost = getBLiq()*Math.log(Math.exp((qPos+1)/getBLiq())+Math.exp(qNeg/getBLiq()));
+      cost = costFuncPost - costFunc;
+
+      return cost;
+   }
+
+   protected int qInitLMSR (double initialProbability) { // creates artificial stocks so next price equals given initial probability
+      int qInit = 0;
+      int iterator = 0;
+      double priceLim;
+
+      if (getInitialPrice() < 0.5) {
+         priceLim = 1 - getInitialPrice();
+      } else {
+         priceLim = getInitialPrice();
+      }
+
+      while (qInit == 0) {
+         iterator++;
+         double priceMid = firstPrice(iterator, 0, getBLiq());
+         if (priceLim < priceMid) {
+            qInit = iterator;
+         }
+      }
+      return qInit;
+   }
+
+   protected void probShock () { // adds probability shock at time set in GUI
+      setProbability(getProbAfterShock()); //called in ExecutePeriod
+   }
 
    // Standard-update-process for OUP
    public void updateDividend() {
@@ -423,6 +461,10 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
    public double getPeriodShock() { return periodShock; }
    public void setPeriodShock(int value) { this.periodShock = value; } // mudar com double funciona sl pq
+   public double getQStocksLMSR() { return qStocksLMSR; }
+   public void setqStocksLMSR(double value) {
+      this.qStocksLMSR += value;
+   }
 
 
    public double getTradingVolume() {
@@ -447,7 +489,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public String[] getProbedProperties() {
-      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess"};
+      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess", "bLiq"};
    }
 
 

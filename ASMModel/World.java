@@ -39,10 +39,11 @@ class World {
    public static Stock Stocks ;
    public static LMSRStock LMSRStocks;
 
-   public static int numberOfSFIAgents   = 25;  // have the NESFI-Agents run against the SFI-Agents
+   public static int numberOfSFIAgents   = 0;  // have the NESFI-Agents run against the SFI-Agents
    public static int numberOfNESFIAgents = 0;  // have the NESFI-Agents run against the SFI-Agents
+   public static int numberOfLMSRAgents = 25;
    private static int numberOfTechnicians = 25;  // must be equal or smaller numberOfSFIAgents; can only be SFI-Agents
-   public static int numberOfAgents = numberOfSFIAgents + numberOfNESFIAgents;
+   public static int numberOfAgents = numberOfSFIAgents + numberOfNESFIAgents + numberOfLMSRAgents;
    private static double fracFastLearner = 0.0;
    private static int numberOfFastLearner = 0;
    private static double fracClassifierAgents = 1.0;
@@ -74,25 +75,34 @@ class World {
    }  // constructor
 
    public static void createAgents() {
-      Agents = new Agent[numberOfAgents] ;
-      for(int i = 0; i< numberOfSFIAgents; i++) {
-         Agent newSFIAgent = new SFIAgent(0);
-         Agents[i] = newSFIAgent;
-      }
-      for(int i = numberOfSFIAgents; i < numberOfAgents ; i++) {
-         if (fracFastLearner > 0.0) {
-            if(Random.uniform.nextDoubleFromTo(0d,1d) < fracFastLearner) {
-               Agent newFastAgent = new FastAgent(0);
-               Agents[i] = newFastAgent;
+      if (AsmModel.LMSR) {
+         Agents = new Agent[numberOfLMSRAgents];
+         for(int i = 0; i< numberOfLMSRAgents; i++) {
+            Agent newLMSRAgent = new LMSRAgent(0);
+            Agents[i] = newLMSRAgent;
+         }
+      } else {
+         Agents = new Agent[numberOfAgents] ;
+         for(int i = 0; i< numberOfSFIAgents; i++) {
+            Agent newSFIAgent = new SFIAgent(0);
+            Agents[i] = newSFIAgent;
+         }
+         for(int i = numberOfSFIAgents; i < numberOfAgents ; i++) {
+            if (fracFastLearner > 0.0) {
+               if(Random.uniform.nextDoubleFromTo(0d,1d) < fracFastLearner) {
+                  Agent newFastAgent = new FastAgent(0);
+                  Agents[i] = newFastAgent;
+               } else {
+                  Agent newNESFIAgent = new NESFIAgent(0);
+                  Agents[i] = newNESFIAgent;
+               }
             } else {
                Agent newNESFIAgent = new NESFIAgent(0);
                Agents[i] = newNESFIAgent;
             }
-         } else {
-            Agent newNESFIAgent = new NESFIAgent(0);
-            Agents[i] = newNESFIAgent;
-         }
-      }  // all NESFI-Agents, either of type Normal- or FastLearner
+         }  // all NESFI-Agents, either of type Normal- or FastLearner
+      }
+
       baseWealth = Agents[0].cash; // assume that all agents have same endowments; then, baseWealth is the wealth due to inactivity, i.e., an agents does not trade and holds his initial endowment of one unit of stock.
       System.gc();
       if (AsmModel.recordData && AsmModel.recorderOptions.getNewZeroBitAgentAt() && World.period>0)
