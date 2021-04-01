@@ -37,6 +37,7 @@ abstract class ExecutePeriod {
             World.period++;
          } else if (World.period == stockLMSR.periodShock) {
             stockLMSR.probShock();
+            World.period++;
          } else {
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore

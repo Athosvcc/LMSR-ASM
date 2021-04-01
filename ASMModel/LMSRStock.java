@@ -41,7 +41,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double probability = 0.8;
    protected double initialPrice = 0.6;
    protected double probAfterShock = 0.2;
-   protected int periodShock = 100;
+   protected double periodShock = 100;
    protected int qStocksLMSR = 0;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
@@ -460,7 +460,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       this.probAfterShock = value;
    }
    public double getPeriodShock() { return periodShock; }
-   public void setPeriodShock(int value) { this.periodShock = value; } // mudar com double funciona sl pq
+   public void setPeriodShock(double value) { this.periodShock = value; } // mudar com double funciona sl pq
    public double getQStocksLMSR() { return qStocksLMSR; }
    public void setqStocksLMSR(double value) {
       this.qStocksLMSR += value;
