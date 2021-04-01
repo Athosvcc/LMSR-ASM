@@ -97,7 +97,7 @@ class Specialist {
          for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
             agent = World.Agents[i];
             priceLMSR = getCostLMSR(1) - getCostLMSR(0);
-            stockLMSR.price = priceLMSR;
+            stockLMSR.setPrice(priceLMSR);
             agent.setDemandAndSlope(priceLMSR);
             tradeMatrix[i][0] = agent.getDemand();
             volume += tradeMatrix[i][0];
