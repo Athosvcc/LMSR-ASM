@@ -43,6 +43,8 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double probAfterShock = 0.2;
    protected double periodShock = 100;
    protected int qStocksLMSR = 0;
+   protected int qPosLMSR = 0;
+   protected int qNegLMSR = 0;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
    private double[] dRatios =  {0.6, 0.8, 0.9, 1.0, 1.1, 1.12, 1.4};
@@ -90,7 +92,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       this.dividendMean = dividendMeanTheoretical;
       this.nextDividend = dividend;
       this.oldDividend = dividend;
-      this.price = dividendMeanTheoretical/World.interestRate;     // risk-free price-estimation
+      this.price = initialPrice;     // add probability for LMSR
       this.oldPrice = price;
       this.priceMean = price;
       this.hreePriceMean = price;
@@ -122,13 +124,18 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       }
    }  // initialize()
 
-   protected double firstPrice (int qPos,int qNeg, double bLiq) { // gets price of buying one stock
+   protected double firstPrice (int qPos,int qNeg, double bLiq, boolean pos) { // gets price of buying one stock in LMSR
       double costFunc;
       double costFuncPost;
       double cost;
 
       costFunc = getBLiq()*Math.log(Math.exp(qPos/getBLiq())+Math.exp(qNeg/getBLiq()));
-      costFuncPost = getBLiq()*Math.log(Math.exp((qPos+1)/getBLiq())+Math.exp(qNeg/getBLiq()));
+      if (pos) {
+         costFuncPost = getBLiq()*Math.log(Math.exp((qPos+1)/getBLiq())+Math.exp(qNeg/getBLiq()));
+      } else {
+         costFuncPost = getBLiq()*Math.log(Math.exp((qPos)/getBLiq())+Math.exp((qNeg+1)/getBLiq()));
+      }
+
       cost = costFuncPost - costFunc;
 
       return cost;
@@ -147,7 +154,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
 
       while (qInit == 0) {
          iterator++;
-         double priceMid = firstPrice(iterator, 0, getBLiq());
+         double priceMid = firstPrice(iterator, 0, getBLiq(), true);
          if (priceLim < priceMid) {
             qInit = iterator;
          }
@@ -462,9 +469,11 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public double getPeriodShock() { return periodShock; }
    public void setPeriodShock(double value) { this.periodShock = value; } // mudar com double funciona sl pq
    public double getQStocksLMSR() { return qStocksLMSR; }
-   public void setqStocksLMSR(double value) {
-      this.qStocksLMSR += value;
-   }
+   public void setQStocksLMSR(double value) { this.qStocksLMSR += value; }
+   public double getQPosMSR() { return qPosLMSR; }
+   public void setQPosLMSR(double value) { this.qPosLMSR += value; }
+   public double getQNegMSR() { return qNegLMSR; }
+   public void setQNegLMSR(double value) { this.qNegLMSR += value; }
 
 
    public double getTradingVolume() {

@@ -33,7 +33,12 @@ abstract class ExecutePeriod {
          stockLMSR = World.LMSRStocks;
          if (World.period == 0) {
             int qInitial = stockLMSR.qInitLMSR(stockLMSR.getInitialPrice());
-            stockLMSR.setqStocksLMSR(qInitial);
+            if (stockLMSR.getInitialPrice()<0.5) {
+               stockLMSR.setQNegLMSR(qInitial);
+            } else {
+               stockLMSR.setQPosLMSR(qInitial);
+            }
+            stockLMSR.setQStocksLMSR(qInitial); // mudar
             World.period++;
          } else if (World.period == stockLMSR.periodShock) {
             stockLMSR.probShock();

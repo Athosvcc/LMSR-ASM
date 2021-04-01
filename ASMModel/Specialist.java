@@ -101,7 +101,7 @@ class Specialist {
             agent.setDemandAndSlope(priceLMSR);
             tradeMatrix[i][0] = agent.getDemand();
             volume += tradeMatrix[i][0];
-            stockLMSR.setqStocksLMSR(tradeMatrix[i][0]);
+            stockLMSR.setQStocksLMSR(tradeMatrix[i][0]);
 
          }
       }  // while
