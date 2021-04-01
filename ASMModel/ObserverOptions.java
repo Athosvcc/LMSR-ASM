@@ -20,13 +20,13 @@ public class ObserverOptions implements CustomProbeable {
 
    protected static int updateFrequency = 10 ;
    protected static boolean calculateCorrelations = false;
-   protected boolean showTechnicalBits = true;
-   protected boolean showFundamentalBits = true;
-   protected boolean showBitFractions = true;
+   protected boolean showTechnicalBits = false;
+   protected boolean showFundamentalBits = false;
+   protected boolean showBitFractions = false;
    protected boolean showAgentGrid = false ;
    protected boolean showStocks = false;
    protected boolean showPrice = true;
-   protected boolean showHreePrice = true;
+   protected boolean showHreePrice = false;
    protected boolean showHreePrice_Price = false;
    protected boolean showCrudePrice = false ;
    protected boolean showDividend = false;

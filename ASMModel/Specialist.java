@@ -86,7 +86,7 @@ class Specialist {
       while (iteration < MAXITERATIONS && !done) {
          switch (type) {
             case LMSRSPECIALIST:
-               priceLMSR = getCostLMSR(1) - getCostLMSR(0);
+               //priceLMSR = getCostLMSR(1) - getCostLMSR(0);
                //done = true;
                iteration = MAXITERATIONS;
                break;
@@ -96,16 +96,18 @@ class Specialist {
          // Get each agent's requests
          for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
             agent = World.Agents[i];
+            priceLMSR = getCostLMSR(1) - getCostLMSR(0);
+            stockLMSR.price = priceLMSR;
             agent.setDemandAndSlope(priceLMSR);
             tradeMatrix[i][0] = agent.getDemand();
             volume += tradeMatrix[i][0];
+            stockLMSR.setqStocksLMSR(tradeMatrix[i][0]);
 
          }
       }  // while
 
       stockLMSR.setPrice(priceLMSR);
       stockLMSR.setTradingVolume(volume);
-      stockLMSR.setqStocksLMSR(volume);
       // System.out.println(volume);
    }  // adjustPricePrediction
 

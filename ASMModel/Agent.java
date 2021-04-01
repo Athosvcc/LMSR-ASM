@@ -252,7 +252,7 @@ public class Agent implements Drawable {
       } else if (AsmModel.LMSR) {
 
          forecast = stockLMSR.probability + offset;
-         demand = 100*((forecast-trialPrice)/(divisor) - numberOfStocks); //mudar parametro arbitrario
+         demand = 100*((forecast-trialPrice)/(divisor) - numberOfStocks); //mudar parametro arbitrario sensibilidade confianca
          if (demand < 0) {
             supply = demand + numberOfStocks;
             if (supply > 0) {

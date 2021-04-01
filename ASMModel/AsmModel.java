@@ -49,7 +49,7 @@ public class AsmModel extends SimModelImpl {
 
    protected static World world;
    protected static Specialist specialist;
-   protected static boolean showDisplays = false; //mudar
+   protected static boolean showDisplays = true;
    protected static boolean recordData = false ;
    private static String recorderParamFile = "recorder.pf" ;
    protected static boolean stopAtZeroBit = true ;  // stops the simulation when the zero bit level is reached,
