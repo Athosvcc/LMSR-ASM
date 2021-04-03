@@ -32,7 +32,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
    }
 
    public LMSRAgent(int traderType) {
-      nesfiAgent = false;
+      nesfiAgent = true;
       minActiveRules = 1;  // minimum # of rules to be activated before using roulette, if less, then use average values
       techTrader = true ; // no usage of technical trading bits, false only fundamental bits, initialized in constructr to set parameter
       useClassifier = true;   // use of classifier system or no condition checking
@@ -56,8 +56,9 @@ public class LMSRAgent extends Agent implements CustomProbeable {
          cash = initialCash;
          numberOfStocks =0;    // initial endowment of stocks
          stock = World.Stocks;   //(Stock)World.stockList.get(type); //mudar
+         stockLMSR = World.LMSRStocks;
          stock.totalSupply += 1;
-         wealth = cash + stock.getPrice();
+         wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*(1-stockLMSR.getPrice());
          World.setTotalWealth(World.getTotalWealth()+wealth);
          for (int i = 0; i < numRules; i++) {   // create a set of numRules TradingRules
             ruleSet[i] = new TradingRule(useClassifier, techTrader, checkRules );   // true = ruleCheck
@@ -136,114 +137,6 @@ public class LMSRAgent extends Agent implements CustomProbeable {
       fProb = getAgentFBitFraction();
       tProb = getAgentTBitFraction();
    }  // invokeGA
-
-
-/** I decided to add a 1-point crossover to the original SFI-mutation operator, which was only
- *  a uniform crossover. With the updated mutation operator and uniform crossover as the
- *  exclusive crossover procedure, corner solutions for individual bits tended to be replicated,
- *  i.e., once a bit position was set for all trading rules, uniform crossover replicated this
- *  exactly and we were in a lock-in. Only mutation was a way to escape from that trap.
- *  Two point crossover is another way of avoiding those corner solutions. It should also
- *  simplify the interpretation of bit settings for periodic dividends. Sometimes I had no
- *  idea whether the increased existence of those corner solution was a mere technical
- *  coincidence or whether it indeed reflected useful information by this bit.
- *  The 1-point crossover is only invoked on the bit string. The procedure for the
- *  real valued parameters is not changed. Uniform and 1-point crossover are invoked
- *  with equal probability.
- */
-
-//   protected TradingRule crossover(int rule1, int rule2) {
-//      double prob, weight1, weight2, prob2;
-//      long bit;
-//      int words;
-//      TradingRule offspring;
-//
-//      /* uniform crossover on the condition bits*/
-//      offspring = copyRule(rule1);
-//      words = (!offspring.technicalRule ? 1 : 2  );
-//
-//      System.out.println("Before Crossover:");
-//      ruleSet[rule1].show_bits(0);
-//      ruleSet[rule2].show_bits(0);
-//      if (Random.uniform.nextIntFromTo(0,1)==0) {
-//         // with equal probability uniform crossover
-//         for (int j = 0 ; j < words ; j++ ) {
-//            for (int i = 0; i<32 ; i++ ) {
-//               if (Random.uniform.nextIntFromTo(0,1)==0) {  // with equal probability
-//                  bit = (ruleSet[rule2].conditionWords[j] >> Asset.SHIFT[i] & 3l );
-//               } else {
-//                  bit = (ruleSet[rule1].conditionWords[j] >> Asset.SHIFT[i] & 3l );
-//               }
-//               offspring.conditionWords[j] = offspring.conditionWords[j] & Asset.NMASK[i] | (bit << Asset.SHIFT[i]) ;
-//            }  // for all condition bits
-//         }  // for all condition words
-//         // end uniform crossover
-//         System.out.println("Offspring after uniform crossover before check:");
-//         offspring.show_bits(0);
-//      } else {
-//         // now perform the 2-point crossover
-//         int crossoverPoint = Random.uniform.nextIntFromTo(0,31);
-//         for (int j = 0 ; j < words ; j++ ) {
-//            for (int i = 0; i < crossoverPoint ; i++ ) {
-//               bit = (ruleSet[rule1].conditionWords[j] >> Asset.SHIFT[i] & 3l );
-//               offspring.conditionWords[j] = offspring.conditionWords[j] & Asset.NMASK[i] | (bit << Asset.SHIFT[i]) ;
-//            }
-//            for (int i = crossoverPoint; i < 32 ; i++ ) {
-//               bit = (ruleSet[rule2].conditionWords[j] >> Asset.SHIFT[i] & 3l );
-//               offspring.conditionWords[j] = offspring.conditionWords[j] & Asset.NMASK[i] | (bit << Asset.SHIFT[i]) ;
-//            }
-//         }  // for all condition words
-//         System.out.println("Offspring after 1-point crossover, crossover point = "+crossoverPoint+ ":");
-//         offspring.show_bits(0);
-//      }
-//      // now, do crossover with forecast-parameters
-//      prob = Random.uniform.nextDoubleFromTo(0d,1d);
-//      if (prob < probLinear) {
-//         // choos e a linear combination of parents parameters, weighted by strength
-//         if(ruleSet[rule1].forecastVar > 0d && ruleSet[rule2].forecastVar > 0d) {
-//            weight1 = ruleSet[rule2].forecastVar/(ruleSet[rule1].forecastVar+ruleSet[rule2].forecastVar);
-//         } else {
-//            weight1 = 0.5;
-//         }
-//         weight2 = 1d - weight1;
-//         offspring.forecastPart[0] = weight1*ruleSet[rule1].forecastPart[0]
-//            + weight2*ruleSet[rule2].forecastPart[0];
-//         offspring.forecastPart[1] = weight1*ruleSet[rule1].forecastPart[1]
-//            + weight2*ruleSet[rule2].forecastPart[1];
-//      } else if (prob < probLinear + probRandom) {
-//         // choose each parameter randomly from each parent
-//         for (int j=0 ; j<2 ; j++ ) {
-//            prob2 = Random.uniform.nextIntFromTo(0,1);
-//            if(prob2==0) {
-//               offspring.forecastPart[j] = ruleSet[rule1].forecastPart[j];
-//            } else {
-//               offspring.forecastPart[j] = ruleSet[rule2].forecastPart[j];
-//            }
-//         }  // for all 2 parameters
-//      } else {
-//         // parameters are taken solely from one randomly chosen parent
-//         prob2 = Random.uniform.nextIntFromTo(0,1);
-//         if(prob2==0) {
-//            offspring.forecastPart[0] = ruleSet[rule1].forecastPart[0];
-//            offspring.forecastPart[1] = ruleSet[rule1].forecastPart[1];
-//         } else {
-//            offspring.forecastPart[0] = ruleSet[rule2].forecastPart[0];
-//            offspring.forecastPart[1] = ruleSet[rule2].forecastPart[1];
-//         }
-//      }  // all crossover methods for forecast-parameters
-//      offspring.forecastVar = meanVariance;
-//      if (checkRules) {
-//         offspring.check_consistency();
-//      } else
-//         offspring.getSpecificity();
-//      System.out.println("Offspring after uniform crossover after check:");
-//      offspring.show_bits(0);
-//
-//      offspring.detFitness();
-//      return offspring;
-//   }  // crossover
-
-
 
    public boolean getCheckRules() {
       return checkRules;

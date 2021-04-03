@@ -70,12 +70,13 @@ public class Agent implements Drawable {
    protected int[] oldRuleSet ;
    protected int selectedRule;  // ID of selected Rule in activeRuleSet[]
 
-   protected double demand; // used in LSMR
+   protected boolean pos;
+   protected double optimalDemand;
    protected double supply; // used in LSMR
    protected double order ; // = new double[World.differentStocks];
    protected double slope ; // = new double[World.differentStocks];
-   protected double optimalDemand;
-   protected double difDemand;
+   protected double numberOfPosStocks;
+   protected double numberOfNegStocks;
    protected double numberOfStocks ;
    protected double cumulatedNumberOfStocks; // introduced to check the theoretically derived hypothesis that wealthier agents hold, on average, more stock than poorer agents.
    protected double averageNumberOfStocks ;  // introduced to check the theoretically derived hypothesis that wealthier agents hold, on average, more stock than poorer agents.
@@ -151,17 +152,39 @@ public class Agent implements Drawable {
          double costLMSR;
          stockLMSR = World.LMSRStocks;
          specialist = AsmModel.specialist;
-         costLMSR = specialist.getCostLMSR(order);
-         if (order > 0.0) {
-            numberOfStocks += order;
-            cash -= costLMSR;
-         }
-         else if (order < 0.0) {
-            numberOfStocks += order;
-            cash -= costLMSR;
+         costLMSR = specialist.getCostLMSR(order, pos);
+         if (pos) {
+            if (order >= 0.0) {
+               numberOfStocks += order; //mudar
+               stockLMSR.setQStocksLMSR(order);
+               stockLMSR.setQPosLMSR(order);
+               numberOfPosStocks += order;
+               cash -= costLMSR;
+            }
+            else if (order < 0.0) {
+               numberOfStocks += order; //mudar
+               stockLMSR.setQStocksLMSR(order);
+               stockLMSR.setQPosLMSR(order);
+               numberOfPosStocks += order;
+               cash -= costLMSR;
+            }
+         } else {
+            if (order >= 0.0) {
+               numberOfStocks += order; //mudar
+               numberOfNegStocks += order;
+               stockLMSR.setQNegLMSR(order);
+               cash -= costLMSR;
+            } else if (order < 0.0) {
+               numberOfStocks += order; //mudar
+               numberOfNegStocks += order;
+               stockLMSR.setQNegLMSR(order);
+               cash -= costLMSR;
+            }
          }
          cumulatedNumberOfStocks += numberOfStocks;
-         System.out.println("total acoes: " + stockLMSR.qStocksLMSR);
+         System.out.println("total acoes: " + stockLMSR.getQStocksLMSR());
+         System.out.println("total acoes Pos: " + stockLMSR.getQPosLMSR());
+         System.out.println("total acoes Neg: " + stockLMSR.getQNegLMSR());
          averageNumberOfStocks = cumulatedNumberOfStocks / World.period ;
          // wealth is updated in getEarnings... etc   // ?
 
@@ -204,11 +227,11 @@ public class Agent implements Drawable {
    public void getEarningsAndPayTaxes() {
       if (AsmModel.LMSR) {
          stockLMSR = World.LMSRStocks;
-         cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend()); //mudar
          if (cash < MINCASH) {
             cash = MINCASH;
          }
-         wealth = cash + numberOfStocks*stockLMSR.getPrice();     // update wealth
+         wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*(1-stockLMSR.getPrice());     // update wealth
+         // wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*stockLMSR.getPrice();     // mudar
       } else {
          stock = World.Stocks;
          cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend());
@@ -241,8 +264,6 @@ public class Agent implements Drawable {
    public void setDemandAndSlope(double trialPrice) {
       order = 0;     // if trader don't trade in that stock, then
       slope = 0;     // set order and slope to zero
-      // optimalDemand = 0;
-      difDemand = 0;
       stock = World.Stocks;
       stockLMSR = World.LMSRStocks;
       if (AsmModel.hree) {
@@ -250,22 +271,30 @@ public class Agent implements Drawable {
             (Agent.riskAversion*World.interestRatep1*stock.getNoiseVar()) /
             (World.interestRatep1 - stock.getRho());
       } else if (AsmModel.LMSR) {
-
-         forecast = stockLMSR.probability + offset;
-         demand = 100*((forecast-trialPrice)/(divisor) - numberOfStocks); //mudar parametro arbitrario sensibilidade confianca
-         if (demand < 0) {
-            supply = demand + numberOfStocks;
-            if (supply > 0) {
-               order = demand;
+         forecast = stockLMSR.getProbability() + offset;
+         if (forecast > trialPrice) {
+            if (numberOfNegStocks == 0) {
+               pos = true;
+               optimalDemand = 100 * ((forecast - trialPrice) / (divisor) - numberOfPosStocks);
+               order = optimalDemand;
             } else {
-               order -= numberOfStocks;
+               pos = false;
+               order = -numberOfNegStocks; // sells all No stocks
             }
          } else {
-            order = demand;
-         }
+               if (numberOfPosStocks == 0) {
+                  pos = false;
+                  optimalDemand = 100*(((forecast-trialPrice))/(divisor) - numberOfNegStocks);
+                  order = optimalDemand; // the demand for -Yes is positive No
+               } else {
+                  pos = true;
+                  order = -numberOfPosStocks; // sells all Yes stocks
+               }
+            }
          System.out.println("order: " + order);
          System.out.println("trial price: " + trialPrice);
-         System.out.println("numberofstocks" + numberOfStocks);
+         System.out.println("numberofPosstocks" + numberOfNegStocks);
+         System.out.println("numberofNegstocks" + numberOfPosStocks);
       } else {
          forecast = (trialPrice+stock.getDividend())*pdCoeff + offset;
       }
@@ -280,8 +309,8 @@ public class Agent implements Drawable {
          }
          // clip bids or offers such that (-)MAXHOLDINGS will not be violated
          clipBidOffer();
-         constrainDemand(trialPrice );    // make sure that budget constraints are not violated
       }
+      constrainDemand(trialPrice);    // make sure that budget constraints are not violated
    }	 // setDemandAndSlope
 
 

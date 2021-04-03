@@ -28,6 +28,7 @@ class Specialist {
    private final double MINPRICE = 0.1;
    private double slopeTotal, bidTotal, offerTotal, imbalance;
    public static double bidFrac, offerFrac, volume;
+   public static double volumeNeg, volumePos;
 
    protected static double reF; // holds parameters f for the hree-mode for each stock
    protected static double reG; // holds parameters g for the hree-mode
@@ -63,11 +64,21 @@ class Specialist {
       // System.out.println("f= "+reF+ "   g= "+reG+ "   a= "+reA+ "   b= "+reB);
    }  // end of constructor
 
-   public double getCostLMSR(double order) { // calculates cost function, used for price setting
+   public double getCostLMSR(double order, boolean pos) { // calculates cost function, used for price setting
       double costFunction;
+      double orderpos;
+      double orderneg;
       stockLMSR = World.LMSRStocks;
 
-      costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQStocksLMSR()+order)/stockLMSR.getBLiq())+Math.exp(0/stockLMSR.getBLiq()));
+      if (pos) {
+         orderneg = 0;
+         orderpos = order;
+      } else {
+         orderneg = order;
+         orderpos = 0;
+      }
+
+      costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR()+orderpos)/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR()+orderneg)/stockLMSR.getBLiq()));
 
       return costFunction;
    }
@@ -96,18 +107,28 @@ class Specialist {
          // Get each agent's requests
          for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
             agent = World.Agents[i];
-            priceLMSR = getCostLMSR(1) - getCostLMSR(0);
+            priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
             stockLMSR.setPrice(priceLMSR);
+            stock.setPrice(priceLMSR); //mudar
             agent.setDemandAndSlope(priceLMSR);
-            tradeMatrix[i][0] = agent.getDemand();
-            volume += tradeMatrix[i][0];
-            stockLMSR.setQStocksLMSR(tradeMatrix[i][0]);
+            if (agent.pos) {
+               tradeMatrix[i][0] = agent.getDemand();
+               stockLMSR.setQPosLMSR(tradeMatrix[i][0]);
+               volumePos += tradeMatrix[i][0];
+            } else {
+               tradeMatrix[i][0] = agent.getDemand();
+               stockLMSR.setQNegLMSR(tradeMatrix[i][0]);
+               volumeNeg += tradeMatrix[i][0];
+            }
+
+            volume += tradeMatrix[i][0]; // mudar
+
 
          }
       }  // while
 
       stockLMSR.setPrice(priceLMSR);
-      stockLMSR.setTradingVolume(volume);
+      stockLMSR.setTradingVolume(volume); // mudar
       // System.out.println(volume);
    }  // adjustPricePrediction
 
