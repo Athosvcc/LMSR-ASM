@@ -94,37 +94,24 @@ class Specialist {
       done = false;
       stockLMSR = World.LMSRStocks;
 
-      while (iteration < MAXITERATIONS && !done) {
-         switch (type) {
-            case LMSRSPECIALIST:
-               //priceLMSR = getCostLMSR(1) - getCostLMSR(0);
-               //done = true;
-               iteration = MAXITERATIONS;
-               break;
-            default:
-               break;
+      for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
+         agent = World.Agents[i];
+         priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
+         stockLMSR.setPrice(priceLMSR);
+         stock.setPrice(priceLMSR); //mudar // o display usa esse preço
+         agent.setDemandAndSlope(priceLMSR);
+         if (agent.pos) {
+            tradeMatrix[i][0] = agent.getDemand();
+            stockLMSR.setQPosLMSR(tradeMatrix[i][0]);
+            volumePos += tradeMatrix[i][0];
+         } else {
+            tradeMatrix[i][0] = agent.getDemand();
+            stockLMSR.setQNegLMSR(tradeMatrix[i][0]);
+            volumeNeg += tradeMatrix[i][0];
          }
-         // Get each agent's requests
-         for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
-            agent = World.Agents[i];
-            priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
-            stockLMSR.setPrice(priceLMSR);
-            stock.setPrice(priceLMSR); //mudar // o display usa esse preço
-            agent.setDemandAndSlope(priceLMSR);
-            if (agent.pos) {
-               tradeMatrix[i][0] = agent.getDemand();
-               stockLMSR.setQPosLMSR(tradeMatrix[i][0]);
-               volumePos += tradeMatrix[i][0];
-            } else {
-               tradeMatrix[i][0] = agent.getDemand();
-               stockLMSR.setQNegLMSR(tradeMatrix[i][0]);
-               volumeNeg += tradeMatrix[i][0];
-            }
 
-            volume += tradeMatrix[i][0]; // mudar
+         volume += tradeMatrix[i][0]; // mudar
 
-
-         }
       }  // while
 
       stockLMSR.setPrice(priceLMSR);
