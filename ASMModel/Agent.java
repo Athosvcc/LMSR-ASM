@@ -155,14 +155,12 @@ public class Agent implements Drawable {
          costLMSR = specialist.getCostLMSR(order, pos);
          if (pos) {
             if (order >= 0.0) {
-               numberOfStocks += order; //mudar
                stockLMSR.setQStocksLMSR(order);
                stockLMSR.setQPosLMSR(order);
                numberOfPosStocks += order;
                cash -= costLMSR;
             }
             else if (order < 0.0) {
-               numberOfStocks += order; //mudar
                stockLMSR.setQStocksLMSR(order);
                stockLMSR.setQPosLMSR(order);
                numberOfPosStocks += order;
@@ -170,12 +168,10 @@ public class Agent implements Drawable {
             }
          } else {
             if (order >= 0.0) {
-               numberOfStocks += order; //mudar
                numberOfNegStocks += order;
                stockLMSR.setQNegLMSR(order);
                cash -= costLMSR;
             } else if (order < 0.0) {
-               numberOfStocks += order; //mudar
                numberOfNegStocks += order;
                stockLMSR.setQNegLMSR(order);
                cash -= costLMSR;
@@ -275,23 +271,28 @@ public class Agent implements Drawable {
          if (forecast > trialPrice) {
             if (numberOfNegStocks == 0) {
                pos = true;
-               optimalDemand = 100 * ((forecast - trialPrice) / (divisor) - numberOfPosStocks);
+               optimalDemand = 10*((forecast - trialPrice) / (divisor) - numberOfPosStocks);
                order = optimalDemand;
             } else {
                pos = false;
                order = -numberOfNegStocks; // sells all No stocks
             }
          } else {
-               if (numberOfPosStocks == 0) {
-                  pos = false;
-                  optimalDemand = 100*(((forecast-trialPrice))/(divisor) - numberOfNegStocks);
-                  order = optimalDemand; // the demand for -Yes is positive No
-               } else {
-                  pos = true;
-                  order = -numberOfPosStocks; // sells all Yes stocks
-               }
+            if (numberOfPosStocks == 0) {
+               pos = false;
+               optimalDemand = 10*(((forecast-trialPrice))/(divisor) - numberOfNegStocks);
+               order = optimalDemand; // the demand for -Yes is positive No
+            } else {
+               pos = true;
+               order = -numberOfPosStocks; // sells all Yes stocks
             }
-         System.out.println("order: " + order);
+         }
+         if (pos) {
+            System.out.println("orderPos: " + order);
+         } else {
+            System.out.println("orderNeg: " + order);
+         }
+
          System.out.println("trial price: " + trialPrice);
          System.out.println("numberofPosstocks" + numberOfNegStocks);
          System.out.println("numberofNegstocks" + numberOfPosStocks);

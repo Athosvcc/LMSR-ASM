@@ -38,7 +38,6 @@ abstract class ExecutePeriod {
             } else {
                stockLMSR.setQPosLMSR(qInitial);
             }
-            stockLMSR.setQStocksLMSR(qInitial); // mudar
             World.period++;
          } else if (World.period == stockLMSR.periodShock) {
             stockLMSR.probShock();
@@ -46,27 +45,10 @@ abstract class ExecutePeriod {
          } else {
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore
-            stock = World.Stocks;
-            stock.updateDividend(); // new dividend announced, updating of all statistics and state-of-the-stock
-            Agent.activatedRules = 0;  // for debugging, how many rules are activated in total in this period
-            NESFIAgent.NESFIActivatedRules = 0;
-            SFIAgent.SFIActivatedRules = 0;
-
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
-               if (agent.isFastLearner()) {
-                  if (World.period > World.firstGATime && (Random.uniform.nextDouble() < 1d / World.gaIntervalFastLearner) && !AsmModel.hree) {
-                     agent.invokeGA();
-                  }
-               } else {
-                  if (World.period > World.firstGATime && (Random.uniform.nextDouble() < World.gaProb) && !AsmModel.hree) {
-                     agent.invokeGA();
-                  }
-               }
                agent.chooseRule();        // abstract in agent.java
             }    // for all agents
-            //      System.out.println("T-Bits in use: "+ World.getTechnicalBits() + "  T-Fraction: "+World.getWorldTBitFraction());
-            //      System.out.println("F-Bits in use: "+ World.getFundamentalBits() + "  F-Fraction: "+World.getWorldFBitFraction());
             AsmModel.specialist.adjustPrice();  // specialist gets market maker price for 1 stock
             System.out.println("periodo: " + World.period);
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
@@ -76,10 +58,6 @@ abstract class ExecutePeriod {
                totalWealth += agent.getWealth();
             }        // for all agents
             World.setTotalWealth(totalWealth);
-            World.detBaseWealth();  // determines BaseWealth for inactivity (always holding his initial endowment of stock) for an imaginary agent
-            if ((ObserverOptions.calculateCorrelations && AsmModel.showDisplays) || (AsmModel.recordData && AsmModel.recorderOptions.getCalculateCorrelations())) {
-               AsmModel.world.detCorrelations();
-            }
             if (AsmModel.showDisplays) graphDisplay();
             if (AsmModel.recordData) {
                if (AsmModel.recorderOptions.getRecordAllFromPeriod() <= World.period && AsmModel.recorderOptions.getRecordAllToPeriod() >= World.period) {
