@@ -37,9 +37,9 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    private double meanTradingVolume = 0;
    protected double noiseVar = 0.07429;
    protected double noise = 0;
-   protected double bLiq = 1000;
+   protected double bLiq = 100;
    protected double probability = 0.8;
-   protected double initialPrice = 0.6;
+   protected double initialPrice = 0.5;
    protected double probAfterShock = 0.2;
    protected double periodShock = 0;
    protected int qStocksLMSR = 0;

@@ -154,36 +154,16 @@ public class Agent implements Drawable {
          specialist = AsmModel.specialist;
          costLMSR = specialist.getCostLMSR(order, pos);
          if (pos) {
-            if (order >= 0.0) {
-               stockLMSR.setQStocksLMSR(order);
-               stockLMSR.setQPosLMSR(order);
-               numberOfPosStocks += order;
-               cash -= costLMSR;
-            }
-            else if (order < 0.0) {
-               stockLMSR.setQStocksLMSR(order);
-               stockLMSR.setQPosLMSR(order);
-               numberOfPosStocks += order;
-               cash -= costLMSR;
-            }
+            stockLMSR.setQPosLMSR(order);
+            numberOfPosStocks += order;
+            cash -= costLMSR;
          } else {
-            if (order >= 0.0) {
-               numberOfNegStocks += order;
-               stockLMSR.setQNegLMSR(order);
-               cash -= costLMSR;
-            } else if (order < 0.0) {
-               numberOfNegStocks += order;
-               stockLMSR.setQNegLMSR(order);
-               cash -= costLMSR;
-            }
+            numberOfNegStocks += order;
+            stockLMSR.setQNegLMSR(order);
+            cash -= costLMSR;
          }
-         cumulatedNumberOfStocks += numberOfStocks;
-         System.out.println("total acoes: " + stockLMSR.getQStocksLMSR());
-         System.out.println("total acoes Pos: " + stockLMSR.getQPosLMSR());
-         System.out.println("total acoes Neg: " + stockLMSR.getQNegLMSR());
-         averageNumberOfStocks = cumulatedNumberOfStocks / World.period ;
-         // wealth is updated in getEarnings... etc   // ?
-
+         System.out.println("numberofPosstocks: " + numberOfNegStocks);
+         System.out.println("numberofNegstocks: " + numberOfPosStocks);
       } else {
          double bfp, ofp;
          stock = World.Stocks;
@@ -267,35 +247,31 @@ public class Agent implements Drawable {
             (Agent.riskAversion*World.interestRatep1*stock.getNoiseVar()) /
             (World.interestRatep1 - stock.getRho());
       } else if (AsmModel.LMSR) {
-         forecast = stockLMSR.getProbability() + offset;
-         if (forecast > trialPrice) {
-            if (numberOfNegStocks == 0) {
-               pos = true;
-               optimalDemand = 10*((forecast - trialPrice) / (divisor) - numberOfPosStocks);
-               order = optimalDemand;
+         forecast = stockLMSR.getProbability() + offset; // gets the real probability and adds own perception
+         if (forecast > trialPrice) { // if the agent thinks the probability is higher than the current price
+            if (numberOfNegStocks == 0) { // if agent has no "No" stocks
+               pos = true; // agent will buy "Yes" stocks
+               optimalDemand = ((forecast-trialPrice)/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation // mudar numero arbitrario
+               order = Math.floor(optimalDemand);
+               System.out.println("orderPos: " + order);
             } else {
                pos = false;
                order = -numberOfNegStocks; // sells all No stocks
+               System.out.println("orderPos: " + order);
             }
-         } else {
-            if (numberOfPosStocks == 0) {
-               pos = false;
-               optimalDemand = 10*(((forecast-trialPrice))/(divisor) - numberOfNegStocks);
-               order = optimalDemand; // the demand for -Yes is positive No
-            } else {
+         } else { // if the agent thinks the probability is lower than the current price
+            if (numberOfPosStocks == 0) { // if agent has no "Yes" stocks
+               pos = false; // agent will buy "No" stocks
+               optimalDemand = (((trialPrice-forecast))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation // mudar numero arbitrario
+               order = Math.floor(optimalDemand);
+               System.out.println("orderNeg: " + order);
+            } else { // agent will sell all "Yes" stocks
                pos = true;
                order = -numberOfPosStocks; // sells all Yes stocks
+               System.out.println("orderNeg: " + order);
             }
          }
-         if (pos) {
-            System.out.println("orderPos: " + order);
-         } else {
-            System.out.println("orderNeg: " + order);
-         }
-
          System.out.println("trial price: " + trialPrice);
-         System.out.println("numberofPosstocks" + numberOfNegStocks);
-         System.out.println("numberofNegstocks" + numberOfPosStocks);
       } else {
          forecast = (trialPrice+stock.getDividend())*pdCoeff + offset;
       }
@@ -320,24 +296,30 @@ public class Agent implements Drawable {
     * This applies only if there is one stock to check.
    */
    public void constrainDemand(double trialPrice) {
-      if (order > 0.0) {
-         if (order*trialPrice > (cash-MINCASH)) {
-            if ((cash - MINCASH) > 0.0) {
-               order = (cash-MINCASH)/trialPrice;
-               slope = -order/trialPrice;
-            }
-            else {
-               order = 0.0;
-               slope = 0;
-            }
+      if (AsmModel.LMSR) {
+         specialist = AsmModel.specialist;
+         while (specialist.getCostLMSR(order, pos) > (cash - MINCASH)) {
+            order--;
          }
       } else {
-         if (order+numberOfStocks < -MAXHOLDINGS) {
-            order = -MAXHOLDINGS - numberOfStocks;
-            slope = 0.0;
-         } else if ((order + numberOfStocks < 0.0) && cash < 0.0 ) {
-            order = 0.0;
-            slope = 0.0;
+         if (order > 0.0) {
+            if (order * trialPrice > (cash - MINCASH)) {
+               if ((cash - MINCASH) > 0.0) {
+                  order = (cash - MINCASH) / trialPrice;
+                  slope = -order / trialPrice;
+               } else {
+                  order = 0.0;
+                  slope = 0;
+               }
+            }
+         } else {
+            if (order + numberOfStocks < -MAXHOLDINGS) {
+               order = -MAXHOLDINGS - numberOfStocks;
+               slope = 0.0;
+            } else if ((order + numberOfStocks < 0.0) && cash < 0.0) {
+               order = 0.0;
+               slope = 0.0;
+            }
          }
       }
    }  // constrainDemand

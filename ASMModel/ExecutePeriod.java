@@ -30,6 +30,7 @@ abstract class ExecutePeriod {
 
    public static void execute() {
       if (AsmModel.LMSR) {
+         System.out.println("PERIODO: " + World.period);
          stockLMSR = World.LMSRStocks;
          if (World.period == 0) {
             int qInitial = stockLMSR.qInitLMSR(stockLMSR.getInitialPrice());
@@ -50,7 +51,6 @@ abstract class ExecutePeriod {
                agent.chooseRule();        // abstract in agent.java
             }    // for all agents
             AsmModel.specialist.adjustPrice();  // specialist gets market maker price for 1 stock
-            System.out.println("periodo: " + World.period);
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
                agent.executeOrder();    // updates money, stockPosition and wealth of agents
@@ -70,6 +70,8 @@ abstract class ExecutePeriod {
                   recordPeriod++;
                }
             }
+            System.out.println("total acoes Pos: " + stockLMSR.getQPosLMSR());
+            System.out.println("total acoes Neg: " + stockLMSR.getQNegLMSR());
          }
       } else { // end of LMSR execution
 

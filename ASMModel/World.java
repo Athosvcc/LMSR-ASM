@@ -42,7 +42,7 @@ class World {
    public static int numberOfSFIAgents   = 0;  // have the NESFI-Agents run against the SFI-Agents
    public static int numberOfNESFIAgents = 0;  // have the NESFI-Agents run against the SFI-Agents
    public static int numberOfLMSRAgents = 25;
-   private static int numberOfTechnicians = 25;  // must be equal or smaller numberOfSFIAgents; can only be SFI-Agents
+   private static int numberOfTechnicians = 0;  // must be equal or smaller numberOfSFIAgents; can only be SFI-Agents
    public static int numberOfAgents = numberOfSFIAgents + numberOfNESFIAgents + numberOfLMSRAgents;
    private static double fracFastLearner = 0.0;
    private static int numberOfFastLearner = 0;

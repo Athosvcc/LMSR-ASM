@@ -235,7 +235,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
       }  // Select Best
       if (done) {
          ruleSet[selected].use();   // sets lastUsed and Counter
-         System.out.println(ruleSet[selected]);
+         // System.out.println(ruleSet[selected]); // mudar
          pdCoeff = ruleSet[selected].getAij();
          offset = ruleSet[selected].getBij();
          fcVar = ruleSet[selected].getForecastVar();
@@ -259,7 +259,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
          fcVar = sumVar/numRules;
          done = true;
       }  // select average or no rules selected
-      divisor = riskAversion * fcVar;
+      divisor = riskAversion * Math.sqrt(stockLMSR.getProbability()*(1-stockLMSR.getProbability()));
    }  // chooseRule
 
    public int getMinActiveRules() {
