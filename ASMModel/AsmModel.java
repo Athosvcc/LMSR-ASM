@@ -1091,7 +1091,7 @@ public class AsmModel extends SimModelImpl {
       return world.numberOfLMSRAgents;
    }
    public void setNumberOfLMSRAgents(int val) { //mudar
-      world.numberOfNESFIAgents = val;
+      world.numberOfLMSRAgents = val;
       world.numberOfAgents = world.numberOfSFIAgents + world.numberOfNESFIAgents + world.numberOfLMSRAgents;
    }
    public boolean getShowDisplays() { return showDisplays; }
