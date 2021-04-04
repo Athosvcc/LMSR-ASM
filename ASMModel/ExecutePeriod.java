@@ -43,6 +43,11 @@ abstract class ExecutePeriod {
          } else if (World.period == stockLMSR.periodShock) {
             stockLMSR.probShock();
             World.period++;
+         } else if (World.period == World.numberOfPeriods) { // pays out agent investments
+            for (int j = 0; j < World.numberOfLMSRAgents; j++) {
+               agent = World.Agents[j];
+               agent.setPayout();
+            }
          } else {
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore

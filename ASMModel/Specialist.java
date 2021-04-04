@@ -29,6 +29,8 @@ class Specialist {
    private double slopeTotal, bidTotal, offerTotal, imbalance;
    public static double bidFrac, offerFrac, volume;
    public static double volumeNeg, volumePos;
+   public static double specialistRevenue;
+   public static double specialistPayout;
 
    protected static double reF; // holds parameters f for the hree-mode for each stock
    protected static double reG; // holds parameters g for the hree-mode
@@ -208,5 +210,6 @@ class Specialist {
       }  // adjustPrice
 
    }
-
+   public void setSpecialistRevenue(double val) { specialistRevenue += val; }
+   public void setSpecialistPayout(double val) { specialistPayout += val; }
 }

@@ -156,10 +156,12 @@ public class Agent implements Drawable {
          if (pos) {
             stockLMSR.setQPosLMSR(order);
             numberOfPosStocks += order;
+            specialist.setSpecialistRevenue(costLMSR);
             cash -= costLMSR;
          } else {
-            numberOfNegStocks += order;
             stockLMSR.setQNegLMSR(order);
+            numberOfNegStocks += order;
+            specialist.setSpecialistRevenue(costLMSR);
             cash -= costLMSR;
          }
          System.out.println("numberofPosstocks: " + numberOfNegStocks);
@@ -217,6 +219,30 @@ public class Agent implements Drawable {
          wealth = cash + numberOfStocks*stock.getPrice();;     // update wealth
       }
    } // receiveInterestAndDividend
+
+   public void setPayout() { // mudar // adicionar boolean pra acao que se realizou?
+      stockLMSR = World.LMSRStocks;
+      specialist = AsmModel.specialist;
+      if (stockLMSR.probability > 0.5) {
+         if (numberOfPosStocks > 0) {
+            wealth = cash + numberOfPosStocks*1;
+            numberOfPosStocks = 0;
+            specialist.setSpecialistPayout(numberOfPosStocks*1);
+         } else {
+            wealth = cash; // Yes stocks pay 0
+            numberOfPosStocks = 0;
+         }
+      } else {
+         if (numberOfNegStocks > 0) {
+            wealth = cash + numberOfNegStocks * 1;
+            numberOfNegStocks = 0;
+            specialist.setSpecialistPayout(numberOfNegStocks*1);
+         } else {
+            wealth = cash; // No stocks pay 0
+            numberOfNegStocks = 0;
+         }
+      }
+   }
 
 
 
