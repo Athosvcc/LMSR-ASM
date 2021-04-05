@@ -85,6 +85,14 @@ class Specialist {
       costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR())/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR())/stockLMSR.getBLiq()));
       costFunctionPost = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR()+orderpos)/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR()+orderneg)/stockLMSR.getBLiq()));
       orderCost = costFunctionPost - costFunction;
+
+      if (order > 0) { // rounds the cost up when buying and down when selling
+         BigDecimal bd = new BigDecimal(orderCost+0.01).setScale(2, BigDecimal.ROUND_DOWN);
+         orderCost = bd.doubleValue();
+      } else {
+         BigDecimal bd = new BigDecimal(orderCost).setScale(2, BigDecimal.ROUND_DOWN);
+         orderCost = bd.doubleValue();
+      }
       return orderCost;
    }
 
