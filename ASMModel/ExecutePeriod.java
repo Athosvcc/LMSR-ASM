@@ -33,7 +33,7 @@ abstract class ExecutePeriod {
          Specialist specialist = AsmModel.specialist;
          System.out.println("PERIODO: " + World.period);
          stockLMSR = World.LMSRStocks;
-         if (World.period == 0) {
+         if (World.period == 0) { // at period 0, create artificial stocks necessary for initial price
             int qInitial = stockLMSR.qInitLMSR(stockLMSR.getInitialPrice());
             if (stockLMSR.getInitialPrice()<0.5) {
                stockLMSR.setQNegLMSR(qInitial);
@@ -41,11 +41,11 @@ abstract class ExecutePeriod {
                stockLMSR.setQPosLMSR(qInitial);
             }
             World.period++;
-         } else if (World.period == stockLMSR.periodShock) {
+         } else if (World.period == stockLMSR.periodShock) { // if it's the shock period, change underlying probability
             stockLMSR.probShock();
             World.period++;
             System.out.println("Wealth: " + agent.getWealth());
-         } else if (World.period == World.numberOfPeriods-1) { // pays out agent investments
+         } else if (World.period == World.numberOfPeriods-1) { // at the last period, pays out agent investments
             double totalWealth = 0;
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
@@ -57,12 +57,12 @@ abstract class ExecutePeriod {
             System.out.println("Payout: " + specialist.getSpecialistPayout());
             System.out.println("MM Loss: " + (specialist.getSpecialistRevenue()-specialist.getSpecialistPayout()));
             System.out.println("totalWealth: " + totalWealth);
-         } else {
+         } else { // behavior in all other periods
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
-               agent.chooseRule();        // abstract in agent.java
+               agent.chooseRule();        // used only for forecasting
             }    // for all agents
             AsmModel.specialist.adjustPrice();  // specialist gets market maker price for 1 stock
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {

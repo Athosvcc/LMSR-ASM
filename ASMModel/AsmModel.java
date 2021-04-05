@@ -988,7 +988,7 @@ public class AsmModel extends SimModelImpl {
    }  // public static void main( )
 
    public String getName() {
-          return "NESFI-ASM";
+          return "LMSR-NESFI-ASM";
    }
    public Schedule getSchedule() {
           return schedule;

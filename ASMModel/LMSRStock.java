@@ -129,7 +129,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       double cost;
 
       costFunc = getBLiq()*Math.log(Math.exp(qPos/getBLiq())+Math.exp(qNeg/getBLiq()));
-      if (pos) {
+      if (pos) { // differentiates between buying positive or negative stocks
          costFuncPost = getBLiq()*Math.log(Math.exp((qPos+1)/getBLiq())+Math.exp(qNeg/getBLiq()));
       } else {
          costFuncPost = getBLiq()*Math.log(Math.exp((qPos)/getBLiq())+Math.exp((qNeg+1)/getBLiq()));
@@ -145,7 +145,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       int iterator = 0;
       double priceLim;
 
-      if (getInitialPrice() < 0.5) {
+      if (getInitialPrice() < 0.5) { // price of positive and negative stocks are complementary
          priceLim = 1 - getInitialPrice();
       } else {
          priceLim = getInitialPrice();

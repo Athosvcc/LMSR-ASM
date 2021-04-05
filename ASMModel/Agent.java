@@ -148,24 +148,22 @@ public class Agent implements Drawable {
    }
 
    public void executeOrder() {
-      if (AsmModel.LMSR) {
+      if (AsmModel.LMSR) { // gets cost of order and adds stocks to current holdings of agents and of the system as a whole, as well as sets revenue and subtracts cash paid
          double costLMSR;
          stockLMSR = World.LMSRStocks;
          specialist = AsmModel.specialist;
          costLMSR = specialist.getCostLMSR(order, pos);
-         if (pos) {
-            stockLMSR.setQPosLMSR(order);
-            numberOfPosStocks += order;
-            specialist.setSpecialistRevenue(costLMSR);
-            cash -= costLMSR;
-         } else {
-            stockLMSR.setQNegLMSR(order);
-            numberOfNegStocks += order;
-            specialist.setSpecialistRevenue(costLMSR);
-            cash -= costLMSR;
+         if (pos) { // if agent will buy or sell positive stocks
+            stockLMSR.setQPosLMSR(order); // adds or subtracts to the total of positive stocks in the system
+            numberOfPosStocks += order; // adds or subtracts to total of positive stocks the agent holds
+            specialist.setSpecialistRevenue(costLMSR); // adds to Market Maker revenue
+            cash -= costLMSR; // subtracts the cost of the order from the agent's cash
+         } else { // if agent will buy or sell negative stocks
+            stockLMSR.setQNegLMSR(order); // adds or subtracts to the total of positive stocks in the system
+            numberOfNegStocks += order; // adds or subtracts to total of positive stocks the agent holds
+            specialist.setSpecialistRevenue(costLMSR); // adds to Market Maker revenue
+            cash -= costLMSR; // subtracts the cost of the order from the agent's cash
          }
-         // System.out.println("numberofPosstocks: " + numberOfNegStocks);
-         // System.out.println("numberofNegstocks: " + numberOfPosStocks);
       } else {
          double bfp, ofp;
          stock = World.Stocks;
@@ -222,28 +220,27 @@ public class Agent implements Drawable {
    public void setPayout() { // mudar // adicionar boolean pra acao que se realizou?
       stockLMSR = World.LMSRStocks;
       specialist = AsmModel.specialist;
-      if (stockLMSR.probability > 0.5) {
+      if (stockLMSR.probability > 0.5) { // if stock probability is over 0.5 at the last period, positive stocks pay
          if (numberOfPosStocks > 0) {
             wealth = cash + numberOfPosStocks*1;
             specialist.setSpecialistPayout(numberOfPosStocks*1);
             numberOfPosStocks = 0;
-         } else {
+         } else { // if they aren't, stock is value 0
             wealth = cash; // Yes stocks pay 0
             numberOfPosStocks = 0;
          }
-      } else {
+      } else { // if stock probability is less than 0.5 at the last period, negative stocks pay
          if (numberOfNegStocks > 0) {
             wealth = cash + numberOfNegStocks * 1;
             specialist.setSpecialistPayout(numberOfNegStocks*1);
             numberOfNegStocks = 0;
-         } else {
+         } else { // if they aren't, stock is value 0
             wealth = cash; // No stocks pay 0
             numberOfNegStocks = 0;
          }
       }
    }
-
-
+   
 
 
    public void draw(SimGraphics g) {
