@@ -66,6 +66,7 @@ abstract class ExecutePeriod {
                agent.executeOrder();    // updates money, stockPosition and wealth of agents
                agent.getEarningsAndPayTaxes();
                totalWealth += agent.getWealth();
+               System.out.println("Wealth: " + agent.getWealth());
             }        // for all agents
             World.setTotalWealth(totalWealth);
             if (AsmModel.showDisplays) graphDisplay();
@@ -80,8 +81,7 @@ abstract class ExecutePeriod {
                   recordPeriod++;
                }
             }
-            System.out.println("total acoes Pos: " + stockLMSR.getQPosLMSR());
-            System.out.println("total acoes Neg: " + stockLMSR.getQNegLMSR());
+            System.out.println("totalWealth: " + totalWealth);
          }
       } else { // end of LMSR execution
 

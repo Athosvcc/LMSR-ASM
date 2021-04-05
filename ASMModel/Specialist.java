@@ -68,6 +68,8 @@ class Specialist {
 
    public double getCostLMSR(double order, boolean pos) { // calculates cost function, used for price setting
       double costFunction;
+      double costFunctionPost;
+      double orderCost;
       double orderpos;
       double orderneg;
       stockLMSR = World.LMSRStocks;
@@ -80,9 +82,10 @@ class Specialist {
          orderpos = 0;
       }
 
-      costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR()+orderpos)/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR()+orderneg)/stockLMSR.getBLiq()));
-
-      return costFunction;
+      costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR())/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR())/stockLMSR.getBLiq()));
+      costFunctionPost = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR()+orderpos)/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR()+orderneg)/stockLMSR.getBLiq()));
+      orderCost = costFunctionPost - costFunction;
+      return orderCost;
    }
 
    public void adjustPricePrediction() { // different price adjustment for LMSR, determined by cost function
