@@ -46,13 +46,17 @@ abstract class ExecutePeriod {
             World.period++;
             System.out.println("Wealth: " + agent.getWealth());
          } else if (World.period == World.numberOfPeriods-1) { // pays out agent investments
+            double totalWealth = 0;
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
                agent.setPayout();
                System.out.println("Wealth: " + agent.getWealth());
+               totalWealth += agent.getWealth();
             }
             System.out.println("Revenue: " + specialist.getSpecialistRevenue());
             System.out.println("Payout: " + specialist.getSpecialistPayout());
+            System.out.println("MM Loss: " + (specialist.getSpecialistRevenue()-specialist.getSpecialistPayout()));
+            System.out.println("totalWealth: " + totalWealth);
          } else {
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore
@@ -81,7 +85,8 @@ abstract class ExecutePeriod {
                   recordPeriod++;
                }
             }
-            System.out.println("totalWealth: " + totalWealth);
+            System.out.println("totalYesStocks: " + stockLMSR.getQPosLMSR());
+            System.out.println("totalNoStocks: " + stockLMSR.getQNegLMSR());
          }
       } else { // end of LMSR execution
 

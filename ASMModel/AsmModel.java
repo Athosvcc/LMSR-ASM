@@ -139,7 +139,7 @@ public class AsmModel extends SimModelImpl {
       // rngSeed is set by the gui
       Random.createUniform();
       normalNormal = new Normal(0.0, 1.0, new MersenneTwister((int)getRngSeed()) );
-      LMSRNormal = new Normal(0.0, 0.1, new MersenneTwister((int)getRngSeed()) ); // as set in Prediction Market Liquidity
+      LMSRNormal = new Normal(0.0, 0.05, new MersenneTwister((int)getRngSeed()) ); // as set in Prediction Market Liquidity
       stockNormal =  new Normal(0.0, Math.sqrt(stock.noiseVar), new MersenneTwister((int)getRngSeed()) );
       stock.initialize();
       stockLMSR.initialize();
