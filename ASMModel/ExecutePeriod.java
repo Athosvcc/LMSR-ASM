@@ -67,8 +67,7 @@ abstract class ExecutePeriod {
             AsmModel.specialist.adjustPrice();  // specialist gets market maker price for 1 stock
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
-               agent.executeOrder();    // updates money, stockPosition and wealth of agents
-               agent.getEarningsAndPayTaxes();
+               agent.getEarningsAndPayTaxes(); // sets agent wealth
                totalWealth += agent.getWealth();
                System.out.println("Wealth: " + agent.getWealth());
             }        // for all agents
