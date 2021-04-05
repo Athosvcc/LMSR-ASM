@@ -226,8 +226,8 @@ public class Agent implements Drawable {
       if (stockLMSR.probability > 0.5) {
          if (numberOfPosStocks > 0) {
             wealth = cash + numberOfPosStocks*1;
-            numberOfPosStocks = 0;
             specialist.setSpecialistPayout(numberOfPosStocks*1);
+            numberOfPosStocks = 0;
          } else {
             wealth = cash; // Yes stocks pay 0
             numberOfPosStocks = 0;
@@ -235,8 +235,8 @@ public class Agent implements Drawable {
       } else {
          if (numberOfNegStocks > 0) {
             wealth = cash + numberOfNegStocks * 1;
-            numberOfNegStocks = 0;
             specialist.setSpecialistPayout(numberOfNegStocks*1);
+            numberOfNegStocks = 0;
          } else {
             wealth = cash; // No stocks pay 0
             numberOfNegStocks = 0;

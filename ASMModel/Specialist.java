@@ -104,11 +104,9 @@ class Specialist {
          agent.setDemandAndSlope(priceLMSR);
          if (agent.pos) {
             tradeMatrix[i][0] = agent.getDemand();
-            stockLMSR.setQPosLMSR(tradeMatrix[i][0]);
             volumePos += tradeMatrix[i][0];
          } else {
             tradeMatrix[i][0] = agent.getDemand();
-            stockLMSR.setQNegLMSR(tradeMatrix[i][0]);
             volumeNeg += tradeMatrix[i][0];
          }
 
@@ -211,5 +209,7 @@ class Specialist {
 
    }
    public void setSpecialistRevenue(double val) { specialistRevenue += val; }
+   public double getSpecialistRevenue() { return specialistRevenue; }
    public void setSpecialistPayout(double val) { specialistPayout += val; }
+   public double getSpecialistPayout() { return specialistPayout; }
 }

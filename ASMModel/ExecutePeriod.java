@@ -30,6 +30,7 @@ abstract class ExecutePeriod {
 
    public static void execute() {
       if (AsmModel.LMSR) {
+         Specialist specialist = AsmModel.specialist;
          System.out.println("PERIODO: " + World.period);
          stockLMSR = World.LMSRStocks;
          if (World.period == 0) {
@@ -43,11 +44,15 @@ abstract class ExecutePeriod {
          } else if (World.period == stockLMSR.periodShock) {
             stockLMSR.probShock();
             World.period++;
-         } else if (World.period == World.numberOfPeriods) { // pays out agent investments
+            System.out.println("Wealth: " + agent.getWealth());
+         } else if (World.period == World.numberOfPeriods-1) { // pays out agent investments
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
                agent.setPayout();
+               System.out.println("Wealth: " + agent.getWealth());
             }
+            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
+            System.out.println("Payout: " + specialist.getSpecialistPayout());
          } else {
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore

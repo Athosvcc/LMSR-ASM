@@ -51,7 +51,7 @@ class World {
 
    protected static int[][] BitsSet = new int[2][32];  // each position holds how often a particular bit is set in the economy
 
-   public static int numberOfPeriods = 300000 ;
+   public static int numberOfPeriods = 100 ;
    protected static int reInitialize = firstGATime + (50*gaInterval) ;  // by then, the price should have reached its equilibrium; temporary effects due to warm up effects can then be accounted for in the re-initialize procedure
    public static int numRules = 0;
    private static double totalWealth = 0 ;
