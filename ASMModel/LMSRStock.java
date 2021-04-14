@@ -38,6 +38,8 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double noiseVar = 0.07429;
    protected double noise = 0;
    protected double bLiq = 100;
+   protected double alphaLS = 0.05;
+   protected boolean liquiditySensitive = false;
    protected double probability = 0.8;
    protected double initialPrice = 0.5;
    protected double probAfterShock = 0.2;
@@ -122,6 +124,13 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
          // time = waveLength/4;
       }
    }  // initialize()
+
+   protected void liquiditySensitiveB (double alpha, double qPos, double qNeg) { // implements Liquidity Sensitive LMSR (Othman 2003)
+      double b;
+      double qTot = qPos + qNeg;
+      b = alpha*qTot;
+      this.bLiq = b;
+   }
 
    protected double firstPrice (int qPos,int qNeg, double bLiq, boolean pos) { // gets price of buying one stock in LMSR
       double costFunc;
@@ -425,6 +434,12 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected void finalize() throws Throwable {
       super.finalize();
    }
+   public void setLiquiditySensitive(boolean sensitive) {
+      liquiditySensitive = sensitive;
+   }
+   public boolean getLiquiditySensitive() {
+      return liquiditySensitive;
+   }
    public void setDividendProcess(int process) {
       dividendProcess = process;
    }
@@ -452,6 +467,10 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public double getBLiq() { return bLiq; }
    public void setBLiq(double value) {
       this.bLiq = value;
+   }
+   public double getAlphaLS() { return alphaLS; }
+   public void setAlphaLS(double value) {
+      this.alphaLS = value;
    }
    public double getProbability() { return probability; }
    public void setProbability(double value) {
@@ -495,7 +514,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public String[] getProbedProperties() {
-      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess", "bLiq"};
+      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess", "bLiq", "liquiditySensitive", "alphaLS"};
    }
 
 
