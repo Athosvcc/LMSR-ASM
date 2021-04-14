@@ -1,3 +1,8 @@
 .idea
 NESFI-ASM-LMSR.iml
 lib
+out
+/ASMModel/COMPILAR.bat
+/ASMModel/repast.log
+/ASMModel/.project
+/ASMModel/.classpath

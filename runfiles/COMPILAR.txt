@@ -1,6 +1,4 @@
-javac -d classes -classpath  .;d:/repast/lib/repast.jar;d:/repast/lib/colt.jar;d:/repast/lib/jgl3.1.0.jar;d:/repast/lib/plot.jar;d:/repast/lib/jmf.jar;d:/repast/lib/jfreechart-0.9.10.jar;d:/repast/lib/jcommon-0.8.5.jar;d:/repast/lib/junit.jar;d:/repast/lib/servlet.jar;d:/repast/lib/jcchart.jar *.java
+Abrir cmd na pasta ASMModel
 
 
-D:\NSFI\NESFIOneStock2003version - Copia\NESFIOneStock\classes
-
-javac -d "D:\NSFI\NESFIOneStock2003version - Copia\NESFIOneStock\classes" -classpath  .;d:/repast/lib/repast.jar;d:/repast/lib/colt.jar;d:/repast/lib/jgl3.1.0.jar;d:/repast/lib/plot.jar;d:/repast/lib/jmf.jar;d:/repast/lib/jfreechart-0.9.10.jar;d:/repast/lib/jcommon-0.8.5.jar;d:/repast/lib/junit.jar;d:/repast/lib/servlet.jar;d:/repast/lib/jcchart.jar *.java
+javac -d "D:\NESFI-ASM-LMSR\classes" -classpath  .;d:/NESFI-ASM-LMSR/lib/repast.jar;d:/NESFI-ASM-LMSR/lib/colt.jar;d:/NESFI-ASM-LMSR/lib/jgl3.1.0.jar;d:/NESFI-ASM-LMSR/lib/plot.jar;d:/NESFI-ASM-LMSR/lib/jmf.jar;d:/NESFI-ASM-LMSR/lib/jfreechart-0.9.10.jar;d:/NESFI-ASM-LMSR/lib/jcommon-0.8.5.jar;d:/NESFI-ASM-LMSR/lib/junit.jar;d:/NESFI-ASM-LMSR/lib/servlet.jar;d:/NESFI-ASM-LMSR/lib/jcchart.jar *.java
