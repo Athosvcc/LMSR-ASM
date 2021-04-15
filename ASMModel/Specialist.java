@@ -111,6 +111,7 @@ class Specialist {
          if (stockLMSR.getLiquiditySensitive()) {
             stockLMSR.liquiditySensitiveB(stockLMSR.getAlphaLS(), stockLMSR.getQPosLMSR(), stockLMSR.getQNegLMSR());
          }
+         System.out.println("BLS: " + stockLMSR.getBLiq());
          agent = World.Agents[i];
          priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
          stockLMSR.setPrice(priceLMSR);
@@ -130,9 +131,9 @@ class Specialist {
 
       stockLMSR.setPrice(priceLMSR);
       stockLMSR.setTradingVolume(volume); // mudar
-      if (stockLMSR.getLiquiditySensitive()) {
-         System.out.println("BLS: " + stockLMSR.getBLiq());
-      }
+//      if (stockLMSR.getLiquiditySensitive()) {
+//         System.out.println("BLS: " + stockLMSR.getBLiq());
+//      }
    }  // adjustPricePrediction
 
 

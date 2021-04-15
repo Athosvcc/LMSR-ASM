@@ -1,8 +1,15 @@
 .idea
 NESFI-ASM-LMSR.iml
+<<<<<<< HEAD
 lib
 out
 /ASMModel/COMPILAR.bat
 /ASMModel/repast.log
 /ASMModel/.project
 /ASMModel/.classpath
+||||||| parent of 4b1ac49 (Update .gitignore)
+lib
+=======
+lib
+out
+>>>>>>> 4b1ac49 (Update .gitignore)

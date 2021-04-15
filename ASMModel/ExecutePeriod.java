@@ -44,13 +44,13 @@ abstract class ExecutePeriod {
          } else if (World.period == stockLMSR.periodShock) { // if it's the shock period, change underlying probability
             stockLMSR.probShock();
             World.period++;
-            System.out.println("Wealth: " + agent.getWealth());
+            // System.out.println("Wealth: " + agent.getWealth());
          } else if (World.period == World.numberOfPeriods-1) { // at the last period, pays out agent investments
             double totalWealth = 0;
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
                agent.setPayout();
-               System.out.println("Wealth: " + agent.getWealth());
+               // System.out.println("Wealth: " + agent.getWealth());
                totalWealth += agent.getWealth();
             }
             System.out.println("Revenue: " + specialist.getSpecialistRevenue());
@@ -69,7 +69,7 @@ abstract class ExecutePeriod {
                agent = World.Agents[j];
                agent.getEarningsAndPayTaxes(); // sets agent wealth
                totalWealth += agent.getWealth();
-               System.out.println("Wealth: " + agent.getWealth());
+               // System.out.println("Wealth: " + agent.getWealth());
             }        // for all agents
             World.setTotalWealth(totalWealth);
             if (AsmModel.showDisplays) graphDisplay();
@@ -84,8 +84,8 @@ abstract class ExecutePeriod {
                   recordPeriod++;
                }
             }
-            System.out.println("totalYesStocks: " + stockLMSR.getQPosLMSR());
-            System.out.println("totalNoStocks: " + stockLMSR.getQNegLMSR());
+            // System.out.println("totalYesStocks: " + stockLMSR.getQPosLMSR());
+            // System.out.println("totalNoStocks: " + stockLMSR.getQNegLMSR());
          }
       } else { // end of LMSR execution
 
