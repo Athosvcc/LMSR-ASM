@@ -110,12 +110,12 @@ class Specialist {
       for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
          if (stockLMSR.getLiquiditySensitive()) {
             stockLMSR.liquiditySensitiveB(stockLMSR.getAlphaLS(), stockLMSR.getQPosLMSR(), stockLMSR.getQNegLMSR());
+            System.out.println("BLS: " + stockLMSR.getBLiq());
          }
-         System.out.println("BLS: " + stockLMSR.getBLiq());
          agent = World.Agents[i];
          priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
          stockLMSR.setPrice(priceLMSR);
-         stock.setPrice(priceLMSR); //mudar // o display usa esse preço
+         // stock.setPrice(priceLMSR); //mudar // o display usa esse preço
          agent.setDemandAndSlope(priceLMSR);
          if (agent.pos) {
             tradeMatrix[i][0] = agent.getDemand();
@@ -128,6 +128,7 @@ class Specialist {
          }
       }  // while
       stockLMSR.setPrice(priceLMSR);
+      stockLMSR.setPriceNoStock(1-priceLMSR);
 //      if (stockLMSR.getLiquiditySensitive()) {
 //         System.out.println("BLS: " + stockLMSR.getBLiq());
 //      }

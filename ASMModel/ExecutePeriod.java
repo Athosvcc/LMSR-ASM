@@ -84,8 +84,6 @@ abstract class ExecutePeriod {
                   recordPeriod++;
                }
             }
-            // System.out.println("totalYesStocks: " + stockLMSR.getQPosLMSR());
-            // System.out.println("totalNoStocks: " + stockLMSR.getQNegLMSR());
          }
       } else { // end of LMSR execution
 

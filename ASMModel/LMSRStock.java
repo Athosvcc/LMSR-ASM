@@ -43,15 +43,16 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    private double meanTradingVolumeNo = 0;
    protected double noiseVar = 0.07429;
    protected double noise = 0;
-   protected double bLiq = 100;
+   protected double bLiq = 10;
    protected double alphaLS = 2; // used in Othman (2013): 0.05
-   protected boolean liquiditySensitive = true;
+   protected boolean liquiditySensitive = false;
    protected double probability = 0.8;
    protected double initialPrice = 0.5;
    protected double probAfterShock = 0.2;
    protected double periodShock = 50;
    protected int qPosLMSR = 0;
    protected int qNegLMSR = 0;
+   protected double priceNoStock = 0;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
    private double[] dRatios =  {0.6, 0.8, 0.9, 1.0, 1.1, 1.12, 1.4};
@@ -496,6 +497,8 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public void setQPosLMSR(double value) { this.qPosLMSR += value; }
    public double getQNegLMSR() { return qNegLMSR; }
    public void setQNegLMSR(double value) { this.qNegLMSR += value; }
+   public double getPriceNoStock() {return priceNoStock; }
+   public void setPriceNoStock(double value) { this.priceNoStock = value; }
 
 
    public double getTradingVolume() {
@@ -515,7 +518,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       meanTradingVolumeYes = cumulatedTradingVolumeYes / World.period ;
    }
    public double getTradingVolumeNo() {
-      return tradingVolume;
+      return tradingVolumeNo;
    }
    public void setTradingVolumeNo(double volume) {
       tradingVolumeNo = volume;

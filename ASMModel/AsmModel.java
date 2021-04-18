@@ -155,328 +155,331 @@ public class AsmModel extends SimModelImpl {
       if (recordData) {	// writes data to an ascii-file
          recorder = new DataRecorder(recorderOptions.getRecorderOutputFile(), this, "Data Recording of NEFSI-ASM" );
          recorder.setDelimiter(";");
-         if(recorderOptions.getDividend()) {
-            class WriteDividend implements NumericDataSource {
-               public double execute() {
-                  return stock.getDividend();
-               }
-            }
-            recorder.addNumericDataSource("Dividend", new WriteDividend(),2,2);
-         } // if scheduled to record stock dividend(s)
+         if (LMSR) {
 
-         if(recorderOptions.getNumberOfGeneralizations()) {
-            class WriteGeneralizations implements NumericDataSource {
-               public double execute() {
-                  return TradingRule.generalizationCounter;
+         } else { // end LMSR
+            if (recorderOptions.getDividend()) {
+               class WriteDividend implements NumericDataSource {
+                  public double execute() {
+                     return stock.getDividend();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Generalizations", new WriteGeneralizations(),7,0);
-         } // if scheduled to record stock price(s)
+               recorder.addNumericDataSource("Dividend", new WriteDividend(), 2, 2);
+            } // if scheduled to record stock dividend(s)
 
-         if(recorderOptions.getPrice()) {
-            class WritePrice implements NumericDataSource {
-               public double execute() {
-                  return stock.getPrice();
+            if (recorderOptions.getNumberOfGeneralizations()) {
+               class WriteGeneralizations implements NumericDataSource {
+                  public double execute() {
+                     return TradingRule.generalizationCounter;
+                  }
                }
-            }
-            recorder.addNumericDataSource("Price", new WritePrice(),3,2);
-         } // if scheduled to record stock price(s)
-         if(recorderOptions.getHreePrice()) {
-            class WriteHreePrice implements NumericDataSource {
-               public double execute() {
-                  return stock.getHreePrice();
-               }
-            }
-            recorder.addNumericDataSource("Hree price", new WriteHreePrice(),3,2);
-         } // if scheduled to record Hree-price of stock
-         if(recorderOptions.getCrudePrice()) {
-            class WriteCrudePrice implements NumericDataSource {
-               public double execute() {
-                  return stock.getDividend()/World.interestRate;
-               }
-            }
-            recorder.addNumericDataSource("risk neutral price", new WriteCrudePrice(),3,2);
-         } // if scheduled to record Hree-price of stock
-         if(recorderOptions.getTradingVolume()) {
-            class WriteTradingVolume implements NumericDataSource {
-               public double execute() {
-                  return stock.getTradingVolume();
-               }
-            }
-            recorder.addNumericDataSource("Trading volume", new WriteTradingVolume(),3,DIGITS);
-         } // if scheduled to record trading volume of each stocks
-         if(recorderOptions.getMeanTradingVolume()) {
-            class WriteMeanTradingVolume implements NumericDataSource {
-               public double execute() {
-                  return stock.getMeanTradingVolume();
-               }
-            }
-            recorder.addNumericDataSource("Mean trading volume", new WriteMeanTradingVolume(),3,DIGITS);
-         } // if scheduled to record mean trading volume of each stocks
+               recorder.addNumericDataSource("Generalizations", new WriteGeneralizations(), 7, 0);
+            } // if scheduled to record stock price(s)
 
-         if(recorderOptions.getFundamentalBits()) {
-            final double fBitsUsed = (double)World.getFundamentalBits();
-            class WriteFundamentalBits implements NumericDataSource {
-               public double execute() {
-                  if(recorderOptions.getBitFractions()) {
-                     return World.getWorldFBitFraction();
-                  } else {
-                     if(World.period<World.firstGATime) {
-                        return fBitsUsed;
+            if (recorderOptions.getPrice()) {
+               class WritePrice implements NumericDataSource {
+                  public double execute() {
+                     return stock.getPrice();
+                  }
+               }
+               recorder.addNumericDataSource("Price", new WritePrice(), 3, 2);
+            } // if scheduled to record stock price(s)
+            if (recorderOptions.getHreePrice()) {
+               class WriteHreePrice implements NumericDataSource {
+                  public double execute() {
+                     return stock.getHreePrice();
+                  }
+               }
+               recorder.addNumericDataSource("Hree price", new WriteHreePrice(), 3, 2);
+            } // if scheduled to record Hree-price of stock
+            if (recorderOptions.getCrudePrice()) {
+               class WriteCrudePrice implements NumericDataSource {
+                  public double execute() {
+                     return stock.getDividend() / World.interestRate;
+                  }
+               }
+               recorder.addNumericDataSource("risk neutral price", new WriteCrudePrice(), 3, 2);
+            } // if scheduled to record Hree-price of stock
+            if (recorderOptions.getTradingVolume()) {
+               class WriteTradingVolume implements NumericDataSource {
+                  public double execute() {
+                     return stock.getTradingVolume();
+                  }
+               }
+               recorder.addNumericDataSource("Trading volume", new WriteTradingVolume(), 3, DIGITS);
+            } // if scheduled to record trading volume of each stocks
+            if (recorderOptions.getMeanTradingVolume()) {
+               class WriteMeanTradingVolume implements NumericDataSource {
+                  public double execute() {
+                     return stock.getMeanTradingVolume();
+                  }
+               }
+               recorder.addNumericDataSource("Mean trading volume", new WriteMeanTradingVolume(), 3, DIGITS);
+            } // if scheduled to record mean trading volume of each stocks
+
+            if (recorderOptions.getFundamentalBits()) {
+               final double fBitsUsed = (double) World.getFundamentalBits();
+               class WriteFundamentalBits implements NumericDataSource {
+                  public double execute() {
+                     if (recorderOptions.getBitFractions()) {
+                        return World.getWorldFBitFraction();
                      } else {
-                        return (double)World.getFundamentalBits();
+                        if (World.period < World.firstGATime) {
+                           return fBitsUsed;
+                        } else {
+                           return (double) World.getFundamentalBits();
+                        }
                      }
                   }
                }
-            }
-            if(recorderOptions.getBitFractions()) {
-               recorder.addNumericDataSource("Fundamental Bits", new WriteFundamentalBits(),10,9);
-            }  else {
-               recorder.addNumericDataSource("Fundamental Bits", new WriteFundamentalBits(),7,1);
-            }
-         } // if scheduled to record the number of fundamental bits in the economy
-         if(recorderOptions.getTechnicalBits()) {
-            final double tBitsUsed = (double)World.getTechnicalBits();
-            class WriteTechnicalBits implements NumericDataSource {
-               public double execute() {
-                  if(recorderOptions.getBitFractions() ) {
-                     return World.getWorldTBitFraction();
-                  } else {
-                     if(World.period<World.firstGATime) {
-                        return tBitsUsed;
+               if (recorderOptions.getBitFractions()) {
+                  recorder.addNumericDataSource("Fundamental Bits", new WriteFundamentalBits(), 10, 9);
+               } else {
+                  recorder.addNumericDataSource("Fundamental Bits", new WriteFundamentalBits(), 7, 1);
+               }
+            } // if scheduled to record the number of fundamental bits in the economy
+            if (recorderOptions.getTechnicalBits()) {
+               final double tBitsUsed = (double) World.getTechnicalBits();
+               class WriteTechnicalBits implements NumericDataSource {
+                  public double execute() {
+                     if (recorderOptions.getBitFractions()) {
+                        return World.getWorldTBitFraction();
                      } else {
-                        return (double)World.getTechnicalBits();
+                        if (World.period < World.firstGATime) {
+                           return tBitsUsed;
+                        } else {
+                           return (double) World.getTechnicalBits();
+                        }
                      }
                   }
                }
-            }
-            if(recorderOptions.getBitFractions() ) {
-               recorder.addNumericDataSource("Technical Bits", new WriteTechnicalBits(),10,9);
-            } else {
-               recorder.addNumericDataSource("Technical Bits", new WriteTechnicalBits(),7,1);
-            }
-         } // if scheduled to record the number of technical bits in the economy
-         if(recorderOptions.getBitFractions() ) {
-            class WriteBitFraction implements NumericDataSource {
-               public double execute() {
-                  return World.getWorldBitFraction();
+               if (recorderOptions.getBitFractions()) {
+                  recorder.addNumericDataSource("Technical Bits", new WriteTechnicalBits(), 10, 9);
+               } else {
+                  recorder.addNumericDataSource("Technical Bits", new WriteTechnicalBits(), 7, 1);
                }
-            }
-            recorder.addNumericDataSource("Total Bit Fraction", new WriteBitFraction(),10,9);
-         } // if scheduled to record the number of technical bits in the economy
-         if(recorderOptions.getAverageWealth()) {
-            class WriteAverageWealth implements NumericDataSource {
-               public double execute() {
-                  return World.getAverageWealth();
+            } // if scheduled to record the number of technical bits in the economy
+            if (recorderOptions.getBitFractions()) {
+               class WriteBitFraction implements NumericDataSource {
+                  public double execute() {
+                     return World.getWorldBitFraction();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Average Wealth", new WriteAverageWealth(),7,DIGITS);
-         } // if scheduled to record the average wealth of agents in the economy
-         if(recorderOptions.getPVCorr()) {
-            class WritePVCorr implements NumericDataSource {
-               public double execute() {
-                  return Stock.pvCorr;
+               recorder.addNumericDataSource("Total Bit Fraction", new WriteBitFraction(), 10, 9);
+            } // if scheduled to record the number of technical bits in the economy
+            if (recorderOptions.getAverageWealth()) {
+               class WriteAverageWealth implements NumericDataSource {
+                  public double execute() {
+                     return World.getAverageWealth();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Price-Value-Corr.", new WritePVCorr(),4,DIGITS);
-         } // if scheduled to record price-value-correlation
-         if(recorderOptions.getMeanFitness()) {
-            class WriteMeanFitness implements NumericDataSource {
-               public double execute() {
-                  return World.getMeanFitness();
+               recorder.addNumericDataSource("Average Wealth", new WriteAverageWealth(), 7, DIGITS);
+            } // if scheduled to record the average wealth of agents in the economy
+            if (recorderOptions.getPVCorr()) {
+               class WritePVCorr implements NumericDataSource {
+                  public double execute() {
+                     return Stock.pvCorr;
+                  }
                }
-            }
-            recorder.addNumericDataSource("Mean Fitness", new WriteMeanFitness(),3,DIGITS);
-         } // if scheduled
-         if(recorderOptions.getMinFitness()) {
-            class WriteMinFitness implements NumericDataSource {
-               public double execute() {
-                  return World.getMinFitness();
+               recorder.addNumericDataSource("Price-Value-Corr.", new WritePVCorr(), 4, DIGITS);
+            } // if scheduled to record price-value-correlation
+            if (recorderOptions.getMeanFitness()) {
+               class WriteMeanFitness implements NumericDataSource {
+                  public double execute() {
+                     return World.getMeanFitness();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Min Fitness", new WriteMinFitness(),3,DIGITS);
-         } // if scheduled
-         if(recorderOptions.getMaxFitness()) {
-            class WriteMaxFitness implements NumericDataSource {
-               public double execute() {
-                  return World.getMaxFitness();
+               recorder.addNumericDataSource("Mean Fitness", new WriteMeanFitness(), 3, DIGITS);
+            } // if scheduled
+            if (recorderOptions.getMinFitness()) {
+               class WriteMinFitness implements NumericDataSource {
+                  public double execute() {
+                     return World.getMinFitness();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Max Fitness", new WriteMaxFitness(),3,DIGITS);
-         } // if scheduled
-         if(recorderOptions.getActiveRules()) {
-            class WriteActiveRules implements NumericDataSource {
-               public double execute() {
-                  return Agent.activatedRules;
+               recorder.addNumericDataSource("Min Fitness", new WriteMinFitness(), 3, DIGITS);
+            } // if scheduled
+            if (recorderOptions.getMaxFitness()) {
+               class WriteMaxFitness implements NumericDataSource {
+                  public double execute() {
+                     return World.getMaxFitness();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Activated Rules", new WriteActiveRules(),4,DIGITS);
-         } // if scheduled
-         if(recorderOptions.getBitAnalyzer()) {
-            class BitDataSource implements DataSource {
-               public Object execute() {
-                  return world.getBitsSetString();
+               recorder.addNumericDataSource("Max Fitness", new WriteMaxFitness(), 3, DIGITS);
+            } // if scheduled
+            if (recorderOptions.getActiveRules()) {
+               class WriteActiveRules implements NumericDataSource {
+                  public double execute() {
+                     return Agent.activatedRules;
+                  }
                }
-            }
-            recorder.addObjectDataSource("F0 ;F1  ;F2 ;F3 ;F4 ;F5 ;F6 ;F7 ;F8 ;F9 ;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;F20;F21;F22;F23;F24;F25;F26;F27;F28;F29;F30;F31;T0 ;T1  ;T2 ;T3 ;T4 ;T5 ;T6 ;T7 ;T8 ;T9 ;T10;T11;T12;T13;T14;T15;T16;T17;T18;T19;T20;T21;T22;T23;T24;T25;T26;T27;T28;T29;T30;T31", new BitDataSource());
-         }  // bit Analyzer
-         if(recorderOptions.getAverageWealthOfClassifierAgents()) {
-            class WealthOfClassifierAgents implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfClassifierAgents();
+               recorder.addNumericDataSource("Activated Rules", new WriteActiveRules(), 4, DIGITS);
+            } // if scheduled
+            if (recorderOptions.getBitAnalyzer()) {
+               class BitDataSource implements DataSource {
+                  public Object execute() {
+                     return world.getBitsSetString();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Wealth Class.Ag.", new WealthOfClassifierAgents(),7,0);
-         } // if scheduled
-         if(recorderOptions.getAverageWealthOfNoClassifierAgents()) {
-            class WealthOfNoClassifierAgents implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfNoClassifierAgents();
+               recorder.addObjectDataSource("F0 ;F1  ;F2 ;F3 ;F4 ;F5 ;F6 ;F7 ;F8 ;F9 ;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;F20;F21;F22;F23;F24;F25;F26;F27;F28;F29;F30;F31;T0 ;T1  ;T2 ;T3 ;T4 ;T5 ;T6 ;T7 ;T8 ;T9 ;T10;T11;T12;T13;T14;T15;T16;T17;T18;T19;T20;T21;T22;T23;T24;T25;T26;T27;T28;T29;T30;T31", new BitDataSource());
+            }  // bit Analyzer
+            if (recorderOptions.getAverageWealthOfClassifierAgents()) {
+               class WealthOfClassifierAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfClassifierAgents();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Wealth NoClass.Ag.", new WealthOfNoClassifierAgents(),7,0);
-         } // if scheduled
+               recorder.addNumericDataSource("Wealth Class.Ag.", new WealthOfClassifierAgents(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getAverageWealthOfNoClassifierAgents()) {
+               class WealthOfNoClassifierAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfNoClassifierAgents();
+                  }
+               }
+               recorder.addNumericDataSource("Wealth NoClass.Ag.", new WealthOfNoClassifierAgents(), 7, 0);
+            } // if scheduled
 
-         if(recorderOptions.getAverageWealthOfFundamentalTraders()) {
-            class WealthOfFundamentalTraders implements NumericDataSource {
-               public double execute() {
-                  return World.getAverageWealthFundamentalTraders();
+            if (recorderOptions.getAverageWealthOfFundamentalTraders()) {
+               class WealthOfFundamentalTraders implements NumericDataSource {
+                  public double execute() {
+                     return World.getAverageWealthFundamentalTraders();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Av. Wealth Fund. Traders", new WealthOfFundamentalTraders(),7,0);
-         } // if scheduled
-         if(recorderOptions.getAverageWealthOfTechnicalTraders()) {
-            class WealthOfTechnicalTraders implements NumericDataSource {
-               public double execute() {
-                  return World.getAverageWealthTechnicalTraders();
+               recorder.addNumericDataSource("Av. Wealth Fund. Traders", new WealthOfFundamentalTraders(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getAverageWealthOfTechnicalTraders()) {
+               class WealthOfTechnicalTraders implements NumericDataSource {
+                  public double execute() {
+                     return World.getAverageWealthTechnicalTraders();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Av. Wealth Techn. Traders", new WealthOfTechnicalTraders(),7,0);
-         } // if scheduled
-         if(recorderOptions.getAverageWealthOfFastLearner()) {
-            class WealthOfFastLearner implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfFastLearner();
+               recorder.addNumericDataSource("Av. Wealth Techn. Traders", new WealthOfTechnicalTraders(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getAverageWealthOfFastLearner()) {
+               class WealthOfFastLearner implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfFastLearner();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Av. Wealth Fast Learner", new WealthOfFastLearner(),7,0);
-         } // if scheduled
-         if(recorderOptions.getAverageWealthOfNormalLearner()) {
-            class WealthOfNormalLearner implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfNormalLearner();
+               recorder.addNumericDataSource("Av. Wealth Fast Learner", new WealthOfFastLearner(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getAverageWealthOfNormalLearner()) {
+               class WealthOfNormalLearner implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfNormalLearner();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Av. Wealth Normal Learner", new WealthOfNormalLearner(),7,0);
-         } // if scheduled
-         if(recorderOptions.getAverageWealthOfSFIAgents()) {
-            class WealthOfSFIAgents implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfSFIAgents();
+               recorder.addNumericDataSource("Av. Wealth Normal Learner", new WealthOfNormalLearner(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getAverageWealthOfSFIAgents()) {
+               class WealthOfSFIAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfSFIAgents();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Av. Wealth SFI-Agents", new WealthOfSFIAgents(),7,0);
-         } // if scheduled
-         if(recorderOptions.getAverageWealthOfNESFIAgents()) {
-            class WealthOfNESFIAgents implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfNESFIAgents();
+               recorder.addNumericDataSource("Av. Wealth SFI-Agents", new WealthOfSFIAgents(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getAverageWealthOfNESFIAgents()) {
+               class WealthOfNESFIAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfNESFIAgents();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Av. Wealth NESFI-Agents", new WealthOfNESFIAgents(),7,0);
-         } // if scheduled
+               recorder.addNumericDataSource("Av. Wealth NESFI-Agents", new WealthOfNESFIAgents(), 7, 0);
+            } // if scheduled
 
-         if(recorderOptions.getSelectAverageCounter()) {
-            class SelectAverageCounter implements NumericDataSource {
-               public double execute() {
-                  return Agent.selectAverageCounter;
+            if (recorderOptions.getSelectAverageCounter()) {
+               class SelectAverageCounter implements NumericDataSource {
+                  public double execute() {
+                     return Agent.selectAverageCounter;
+                  }
                }
-            }
-            class SFISelectAverageCounter implements NumericDataSource {
-               public double execute() {
-                  return SFIAgent.SFISelectAverageCounter;
+               class SFISelectAverageCounter implements NumericDataSource {
+                  public double execute() {
+                     return SFIAgent.SFISelectAverageCounter;
+                  }
                }
-            }
-            class NESFISelectAverageCounter implements NumericDataSource {
-               public double execute() {
-                  return NESFIAgent.NESFISelectAverageCounter;
+               class NESFISelectAverageCounter implements NumericDataSource {
+                  public double execute() {
+                     return NESFIAgent.NESFISelectAverageCounter;
+                  }
                }
-            }
-            recorder.addNumericDataSource("SelectAverage", new SelectAverageCounter(),7,0);
-            recorder.addNumericDataSource("SFISelectAverage", new SFISelectAverageCounter(),7,0);
-            recorder.addNumericDataSource("NESFISelectAverage", new NESFISelectAverageCounter(),7,0);
-         } // if scheduled
+               recorder.addNumericDataSource("SelectAverage", new SelectAverageCounter(), 7, 0);
+               recorder.addNumericDataSource("SFISelectAverage", new SFISelectAverageCounter(), 7, 0);
+               recorder.addNumericDataSource("NESFISelectAverage", new NESFISelectAverageCounter(), 7, 0);
+            } // if scheduled
 
-         if(recorderOptions.getZeroBitAgents()) {
-            class ZeroBitAgents implements NumericDataSource {
-               public double execute() {
-                  return World.getZeroBitAgents();
+            if (recorderOptions.getZeroBitAgents()) {
+               class ZeroBitAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.getZeroBitAgents();
+                  }
                }
-            }
-            class ZeroFundamentalBitAgents implements NumericDataSource {
-               public double execute() {
-                  return World.numberOfZeroFundamentalBitAgents;
+               class ZeroFundamentalBitAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.numberOfZeroFundamentalBitAgents;
+                  }
                }
-            }
-            class ZeroTechnicalBitAgents implements NumericDataSource {
-               public double execute() {
-                  return World.numberOfZeroTechnicalBitAgents;
+               class ZeroTechnicalBitAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.numberOfZeroTechnicalBitAgents;
+                  }
                }
-            }
-            recorder.addNumericDataSource("ZBA", new ZeroBitAgents(),4,0);
-            recorder.addNumericDataSource("ZFBA", new ZeroFundamentalBitAgents(),4,0);
-            recorder.addNumericDataSource("ZTBA", new ZeroTechnicalBitAgents(),4,0);
-         } // if scheduled
-         if(recorderOptions.getWealthZeroBitAgents()) {
-            class WealthZeroBitAgents implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfZeroBitAgents();
+               recorder.addNumericDataSource("ZBA", new ZeroBitAgents(), 4, 0);
+               recorder.addNumericDataSource("ZFBA", new ZeroFundamentalBitAgents(), 4, 0);
+               recorder.addNumericDataSource("ZTBA", new ZeroTechnicalBitAgents(), 4, 0);
+            } // if scheduled
+            if (recorderOptions.getWealthZeroBitAgents()) {
+               class WealthZeroBitAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfZeroBitAgents();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Wealth ZBA", new WealthZeroBitAgents(),7,0);
-         } // if scheduled
-         if(recorderOptions.getWealthNonZeroBitAgents()) {
-            class WealthNonZeroBitAgents implements NumericDataSource {
-               public double execute() {
-                  return World.getWealthOfNonZeroBitAgents();
+               recorder.addNumericDataSource("Wealth ZBA", new WealthZeroBitAgents(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getWealthNonZeroBitAgents()) {
+               class WealthNonZeroBitAgents implements NumericDataSource {
+                  public double execute() {
+                     return World.getWealthOfNonZeroBitAgents();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Wealth NZBA", new WealthNonZeroBitAgents(),7,0);
-         } // if scheduled
-         if(recorderOptions.getBaseWealth()) {
-            class BaseWealth implements NumericDataSource {
-               public double execute() {
-                  return World.getBaseWealth();
+               recorder.addNumericDataSource("Wealth NZBA", new WealthNonZeroBitAgents(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getBaseWealth()) {
+               class BaseWealth implements NumericDataSource {
+                  public double execute() {
+                     return World.getBaseWealth();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Base Wealth", new BaseWealth(),7,0);
-         } // if scheduled
-         if(recorderOptions.getHreeBaseWealth()) {
-            class HreeBaseWealth implements NumericDataSource {
-               public double execute() {
-                  return World.getLongTermHreeBaseWealth();
+               recorder.addNumericDataSource("Base Wealth", new BaseWealth(), 7, 0);
+            } // if scheduled
+            if (recorderOptions.getHreeBaseWealth()) {
+               class HreeBaseWealth implements NumericDataSource {
+                  public double execute() {
+                     return World.getLongTermHreeBaseWealth();
+                  }
                }
-            }
-            recorder.addNumericDataSource("Hree Base wealth", new HreeBaseWealth(),7,0);
-         } // if scheduled
+               recorder.addNumericDataSource("Hree Base wealth", new HreeBaseWealth(), 7, 0);
+            } // if scheduled
 
-         if(recorderOptions.getForecastParameterA()) {
-            class forecastParameterA implements NumericDataSource {
-               public double execute() {
-                  return World.getForecastMeanA();
+            if (recorderOptions.getForecastParameterA()) {
+               class forecastParameterA implements NumericDataSource {
+                  public double execute() {
+                     return World.getForecastMeanA();
+                  }
                }
-            }
-            recorder.addNumericDataSource("ForecastMean", new forecastParameterA(),7,6);
+               recorder.addNumericDataSource("ForecastMean", new forecastParameterA(), 7, 6);
 
-            class MeanVarianceEstimate implements NumericDataSource {
-               public double execute() {
-                  return World.getVarianceMean();
+               class MeanVarianceEstimate implements NumericDataSource {
+                  public double execute() {
+                     return World.getVarianceMean();
+                  }
                }
-            }
-            recorder.addNumericDataSource("VarEstimateMean", new MeanVarianceEstimate(),6,4);
+               recorder.addNumericDataSource("VarEstimateMean", new MeanVarianceEstimate(), 6, 4);
 
-         } // if scheduled
-
+            } // if scheduled
+         } // end not LMSR
       }  // if record ??
    }  // buildModel
 
@@ -501,11 +504,24 @@ public class AsmModel extends SimModelImpl {
                });
             }  // if showHreePrice_Price
             if(observer.showPrice) {
-               priceGraph.addSequence("Price", new Sequence() {
-                  public double getSValue() {
-                     return stock.getPrice();
-                  }
-               });
+               if (LMSR) {
+                  priceGraph.addSequence("Price of Yes Stocks", new Sequence() {
+                     public double getSValue() {
+                        return stockLMSR.getPrice();
+                     }
+                  });
+                  priceGraph.addSequence("Price of No Stocks", new Sequence() {
+                     public double getSValue() {
+                        return stockLMSR.getPriceNoStock();
+                     }
+                  });
+               } else { // end LMSR showPrice
+                  priceGraph.addSequence("Price", new Sequence() {
+                     public double getSValue() {
+                        return stock.getPrice();
+                     }
+                  });
+               }
             }  // if showPrice
             if(observer.showPriceMean) {
                priceGraph.addSequence("Mean of Stockprice", new Sequence() {
@@ -596,13 +612,26 @@ public class AsmModel extends SimModelImpl {
          if(observer.showVolume) {
             volumeGraph = new OpenSequenceGraph("Volume over time", this);
             this.registerMediaProducer("Volume over Time ", volumeGraph );
-//            volumeGraph.setYRange(0 , 2);
-//            volumeGraph.setYIncrement(1);
-            volumeGraph.addSequence("Volume", new Sequence() {
-               public double getSValue() {
-                  return stock.getTradingVolume();
-               }
-            });
+            volumeGraph.setYRange(0 , 45);
+            volumeGraph.setYIncrement(1);
+            if (LMSR) {
+               volumeGraph.addSequence("Volume of Yes Stocks", new Sequence() {
+                  public double getSValue() {
+                     return stockLMSR.getTradingVolumeYes();
+                  }
+               });
+               volumeGraph.addSequence("Volume of No Stocks", new Sequence() {
+                  public double getSValue() {
+                     return stockLMSR.getTradingVolumeNo();
+                  }
+               });
+            } else {
+               volumeGraph.addSequence("Volume", new Sequence() {
+                  public double getSValue() {
+                     return stock.getTradingVolume();
+                  }
+               });
+            }
          }  // showVolume
          if(observer.getShowWealthClassifierAgents() || observer.getShowWealthFundamentalTraders() || observer.getShowWealthNoClassifierAgents() || observer.getShowWealthTechnicalTraders() || observer.getShowWealthNormalLearner() || observer.getShowWealthFastLearner() || observer.getShowWealthSFIAgents() || observer.getShowWealthNESFIAgents() || observer.getShowWealthNonZeroBitAgents() || observer.getShowWealthZeroBitAgents() || observer.getShowBaseWealth() || observer.getShowLongTermHreeBaseWealth()) {
             wealthGraph = new OpenSequenceGraph("Average Wealth", this);

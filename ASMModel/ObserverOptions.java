@@ -38,7 +38,7 @@ public class ObserverOptions implements CustomProbeable {
    protected boolean showDivMean = false;
    protected boolean showHreeMean = false;
    protected boolean showLogReturns = false;
-   protected boolean showVolume = false ;
+   protected boolean showVolume = true ;
    protected boolean showPriceValueCorr = false;
    protected boolean showWealthClassifierAgents = false;
    protected boolean showWealthNoClassifierAgents = false;
