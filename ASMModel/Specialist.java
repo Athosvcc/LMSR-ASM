@@ -120,17 +120,14 @@ class Specialist {
          if (agent.pos) {
             tradeMatrix[i][0] = agent.getDemand();
             volumePos += tradeMatrix[i][0];
+            stockLMSR.setTradingVolumeYes(volumePos);
          } else {
             tradeMatrix[i][0] = agent.getDemand();
             volumeNeg += tradeMatrix[i][0];
+            stockLMSR.setTradingVolumeNo(volumeNeg);
          }
-
-         volume += tradeMatrix[i][0]; // mudar
-
       }  // while
-
       stockLMSR.setPrice(priceLMSR);
-      stockLMSR.setTradingVolume(volume); // mudar
 //      if (stockLMSR.getLiquiditySensitive()) {
 //         System.out.println("BLS: " + stockLMSR.getBLiq());
 //      }

@@ -27,4 +27,4 @@ averageWealthOfFastLearner: true
 averageWealthOfNormalLearner: true
 averageWealthOfSFIAgents: true
 averageWealthOfNESFIAgents: true
-outputFile: NESFI-Data.txt
+outputFile: LMSR-NESFI-Data.txt

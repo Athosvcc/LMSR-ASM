@@ -33,8 +33,14 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double rho = 0.95;
    protected double dividendMeanTheoretical = 10.0 ;	// theoretical dividend mean of stochastic process, should exceed risk free interestpayment on one unit of capital
    private double tradingVolume = 0;
+   private double tradingVolumeYes = 0;
+   private double tradingVolumeNo = 0;
    private double cumulatedTradingVolume = 0;
+   private double cumulatedTradingVolumeYes = 0;
+   private double cumulatedTradingVolumeNo = 0;
    private double meanTradingVolume = 0;
+   private double meanTradingVolumeYes = 0;
+   private double meanTradingVolumeNo = 0;
    protected double noiseVar = 0.07429;
    protected double noise = 0;
    protected double bLiq = 100;
@@ -500,8 +506,30 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       cumulatedTradingVolume += volume;
       meanTradingVolume = cumulatedTradingVolume / World.period ;
    }
+   public double getTradingVolumeYes() {
+      return tradingVolumeYes;
+   }
+   public void setTradingVolumeYes(double volume) {
+      tradingVolumeYes = volume;
+      cumulatedTradingVolumeYes += volume;
+      meanTradingVolumeYes = cumulatedTradingVolumeYes / World.period ;
+   }
+   public double getTradingVolumeNo() {
+      return tradingVolume;
+   }
+   public void setTradingVolumeNo(double volume) {
+      tradingVolumeNo = volume;
+      cumulatedTradingVolumeNo += volume;
+      meanTradingVolumeNo = cumulatedTradingVolumeNo / World.period ;
+   }
    public double getMeanTradingVolume() {
       return meanTradingVolume;
+   }
+   public double getMeanTradingVolumeYes() {
+      return meanTradingVolumeYes;
+   }
+   public double getMeanTradingVolumeNo() {
+      return meanTradingVolumeNo;
    }
    public double getHreePrice() {
       return hreePrice;

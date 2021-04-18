@@ -27,7 +27,7 @@ package ASMModel;
  */
 public class RecorderOptions implements CustomProbeable {
 
-   private static String recorderOutputFile = "I:/NESFI-Data.txt";
+   private static String recorderOutputFile = "D:/LMSR-NESFI-Data.txt";
    private static int writeFrequency = 2;
    private static int recordFrequency = 1;
    private static int startFromPeriod = 1;
@@ -367,7 +367,7 @@ public class RecorderOptions implements CustomProbeable {
    }
 
   public String[] getProbedProperties() {
-      return new String[] {"maxFitness","writeFrequency","recordFrequency","divdend",
+      return new String[] {"maxFitness","writeFrequency","recordFrequency","dividend",
       "technicalBits","fundamentalBits","bitFractions","numberOfGeneralizations",
       "price","hreePrice","forecastparameterA",
       "averageWealth","tradingVolume",
