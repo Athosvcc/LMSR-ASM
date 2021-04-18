@@ -34,12 +34,15 @@ abstract class ExecutePeriod {
          System.out.println("PERIODO: " + World.period);
          stockLMSR = World.LMSRStocks;
          if (World.period == 0) { // at period 0, create artificial stocks necessary for initial price
+            stockLMSR.baseQLMSR(stockLMSR.getInitialQuantity());
             int qInitial = stockLMSR.qInitLMSR(stockLMSR.getInitialPrice());
             if (stockLMSR.getInitialPrice()<0.5) {
                stockLMSR.setQNegLMSR(qInitial);
             } else {
                stockLMSR.setQPosLMSR(qInitial);
             }
+            stockLMSR.setQPosInitial(stockLMSR.getQPosLMSR());
+            stockLMSR.setQNegInitial(stockLMSR.getQNegLMSR());
             World.period++;
          } else if (World.period == stockLMSR.periodShock) { // if it's the shock period, change underlying probability
             stockLMSR.probShock();
@@ -73,9 +76,9 @@ abstract class ExecutePeriod {
             }        // for all agents
             World.setTotalWealth(totalWealth);
             specialist.setSpecialistLiabilities();
-            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
-            System.out.println("Profit: " + specialist.getSpecialistProfit());
-            System.out.println("Liabilities: " + specialist.getSpecialistLiabilities());
+//            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
+//            System.out.println("Profit: " + specialist.getSpecialistProfit());
+//            System.out.println("Liabilities: " + specialist.getSpecialistLiabilities());
             if (AsmModel.showDisplays) graphDisplay();
             if (AsmModel.recordData) {
                if (AsmModel.recorderOptions.getRecordAllFromPeriod() <= World.period && AsmModel.recorderOptions.getRecordAllToPeriod() >= World.period) {
@@ -88,6 +91,8 @@ abstract class ExecutePeriod {
                   recordPeriod++;
                }
             }
+            System.out.println("Yes Stocks: " + stockLMSR.getQPosLMSR());
+            System.out.println("No Stocks: " + stockLMSR.getQNegLMSR());
          }
       } else { // end of LMSR execution
 

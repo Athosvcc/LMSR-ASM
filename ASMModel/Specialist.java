@@ -231,9 +231,9 @@ class Specialist {
    public void setSpecialistLiabilities() {
       stockLMSR = World.LMSRStocks;
       if (stockLMSR.probability > 0.5) {
-         specialistLiabilities = stockLMSR.getQPosLMSR();
+         specialistLiabilities = stockLMSR.getQPosLMSR() - stockLMSR.getQPosInitial(); // Market Maker doesn't pay for initial stocks
       } else {
-         specialistLiabilities = stockLMSR.getQNegLMSR();
+         specialistLiabilities = stockLMSR.getQNegLMSR() - stockLMSR.getQNegInitial(); // Market Maker doesn't pay for initial stocks
       }
    }
    public double getSpecialistLiabilities() { return specialistLiabilities; }

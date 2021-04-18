@@ -44,7 +44,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double noiseVar = 0.07429;
    protected double noise = 0;
    protected double bLiq = 10;
-   protected double alphaLS = 2; // used in Othman (2013): 0.05
+   protected double alphaLS = 0.05; // used in Othman (2013): 0.05
    protected boolean liquiditySensitive = false;
    protected double probability = 0.8;
    protected double initialPrice = 0.5;
@@ -52,6 +52,9 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double periodShock = 50;
    protected int qPosLMSR = 0;
    protected int qNegLMSR = 0;
+   protected double qPosInitial = 0;
+   protected double qNegInitial = 0;
+   protected double initialQuantity = 0;
    protected double priceNoStock = 0;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
@@ -137,6 +140,11 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       double qTot = qPos + qNeg;
       b = alpha*qTot;
       this.bLiq = b;
+   }
+
+   protected void baseQLMSR (double quantity) { // adds artificial initial stocks
+      setQNegLMSR(quantity);
+      setQPosLMSR(quantity);
    }
 
    protected double firstPrice (int qPos,int qNeg, double bLiq, boolean pos) { // gets price of buying one stock in LMSR
@@ -487,6 +495,10 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public void setInitialPrice(double value) {
       this.initialPrice = value;
    }
+   public double getInitialQuantity() { return initialQuantity; }
+   public void setInitialQuantity(double value) {
+      this.initialQuantity = value;
+   } // mudar com double funciona sl pq
    public double getProbAfterShock() { return probAfterShock; }
    public void setProbAfterShock(double value) {
       this.probAfterShock = value;
@@ -497,6 +509,10 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public void setQPosLMSR(double value) { this.qPosLMSR += value; }
    public double getQNegLMSR() { return qNegLMSR; }
    public void setQNegLMSR(double value) { this.qNegLMSR += value; }
+   public double getQPosInitial() { return qPosInitial; }
+   public void setQPosInitial(double value) { this.qPosInitial = value; }
+   public double getQNegInitial() { return qNegInitial; }
+   public void setQNegInitial(double value) { this.qNegInitial = value; }
    public double getPriceNoStock() {return priceNoStock; }
    public void setPriceNoStock(double value) { this.priceNoStock = value; }
 
@@ -545,7 +561,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public String[] getProbedProperties() {
-      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess", "bLiq", "liquiditySensitive", "alphaLS"};
+      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess", "bLiq", "liquiditySensitive", "alphaLS", "initialQuantity"};
    }
 
 
