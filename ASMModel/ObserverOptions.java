@@ -38,7 +38,7 @@ public class ObserverOptions implements CustomProbeable {
    protected boolean showDivMean = false;
    protected boolean showHreeMean = false;
    protected boolean showLogReturns = false;
-   protected boolean showVolume = true ;
+   protected boolean showVolume = true;
    protected boolean showPriceValueCorr = false;
    protected boolean showWealthClassifierAgents = false;
    protected boolean showWealthNoClassifierAgents = false;
@@ -52,6 +52,9 @@ public class ObserverOptions implements CustomProbeable {
    protected boolean showWealthNonZeroBitAgents = false; // those who keep using bits, are they doing better?, used to analyze the classifier system with periodic dividend data.
    protected boolean showBaseWealth = false;
    protected boolean showLongTermHreeBaseWealth = false;
+   protected boolean showMarketMakerRevenue = true;
+   protected boolean showMarketMakerLiabilities = true;
+   protected boolean showMarketMakerProfit = true;
 
    protected boolean showBitDistribution = false;
 
@@ -310,6 +313,24 @@ public class ObserverOptions implements CustomProbeable {
    public void setShowLongTermHreeBaseWealth(boolean val) {
       showLongTermHreeBaseWealth = val;
    }
+   public boolean getShowMarketMakerRevenue() {
+      return showMarketMakerRevenue;
+   }
+   public void setShowMarketMakerRevenue(boolean val) {
+      showMarketMakerRevenue = val;
+   }
+   public boolean getShowMarketMakerLiabilities() {
+      return showMarketMakerLiabilities;
+   }
+   public void setShowMarketMakerLiabilities(boolean val) {
+      showMarketMakerLiabilities = val;
+   }
+   public boolean getShowMarketMakerProfit() {
+      return showMarketMakerProfit;
+   }
+   public void setShowMarketMakerProfit(boolean val) {
+      showMarketMakerProfit = val;
+   }
 
 
    /**
@@ -332,6 +353,7 @@ public class ObserverOptions implements CustomProbeable {
          "showWealthNormalLearner","showWealthFastLearner",
          "showWealthZeroBitAgents","showWealthNonZeroBitAgents",
          "showBaseWealth","showLongTermHreeBaseWealth",
+         "showMarketMakerRevenue","ShowMarketMakerLiabilities","ShowMarketMakerProfit",
          "updateFrequency"
       };
    }  // getProbedProperties()

@@ -220,7 +220,7 @@ public class Agent implements Drawable {
    public void setPayout() { // mudar // adicionar boolean pra acao que se realizou?
       stockLMSR = World.LMSRStocks;
       specialist = AsmModel.specialist;
-      if (stockLMSR.probability > 0.5) { // if stock probability is over 0.5 at the last period, positive stocks pay
+      if (stockLMSR.probability > 0.5) { // if stock probability is over 0.5 at the last period, "Yes" stocks pay
          if (numberOfPosStocks > 0) {
             wealth = cash + numberOfPosStocks*1;
             specialist.setSpecialistPayout(numberOfPosStocks*1);
@@ -229,7 +229,7 @@ public class Agent implements Drawable {
             wealth = cash; // Yes stocks pay 0
             numberOfPosStocks = 0;
          }
-      } else { // if stock probability is less than 0.5 at the last period, negative stocks pay
+      } else { // if stock probability is less than 0.5 at the last period, "No" stocks pay
          if (numberOfNegStocks > 0) {
             wealth = cash + numberOfNegStocks * 1;
             specialist.setSpecialistPayout(numberOfNegStocks*1);

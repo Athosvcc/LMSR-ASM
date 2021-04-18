@@ -29,8 +29,9 @@ class Specialist {
    private double slopeTotal, bidTotal, offerTotal, imbalance;
    public static double bidFrac, offerFrac, volume;
    public static double volumeNeg, volumePos;
-   public static double specialistRevenue;
-   public static double specialistPayout;
+   public static double specialistRevenue = 0;
+   public static double specialistPayout = 0;
+   public static double specialistLiabilities = 0;
 
    protected static double reF; // holds parameters f for the hree-mode for each stock
    protected static double reG; // holds parameters g for the hree-mode
@@ -227,4 +228,14 @@ class Specialist {
    public double getSpecialistRevenue() { return specialistRevenue; }
    public void setSpecialistPayout(double val) { specialistPayout += val; }
    public double getSpecialistPayout() { return specialistPayout; }
+   public void setSpecialistLiabilities() {
+      stockLMSR = World.LMSRStocks;
+      if (stockLMSR.probability > 0.5) {
+         specialistLiabilities = stockLMSR.getQPosLMSR();
+      } else {
+         specialistLiabilities = stockLMSR.getQNegLMSR();
+      }
+   }
+   public double getSpecialistLiabilities() { return specialistLiabilities; }
+   public double getSpecialistProfit() { return getSpecialistRevenue() - getSpecialistLiabilities(); }
 }

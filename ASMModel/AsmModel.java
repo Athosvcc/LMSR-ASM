@@ -64,6 +64,8 @@ public class AsmModel extends SimModelImpl {
    protected static OpenSequenceGraph bitUsageGraph;
    protected static OpenSequenceGraph volumeGraph;
    protected static OpenSequenceGraph wealthGraph;
+   protected static OpenSequenceGraph MMGraph;
+   protected static OpenSequenceGraph LMSRGraph;
    protected static BitDistributionPlot bitDistributionPlot;
 
    private Object2DTorus agentWorld;   // to display and probe the agents
@@ -633,6 +635,27 @@ public class AsmModel extends SimModelImpl {
                });
             }
          }  // showVolume
+         if(observer.getShowMarketMakerRevenue() || observer.getShowMarketMakerLiabilities() || observer.getShowMarketMakerProfit()) {
+            MMGraph = new OpenSequenceGraph("Market Maker Cash Flow", this);
+            this.registerMediaProducer("Market Maker Cash Flow ", MMGraph );
+            MMGraph.setYRange(0 , 20);
+            MMGraph.setYIncrement(1);
+            MMGraph.addSequence("Market Maker Revenue", new Sequence() {
+               public double getSValue() {
+                  return specialist.getSpecialistRevenue();
+               }
+            });
+            MMGraph.addSequence("Market Maker Liabilities", new Sequence() {
+               public double getSValue() {
+                  return specialist.getSpecialistLiabilities();
+               }
+            });
+            MMGraph.addSequence("Market Maker Profit", new Sequence() {
+               public double getSValue() {
+                  return specialist.getSpecialistProfit();
+               }
+            });
+         }  // showMarketMaker
          if(observer.getShowWealthClassifierAgents() || observer.getShowWealthFundamentalTraders() || observer.getShowWealthNoClassifierAgents() || observer.getShowWealthTechnicalTraders() || observer.getShowWealthNormalLearner() || observer.getShowWealthFastLearner() || observer.getShowWealthSFIAgents() || observer.getShowWealthNESFIAgents() || observer.getShowWealthNonZeroBitAgents() || observer.getShowWealthZeroBitAgents() || observer.getShowBaseWealth() || observer.getShowLongTermHreeBaseWealth()) {
             wealthGraph = new OpenSequenceGraph("Average Wealth", this);
             wealthGraph.setYRange(20000 , 25000);
@@ -997,6 +1020,9 @@ public class AsmModel extends SimModelImpl {
          }
          if(observer.getShowTechnicalBits() || observer.getShowFundamentalBits() || observer.getShowBitFractions() ) {
             bitUsageGraph.display();
+         }
+         if(observer.getShowMarketMakerRevenue() || observer.getShowMarketMakerLiabilities() || observer.getShowMarketMakerProfit() ) {
+            MMGraph.display();
          }
          if(observer.getShowWealthClassifierAgents() || observer.getShowWealthFundamentalTraders() || observer.getShowWealthNoClassifierAgents() || observer.getShowWealthTechnicalTraders() || observer.getShowWealthNormalLearner() || observer.getShowWealthFastLearner() || observer.getShowWealthSFIAgents() || observer.getShowWealthNESFIAgents() || observer.getShowWealthNonZeroBitAgents() || observer.getShowWealthZeroBitAgents() || observer.getShowBaseWealth() || observer.getShowLongTermHreeBaseWealth() ) {
             wealthGraph.display();

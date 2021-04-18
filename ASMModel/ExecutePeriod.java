@@ -53,10 +53,10 @@ abstract class ExecutePeriod {
                // System.out.println("Wealth: " + agent.getWealth());
                totalWealth += agent.getWealth();
             }
-            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
-            System.out.println("Payout: " + specialist.getSpecialistPayout());
-            System.out.println("MM Loss: " + (specialist.getSpecialistRevenue()-specialist.getSpecialistPayout()));
-            System.out.println("totalWealth: " + totalWealth);
+//            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
+//            System.out.println("Payout: " + specialist.getSpecialistPayout());
+//            System.out.println("MM Loss: " + (specialist.getSpecialistRevenue()-specialist.getSpecialistPayout()));
+//            System.out.println("totalWealth: " + totalWealth);
          } else { // behavior in all other periods
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore
@@ -72,6 +72,10 @@ abstract class ExecutePeriod {
                // System.out.println("Wealth: " + agent.getWealth());
             }        // for all agents
             World.setTotalWealth(totalWealth);
+            specialist.setSpecialistLiabilities();
+            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
+            System.out.println("Profit: " + specialist.getSpecialistProfit());
+            System.out.println("Liabilities: " + specialist.getSpecialistLiabilities());
             if (AsmModel.showDisplays) graphDisplay();
             if (AsmModel.recordData) {
                if (AsmModel.recorderOptions.getRecordAllFromPeriod() <= World.period && AsmModel.recorderOptions.getRecordAllToPeriod() >= World.period) {
@@ -155,6 +159,13 @@ abstract class ExecutePeriod {
          if(AsmModel.observer.getShowVolume() && (World.period > 2)) {
             AsmModel.volumeGraph.record();
          }
+         if(AsmModel.observer.getShowMarketMakerRevenue() ) {
+            AsmModel.MMGraph.record();
+         } else if (AsmModel.observer.getShowMarketMakerLiabilities() ) {
+            AsmModel.MMGraph.record();
+         } else if (AsmModel.observer.getShowMarketMakerProfit() ) {
+            AsmModel.MMGraph.record();
+         }
 
          if(AsmModel.observer.getShowWealthClassifierAgents() ) {
             AsmModel.wealthGraph.record();
@@ -203,6 +214,9 @@ abstract class ExecutePeriod {
             }
             if(AsmModel.observer.getShowWealthClassifierAgents() || AsmModel.observer.getShowWealthFundamentalTraders() || AsmModel.observer.getShowWealthNoClassifierAgents() || AsmModel.observer.getShowWealthTechnicalTraders() || AsmModel.observer.getShowWealthNormalLearner() || AsmModel.observer.getShowWealthFastLearner() || AsmModel.observer.getShowWealthSFIAgents() || AsmModel.observer.getShowWealthNESFIAgents() || AsmModel.observer.getShowWealthNonZeroBitAgents() || AsmModel.observer.getShowWealthZeroBitAgents() || AsmModel.observer.getShowBaseWealth() || AsmModel.observer.getShowLongTermHreeBaseWealth()) {
                AsmModel.wealthGraph.updateGraph();
+            }
+            if(AsmModel.observer.getShowMarketMakerRevenue() || AsmModel.observer.getShowMarketMakerLiabilities() || AsmModel.observer.getShowMarketMakerProfit() ) {
+               AsmModel.MMGraph.updateGraph();
             }
 
             displayPeriod = 0;
