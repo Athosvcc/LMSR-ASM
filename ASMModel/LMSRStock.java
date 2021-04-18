@@ -43,7 +43,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    private double meanTradingVolumeNo = 0;
    protected double noiseVar = 0.07429;
    protected double noise = 0;
-   protected double bLiq = 10;
+   protected double bLiq = 2;
    protected double alphaLS = 0.05; // used in Othman (2013): 0.05
    protected boolean liquiditySensitive = false;
    protected double probability = 0.8;
@@ -54,7 +54,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected int qNegLMSR = 0;
    protected double qPosInitial = 0;
    protected double qNegInitial = 0;
-   protected double initialQuantity = 0;
+   protected double initialQuantity = 10;
    protected double priceNoStock = 0;
 
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};

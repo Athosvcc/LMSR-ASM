@@ -18,7 +18,7 @@ import uchicago.src.sim.engine.CustomProbeable;
  */
 public class ObserverOptions implements CustomProbeable {
 
-   protected static int updateFrequency = 10 ;
+   protected static int updateFrequency = 1 ;
    protected static boolean calculateCorrelations = false;
    protected boolean showTechnicalBits = false;
    protected boolean showFundamentalBits = false;

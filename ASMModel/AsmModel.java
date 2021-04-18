@@ -491,7 +491,7 @@ public class AsmModel extends SimModelImpl {
          final LMSRStock stockLMSR = World.LMSRStocks;
          if(observer.showStocks) {
             priceGraph = new OpenSequenceGraph("Prices and MA's", this);
-            priceGraph.setYRange(0 , 2);
+            priceGraph.setYRange(0 , 1.2);
             priceGraph.setYIncrement(2.5);
             if(observer.getShowHreePrice_Price()) {
                hreePrice_PriceGraph = new OpenSequenceGraph("HreePrice - Price", this);

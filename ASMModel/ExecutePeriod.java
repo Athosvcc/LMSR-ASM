@@ -91,8 +91,8 @@ abstract class ExecutePeriod {
                   recordPeriod++;
                }
             }
-            System.out.println("Yes Stocks: " + stockLMSR.getQPosLMSR());
-            System.out.println("No Stocks: " + stockLMSR.getQNegLMSR());
+//            System.out.println("Yes Stocks: " + stockLMSR.getQPosLMSR());
+//            System.out.println("No Stocks: " + stockLMSR.getQNegLMSR());
          }
       } else { // end of LMSR execution
 
