@@ -56,6 +56,7 @@ abstract class ExecutePeriod {
                // System.out.println("Wealth: " + agent.getWealth());
                totalWealth += agent.getWealth();
             }
+            specialist.setSpecialistLiabilities();
 //            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
 //            System.out.println("Payout: " + specialist.getSpecialistPayout());
 //            System.out.println("MM Loss: " + (specialist.getSpecialistRevenue()-specialist.getSpecialistPayout()));
@@ -76,9 +77,9 @@ abstract class ExecutePeriod {
             }        // for all agents
             World.setTotalWealth(totalWealth);
             specialist.setSpecialistLiabilities();
-//            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
-//            System.out.println("Profit: " + specialist.getSpecialistProfit());
-//            System.out.println("Liabilities: " + specialist.getSpecialistLiabilities());
+            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
+            System.out.println("Profit: " + specialist.getSpecialistProfit());
+            System.out.println("Liabilities: " + specialist.getSpecialistLiabilities());
             if (AsmModel.showDisplays) graphDisplay();
             if (AsmModel.recordData) {
                if (AsmModel.recorderOptions.getRecordAllFromPeriod() <= World.period && AsmModel.recorderOptions.getRecordAllToPeriod() >= World.period) {

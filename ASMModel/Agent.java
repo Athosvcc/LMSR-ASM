@@ -223,7 +223,7 @@ public class Agent implements Drawable {
       if (stockLMSR.probability > 0.5) { // if stock probability is over 0.5 at the last period, "Yes" stocks pay
          if (numberOfPosStocks > 0) {
             wealth = cash + numberOfPosStocks*1;
-            specialist.setSpecialistPayout(numberOfPosStocks*1);
+            // specialist.setSpecialistPayout(numberOfPosStocks*1);
             numberOfPosStocks = 0;
          } else { // if they aren't, stock is value 0
             wealth = cash; // Yes stocks pay 0
@@ -232,7 +232,7 @@ public class Agent implements Drawable {
       } else { // if stock probability is less than 0.5 at the last period, "No" stocks pay
          if (numberOfNegStocks > 0) {
             wealth = cash + numberOfNegStocks * 1;
-            specialist.setSpecialistPayout(numberOfNegStocks*1);
+            // specialist.setSpecialistPayout(numberOfNegStocks*1);
             numberOfNegStocks = 0;
          } else { // if they aren't, stock is value 0
             wealth = cash; // No stocks pay 0

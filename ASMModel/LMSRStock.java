@@ -44,7 +44,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double noiseVar = 0.07429;
    protected double noise = 0;
    protected double bLiq = 2;
-   protected double alphaLS = 0.05; // used in Othman (2013): 0.05
+   protected double alphaLS = 0.15; // used in Othman (2013): 0.05 // 0.15 corresponds to a "vig" of 20%
    protected boolean liquiditySensitive = false;
    protected double probability = 0.8;
    protected double initialPrice = 0.5;
