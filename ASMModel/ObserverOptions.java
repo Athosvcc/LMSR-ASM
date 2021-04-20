@@ -55,6 +55,8 @@ public class ObserverOptions implements CustomProbeable {
    protected boolean showMarketMakerRevenue = true;
    protected boolean showMarketMakerLiabilities = true;
    protected boolean showMarketMakerProfit = true;
+   protected boolean showBLiq = true;
+   protected boolean showProbability = true;
 
    protected boolean showBitDistribution = false;
 
@@ -331,6 +333,18 @@ public class ObserverOptions implements CustomProbeable {
    public void setShowMarketMakerProfit(boolean val) {
       showMarketMakerProfit = val;
    }
+   public boolean getShowBLiq() {
+      return showBLiq;
+   }
+   public void setShowBLiq(boolean val) {
+      showBLiq = val;
+   }
+   public boolean getShowProbability() {
+      return showProbability;
+   }
+   public void setShowProbability(boolean val) {
+      showProbability = val;
+   }
 
 
    /**
@@ -354,6 +368,7 @@ public class ObserverOptions implements CustomProbeable {
          "showWealthZeroBitAgents","showWealthNonZeroBitAgents",
          "showBaseWealth","showLongTermHreeBaseWealth",
          "showMarketMakerRevenue","ShowMarketMakerLiabilities","ShowMarketMakerProfit",
+         "ShowBLiq","ShowProbability",
          "updateFrequency"
       };
    }  // getProbedProperties()

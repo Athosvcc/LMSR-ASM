@@ -580,6 +580,13 @@ public class AsmModel extends SimModelImpl {
                   });
                }
             }  // if showPrice
+            if(observer.showProbability) {
+               priceGraph.addSequence("Probability", new Sequence() {
+                  public double getSValue() {
+                     return stockLMSR.getProbability();
+                  }
+               });
+            }  // showPriceMean
             if(observer.showPriceMean) {
                priceGraph.addSequence("Mean of Stockprice", new Sequence() {
                   public double getSValue() {
@@ -695,22 +702,39 @@ public class AsmModel extends SimModelImpl {
             this.registerMediaProducer("Market Maker Cash Flow ", MMGraph );
             MMGraph.setYRange(0 , 20);
             MMGraph.setYIncrement(1);
-            MMGraph.addSequence("Market Maker Revenue", new Sequence() {
-               public double getSValue() {
-                  return specialist.getSpecialistRevenue();
-               }
-            });
-            MMGraph.addSequence("Market Maker Liabilities", new Sequence() {
-               public double getSValue() {
-                  return specialist.getSpecialistLiabilities();
-               }
-            });
-            MMGraph.addSequence("Market Maker Profit", new Sequence() {
-               public double getSValue() {
-                  return specialist.getSpecialistProfit();
-               }
-            });
+            if (observer.getShowMarketMakerRevenue()) {
+               MMGraph.addSequence("Market Maker Revenue", new Sequence() {
+                  public double getSValue() {
+                     return specialist.getSpecialistRevenue();
+                  }
+               });
+            }
+            if (observer.getShowMarketMakerLiabilities()) {
+               MMGraph.addSequence("Market Maker Liabilities", new Sequence() {
+                  public double getSValue() {
+                     return specialist.getSpecialistLiabilities();
+                  }
+               });
+            }
+            if (observer.getShowMarketMakerProfit()) {
+               MMGraph.addSequence("Market Maker Profit", new Sequence() {
+                  public double getSValue() {
+                     return specialist.getSpecialistProfit();
+                  }
+               });
+            }
          }  // showMarketMaker
+         if(observer.getShowBLiq()) {
+            LMSRGraph = new OpenSequenceGraph("LMSR Settings", this);
+            this.registerMediaProducer("LMSR Settings ", LMSRGraph );
+            LMSRGraph.setYRange(0 , 10);
+            LMSRGraph.setYIncrement(1);
+            LMSRGraph.addSequence("bLiq", new Sequence() {
+               public double getSValue() {
+                  return stockLMSR.getBLiq();
+               }
+            });
+         }  // showLMSRSettings
          if(observer.getShowWealthClassifierAgents() || observer.getShowWealthFundamentalTraders() || observer.getShowWealthNoClassifierAgents() || observer.getShowWealthTechnicalTraders() || observer.getShowWealthNormalLearner() || observer.getShowWealthFastLearner() || observer.getShowWealthSFIAgents() || observer.getShowWealthNESFIAgents() || observer.getShowWealthNonZeroBitAgents() || observer.getShowWealthZeroBitAgents() || observer.getShowBaseWealth() || observer.getShowLongTermHreeBaseWealth()) {
             wealthGraph = new OpenSequenceGraph("Average Wealth", this);
             wealthGraph.setYRange(20000 , 25000);
@@ -1078,6 +1102,9 @@ public class AsmModel extends SimModelImpl {
          }
          if(observer.getShowMarketMakerRevenue() || observer.getShowMarketMakerLiabilities() || observer.getShowMarketMakerProfit() ) {
             MMGraph.display();
+         }
+         if(observer.getShowBLiq()) {
+            LMSRGraph.display();
          }
          if(observer.getShowWealthClassifierAgents() || observer.getShowWealthFundamentalTraders() || observer.getShowWealthNoClassifierAgents() || observer.getShowWealthTechnicalTraders() || observer.getShowWealthNormalLearner() || observer.getShowWealthFastLearner() || observer.getShowWealthSFIAgents() || observer.getShowWealthNESFIAgents() || observer.getShowWealthNonZeroBitAgents() || observer.getShowWealthZeroBitAgents() || observer.getShowBaseWealth() || observer.getShowLongTermHreeBaseWealth() ) {
             wealthGraph.display();

@@ -172,6 +172,9 @@ abstract class ExecutePeriod {
          } else if (AsmModel.observer.getShowMarketMakerProfit() ) {
             AsmModel.MMGraph.record();
          }
+         if(AsmModel.observer.getShowBLiq() ) {
+            AsmModel.LMSRGraph.record();
+         }
 
          if(AsmModel.observer.getShowWealthClassifierAgents() ) {
             AsmModel.wealthGraph.record();
@@ -223,6 +226,9 @@ abstract class ExecutePeriod {
             }
             if(AsmModel.observer.getShowMarketMakerRevenue() || AsmModel.observer.getShowMarketMakerLiabilities() || AsmModel.observer.getShowMarketMakerProfit() ) {
                AsmModel.MMGraph.updateGraph();
+            }
+            if(AsmModel.observer.getShowBLiq() ) {
+               AsmModel.LMSRGraph.updateGraph();
             }
 
             displayPeriod = 0;

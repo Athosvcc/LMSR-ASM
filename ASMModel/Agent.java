@@ -297,7 +297,7 @@ public class Agent implements Drawable {
                // System.out.println("orderNeg: " + order);
             }
          }
-         System.out.println("trial price: " + trialPrice);
+         // System.out.println("trial price: " + trialPrice);
       } else {
          forecast = (trialPrice+stock.getDividend())*pdCoeff + offset;
       }
