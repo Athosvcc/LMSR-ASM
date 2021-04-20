@@ -38,7 +38,7 @@ public class RecorderOptions implements CustomProbeable {
    private static boolean fundamentalBits = true;
    private static boolean bitFractions = false;
    private static boolean bitAnalyzer = true;
-   private static boolean price = false;
+   private static boolean price = true;
    private static boolean hreePrice = false;
    private static boolean crudePrice = false;
    private static boolean dividend = false;
@@ -71,6 +71,11 @@ public class RecorderOptions implements CustomProbeable {
    private static boolean selectAverageCounter = false;
    private static boolean baseWealth = false;
    private static boolean hreeBaseWealth = false;
+   private static boolean quantityLMSR = true;
+   private static boolean probability = true;
+   private static boolean marketMakerRevenue = true;
+   private static boolean marketMakerLiabilities = true;
+   private static boolean marketMakerProfit = true;
 
    public RecorderOptions() {}
 
@@ -365,6 +370,32 @@ public class RecorderOptions implements CustomProbeable {
    public boolean getHreeBaseWealth() {
       return this.hreeBaseWealth;
    }
+   public boolean getQuantityLMSR() {
+      return quantityLMSR;
+   }
+   public void setQuantityLMSR(boolean val) { quantityLMSR = val; }
+   public boolean getProbability() {
+      return probability;
+   }
+   public void setProbability(boolean val) {
+      probability = val;
+   }
+   public boolean getMarketMakerRevenue() {
+      return marketMakerRevenue;
+   }
+   public void setMarketMakerRevenue(boolean val) { marketMakerRevenue = val; }
+   public boolean getMarketMakerLiabilities() {
+      return marketMakerLiabilities;
+   }
+   public void setMarketMakerLiabilities(boolean val) {
+      marketMakerLiabilities = val;
+   }
+   public boolean getMarketMakerProfit() {
+      return marketMakerProfit;
+   }
+   public void setMarketMakerProfit(boolean val) {
+      marketMakerProfit = val;
+   }
 
   public String[] getProbedProperties() {
       return new String[] {"maxFitness","writeFrequency","recordFrequency","dividend",
@@ -376,7 +407,11 @@ public class RecorderOptions implements CustomProbeable {
       "averageWealthOfNoClassifierAgents","averageWealthOfFundamentalTraders","averageWealthOfTechnicalTraders",
       "averageWealthOfSFIAgents",
       "averageWealthOfNESFIAgents","wealthZeroBitAgents","wealthNonZeroBitAgents",
-      "recorderOutputFile","zeroBitAgents","newZeroBitAgentAt","newZeroFundamentalBitAgentAt","newZeroTechnicalBitAgentAt","selectAverageCounter","baseWealth"};
+      "recorderOutputFile","zeroBitAgents","newZeroBitAgentAt","newZeroFundamentalBitAgentAt","newZeroTechnicalBitAgentAt",
+      "selectAverageCounter","baseWealth",
+      "quantityLMSR","probability",
+      "marketMakerRevenue","marketMakerLiabilities","marketMakerProfit",
+      };
       // deletetd hreeBaseWealth, meanTradingVolume, meanPrice, averageWealthOfNormalLearners, averageWealthOfFastLearner, meanFitness
    }
 

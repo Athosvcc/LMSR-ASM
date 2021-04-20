@@ -158,6 +158,61 @@ public class AsmModel extends SimModelImpl {
          recorder = new DataRecorder(recorderOptions.getRecorderOutputFile(), this, "Data Recording of NEFSI-ASM" );
          recorder.setDelimiter(";");
          if (LMSR) {
+            if (recorderOptions.getPrice()) {
+               class WriteYesPrice implements NumericDataSource {
+                  public double execute() {
+                     return stockLMSR.getPrice();
+                  }
+               }
+               class WriteNoPrice implements NumericDataSource {
+                  public double execute() { return stockLMSR.getPriceNoStock(); }
+               }
+               recorder.addNumericDataSource("Price of Yes Stock", new WriteYesPrice(), 3, 2);
+               recorder.addNumericDataSource("Price of No Stock", new WriteNoPrice(), 3, 2);
+            } // if scheduled to record stock price(s)
+            if (recorderOptions.getQuantityLMSR()) {
+               class WriteYesQuantity implements NumericDataSource {
+                  public double execute() {
+                     return stockLMSR.getQPosLMSR();
+                  }
+               }
+               class WriteNoQuantity implements NumericDataSource {
+                  public double execute() { return stockLMSR.getQNegLMSR(); }
+               }
+               recorder.addNumericDataSource("Quantity of Yes Stock", new WriteYesQuantity(), 3, 2);
+               recorder.addNumericDataSource("Quantity of No Stock", new WriteNoQuantity(), 3, 2);
+            } // if scheduled to record stock quantity
+            if (recorderOptions.getMarketMakerRevenue()) {
+               class WriteMarketMakerRevenue implements NumericDataSource {
+                  public double execute() {
+                     return specialist.getSpecialistRevenue(); }
+               }
+               recorder.addNumericDataSource("Market Maker Revenue", new WriteMarketMakerRevenue(), 3, 2);
+            } // if scheduled to record MM Revenue
+            if (recorderOptions.getMarketMakerLiabilities()) {
+               class WriteProbability implements NumericDataSource {
+                  public double execute() {
+                     return stockLMSR.getProbability();
+                  }
+               }
+               recorder.addNumericDataSource("Probability", new WriteProbability(), 3, 2);
+            } // if scheduled to record Probability
+            if (recorderOptions.getMarketMakerLiabilities()) {
+               class WriteMarketMakerLiabilities implements NumericDataSource {
+                  public double execute() {
+                     return specialist.getSpecialistLiabilities();
+                  }
+               }
+               recorder.addNumericDataSource("Market Maker Liabilities", new WriteMarketMakerLiabilities(), 3, 2);
+            } // if scheduled to record MM Liabilities
+            if (recorderOptions.getMarketMakerProfit()) {
+               class WriteMarketMakerProfit implements NumericDataSource {
+                  public double execute() {
+                     return specialist.getSpecialistProfit();
+                  }
+               }
+               recorder.addNumericDataSource("Market Maker Profit", new WriteMarketMakerProfit(), 3, 2);
+            } // if scheduled to record MM Profit
 
          } else { // end LMSR
             if (recorderOptions.getDividend()) {
@@ -1251,6 +1306,22 @@ public class AsmModel extends SimModelImpl {
       single parameter file, and the respective get- and set-methods have to be public in the
       top level AsmModel-Class.
    */
+   public void setAlphaLS(double val) { LMSRStock.alphaLS = val; }
+   public double getAlphaLS() { return LMSRStock.alphaLS ; }
+   public void setBLiq(double val) { LMSRStock.bLiq = val; }
+   public double getBLiq() { return LMSRStock.bLiq ; }
+   public void setInitialPrice(double val) { LMSRStock.initialPrice = val;}
+   public double getInitialPrice() {return LMSRStock.initialPrice ;}
+   public double getInitialQuantity() { return LMSRStock.initialQuantity; }
+   public void setInitialQuantity(double val) { LMSRStock.initialQuantity = val; }
+   public void setLiquiditySensitive(boolean val) { LMSRStock.liquiditySensitive = val; }
+   public boolean getLiquiditySensitive() { return LMSRStock.liquiditySensitive ; }
+   public void setPeriodShock(double val) { LMSRStock.periodShock = val; }
+   public double getPeriodShock() { return LMSRStock.periodShock ; }
+   public void setProbAfterShock(double val) { LMSRStock.probAfterShock = val;}
+   public double getProbAfterShock() {return LMSRStock.probAfterShock ;}
+   public double getProbability() { return LMSRStock.probability; }
+   public void setProbability(double val) { LMSRStock.probability = val; }
    public void setCrossoverProbability(double val) { Agent.probCrossover = val; }
    public double getCrossoverProbability() { return Agent.probCrossover ; }
    public void setRiskAversion(double val) { staticSFIAgent.riskAversion = val; }   // need it for Batch-runs
@@ -1266,7 +1337,15 @@ public class AsmModel extends SimModelImpl {
 
    public String[] getInitParam() {
       if(this.getController().isBatch()) {
-         String[] params = {"numberOfSFIAgents","numberOfNESFIAgents","stopAtZeroBit","numberOfPeriods","recordData","interestRate","hree","memory","numberOfTechnicians","fracFastAgents","gaInterval","showDisplays","firstGATime","gaIntervalFastAgents","bitCost","crossoverProbability","riskAversion","maxNonActive","recorderParamFile","recorderOutputFile","fracClassifierAgents","selectionMethod","reInitializeAt","numberOfRules","initBitProb"};
+         String[] params = {"numberOfSFIAgents","numberOfNESFIAgents","numberOfLMSRAgents",
+         "stopAtZeroBit","numberOfPeriods","recordData","interestRate","hree","memory",
+         "numberOfTechnicians","fracFastAgents","gaInterval","showDisplays",
+         "firstGATime","gaIntervalFastAgents","bitCost","crossoverProbability",
+         "riskAversion","maxNonActive","recorderParamFile","recorderOutputFile","fracClassifierAgents",
+         "selectionMethod","reInitializeAt","numberOfRules","initBitProb",
+         "LMSR","alphaLS","bLiq","initialPrice","initialQuantity","liquiditySensitive",
+         "periodShock","probAfterShock","probability"
+         };
          return params;
       } else {
          Controller.ALPHA_ORDER= false;   // show the variable not in alphabetical order but in the order as they are in the string array.

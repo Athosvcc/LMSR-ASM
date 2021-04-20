@@ -68,6 +68,9 @@ public class RecorderParamFileReader {
    private static final int NEWZEROTECHNICALBITAGENTAT = 45;
    private static final int NEWZEROBITAGENTAT = 46;
    private static final int WRITEAVERAGESTOCKHOLDINGS = 47;
+   private static final int MARKETMAKERREVENUE = 48;
+   private static final int MARKETMAKERLIABILITIES = 49;
+   private static final int MARKETMAKERPROFIT = 50;
 
    private RandomAccessFile pFile;
    private String fileName;
@@ -578,6 +581,42 @@ public class RecorderParamFileReader {
                            System.out.println("Error while parsing line number "+lineNumber);
                         }
                         break;
+                     case MARKETMAKERREVENUE:   // filename for output file
+                        option = BooleanLexer(st.nextToken().toString());
+                        if(option>-1) {
+                           if(option==0) {
+                              AsmModel.recorderOptions.setNewZeroFundamentalBitAgentAt(false);
+                           } else {
+                              AsmModel.recorderOptions.setNewZeroFundamentalBitAgentAt(true);
+                           }
+                        } else {
+                           System.out.println("Error while parsing line number "+lineNumber);
+                        }
+                        break;
+                     case MARKETMAKERLIABILITIES:   // filename for output file
+                        option = BooleanLexer(st.nextToken().toString());
+                        if(option>-1) {
+                           if(option==0) {
+                              AsmModel.recorderOptions.setNewZeroTechnicalBitAgentAt(false);
+                           } else {
+                              AsmModel.recorderOptions.setNewZeroTechnicalBitAgentAt(true);
+                           }
+                        } else {
+                           System.out.println("Error while parsing line number "+lineNumber);
+                        }
+                        break;
+                     case MARKETMAKERPROFIT:   // filename for output file
+                        option = BooleanLexer(st.nextToken().toString());
+                        if(option>-1) {
+                           if(option==0) {
+                              AsmModel.recorderOptions.setNewZeroBitAgentAt(false);
+                           } else {
+                              AsmModel.recorderOptions.setNewZeroBitAgentAt(true);
+                           }
+                        } else {
+                           System.out.println("Error while parsing line number "+lineNumber);
+                        }
+                        break;
 
                   }
                } else {
@@ -781,6 +820,18 @@ public class RecorderParamFileReader {
       }
       if(word.equalsIgnoreCase("newZeroBitAgentAt:")) {
          token = NEWZEROBITAGENTAT;
+         return token;
+      }
+      if(word.equalsIgnoreCase("marketMakerRevenue:")) {
+         token = MARKETMAKERREVENUE;
+         return token;
+      }
+      if(word.equalsIgnoreCase("marketMakerLiabilities:")) {
+         token = MARKETMAKERLIABILITIES;
+         return token;
+      }
+      if(word.equalsIgnoreCase("marketMakerProfit:")) {
+         token = MARKETMAKERPROFIT;
          return token;
       }
 
