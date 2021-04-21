@@ -35,9 +35,9 @@ public class RecorderOptions implements CustomProbeable {
    private static int recordAllToPeriod = 310000;
    private static boolean calculateCorrelations = false;
    private static boolean technicalBits = true;
-   private static boolean fundamentalBits = true;
+   private static boolean fundamentalBits = false;
    private static boolean bitFractions = false;
-   private static boolean bitAnalyzer = true;
+   private static boolean bitAnalyzer = false;
    private static boolean price = true;
    private static boolean hreePrice = false;
    private static boolean crudePrice = false;
@@ -73,6 +73,7 @@ public class RecorderOptions implements CustomProbeable {
    private static boolean hreeBaseWealth = false;
    private static boolean quantityLMSR = true;
    private static boolean probability = true;
+   private static boolean bLiq = true;
    private static boolean marketMakerRevenue = true;
    private static boolean marketMakerLiabilities = true;
    private static boolean marketMakerProfit = true;
@@ -396,6 +397,12 @@ public class RecorderOptions implements CustomProbeable {
    public void setMarketMakerProfit(boolean val) {
       marketMakerProfit = val;
    }
+   public boolean getBLiq() {
+      return bLiq;
+   }
+   public void setBLiq(boolean val) {
+      bLiq = val;
+   }
 
   public String[] getProbedProperties() {
       return new String[] {"maxFitness","writeFrequency","recordFrequency","dividend",
@@ -409,7 +416,7 @@ public class RecorderOptions implements CustomProbeable {
       "averageWealthOfNESFIAgents","wealthZeroBitAgents","wealthNonZeroBitAgents",
       "recorderOutputFile","zeroBitAgents","newZeroBitAgentAt","newZeroFundamentalBitAgentAt","newZeroTechnicalBitAgentAt",
       "selectAverageCounter","baseWealth",
-      "quantityLMSR","probability",
+      "quantityLMSR","probability","bLiq",
       "marketMakerRevenue","marketMakerLiabilities","marketMakerProfit",
       };
       // deletetd hreeBaseWealth, meanTradingVolume, meanPrice, averageWealthOfNormalLearners, averageWealthOfFastLearner, meanFitness

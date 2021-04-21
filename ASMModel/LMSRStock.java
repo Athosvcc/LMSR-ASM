@@ -559,6 +559,10 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public double getUnitPrice() {
       return unitPrice;
    }
+   public void setResetLMSRStocks() {
+      this.qNegLMSR = 0;
+      this.qPosLMSR = 0;
+   }
 
    public String[] getProbedProperties() {
       return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess", "bLiq", "liquiditySensitive", "alphaLS", "initialQuantity"};

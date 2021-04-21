@@ -213,6 +213,14 @@ public class AsmModel extends SimModelImpl {
                }
                recorder.addNumericDataSource("Market Maker Profit", new WriteMarketMakerProfit(), 3, 2);
             } // if scheduled to record MM Profit
+            if (recorderOptions.getBLiq()) {
+               class WriteBLiq implements NumericDataSource {
+                  public double execute() {
+                     return stockLMSR.getBLiq();
+                  }
+               }
+               recorder.addNumericDataSource("bLiq", new WriteBLiq(), 3, 2);
+            } // if scheduled to record bLiq
 
          } else { // end LMSR
             if (recorderOptions.getDividend()) {
@@ -1153,7 +1161,7 @@ public class AsmModel extends SimModelImpl {
 
    }
 
-   public void setup() {
+   public void setup() { // restart settings for batch runs
       if (World.period > 0) {	// setup called after a simulation run
          tBitsZero = false;
          stopNow = false;
@@ -1188,6 +1196,7 @@ public class AsmModel extends SimModelImpl {
          specialist = null;
          normalNormal = null;
          stockNormal = null;
+         stockNormal = null;
          Agent.instancesOfTechnicians = 0;
          World.numberOfZeroBitAgents = 0;
          World.numberOfZeroFundamentalBitAgents = 0;
@@ -1195,6 +1204,8 @@ public class AsmModel extends SimModelImpl {
          World.period=0;
          NESFIAgent.NESFISelectAverageCounter = 0;
          SFIAgent.SFISelectAverageCounter = 0;
+         LMSRAgent.NESFISelectAverageCounter = 0;
+         stockLMSR.setResetLMSRStocks();
       }  // reRun
       schedule = null;
       schedule = new Schedule();

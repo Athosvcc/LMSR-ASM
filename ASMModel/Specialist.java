@@ -111,7 +111,7 @@ class Specialist {
       for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
          if (stockLMSR.getLiquiditySensitive()) {
             stockLMSR.liquiditySensitiveB(stockLMSR.getAlphaLS(), stockLMSR.getQPosLMSR(), stockLMSR.getQNegLMSR());
-            System.out.println("BLS: " + stockLMSR.getBLiq());
+            // System.out.println("BLS: " + stockLMSR.getBLiq());
          }
          agent = World.Agents[i];
          priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);

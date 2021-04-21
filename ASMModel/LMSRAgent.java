@@ -259,7 +259,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
          fcVar = sumVar/numRules;
          done = true;
       }  // select average or no rules selected
-      divisor = riskAversion * Math.sqrt(stockLMSR.getProbability()*(1-stockLMSR.getProbability()));
+      divisor = riskAversion * stockLMSR.getProbability()*(1-stockLMSR.getProbability());
    }  // chooseRule
 
    public int getMinActiveRules() {
