@@ -201,20 +201,22 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
       dividend = nextDividend;      // we could announce nextDividend to some better informed agents, not yet implemented, all use just dividend
       noise = AsmModel.LMSRNormal.nextDouble();
       switch (probabilityProcess) {
-         case FIXED: // mean-reverting Ohrnstein-Uhlenbeck process with non-iid shocks
-                  nextProbability = Math.max(dividendMeanTheoretical + rho * (dividend - dividendMeanTheoretical) + noise,MINDIVIDEND);
+         case FIXED: // a fixed probability, subject only to shocks
+                  nextProbability = probability;
                   break;
          case LOGIT: // logit specification for event simulation
-                  RHS = betas*zLogit;
-                  nextProbability = Math.exp(RHS)/(1+RHS);
+                  RHS = 1 + (-2)*(World.period/World.numberOfPeriods) + 2*Math.cos(2*Math.PI*World.period/6) + (-2)*Math.sin(2*Math.PI*World.period/6);
+                  // System.out.println("RHS: " + RHS);
+                  nextProbability = Math.exp(RHS)/(1+Math.exp(RHS));
+                  // System.out.println("nextProbability: " + nextProbability);
                   break;
          case RANDOMWALK :
                   nextProbability = probability + noise;
                   if (nextProbability >= 1) {
-                     nextProbability = 1;
+                     nextProbability = 0.999;
                   }
                   if (nextProbability <= 0) {
-                     nextProbability = 0;
+                     nextProbability = 0.001;
                   }
                   break;
          case LOGNORMAL :
@@ -253,8 +255,8 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
                   break;
       }	// switch
       setProbability(nextProbability);
-      updateDividendHistory();
-      updateState();
+      // updateDividendHistory();
+      // updateState();
    }  // updateValue
 
 

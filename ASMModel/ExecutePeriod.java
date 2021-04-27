@@ -64,6 +64,7 @@ abstract class ExecutePeriod {
          } else { // behavior in all other periods
             double totalWealth = 0;
             World.period++;       // initial values for period 0 are set and shouldn't be altered anymore
+            stockLMSR.updateProbability();
             for (int j = 0; j < World.numberOfLMSRAgents; j++) {
                agent = World.Agents[j];
                agent.chooseRule();        // used only for forecasting
