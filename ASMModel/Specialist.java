@@ -101,7 +101,9 @@ class Specialist {
       Agent agent;
       int iteration;
       boolean done;
-      double priceLMSR = 0; // = new double[World.differentStocks]; //mudar
+      double priceLMSR = 0;
+      double priceYesLMSR = 0;
+      double priceNoLMSR = 0;
       type = LMSRSPECIALIST; //mudar
 
       iteration = 0;
@@ -128,8 +130,10 @@ class Specialist {
             stockLMSR.setTradingVolumeNo(volumeNeg);
          }
       }  // while
-      stockLMSR.setPrice(priceLMSR);
-      stockLMSR.setPriceNoStock(1-priceLMSR);
+      priceYesLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
+      priceNoLMSR = getCostLMSR(1, false) - getCostLMSR(0, false);
+      stockLMSR.setPrice(priceYesLMSR);
+      stockLMSR.setPriceNoStock(priceNoLMSR);
 //      if (stockLMSR.getLiquiditySensitive()) {
 //         System.out.println("BLS: " + stockLMSR.getBLiq());
 //      }

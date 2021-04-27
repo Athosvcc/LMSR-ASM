@@ -1189,6 +1189,12 @@ public class AsmModel extends SimModelImpl {
             if(observer.getShowVolume()) {
                volumeGraph.dispose();
             }
+            if(observer.getShowBLiq()) {
+               LMSRGraph.dispose();
+            }
+            if(observer.getShowMarketMakerRevenue() || observer.getShowMarketMakerLiabilities() || observer.getShowMarketMakerProfit() ) {
+               MMGraph.dispose();
+            }
          }  // showDisplays
          for (int i = 0 ; i < world.numberOfAgents ; i++) {
             World.Agents[i] = null;

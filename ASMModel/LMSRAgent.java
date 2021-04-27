@@ -58,7 +58,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
          stock = World.Stocks;   //(Stock)World.stockList.get(type); //mudar
          stockLMSR = World.LMSRStocks;
          stock.totalSupply += 1;
-         wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*(1-stockLMSR.getPrice());
+         wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*stockLMSR.getPriceNoStock();
          World.setTotalWealth(World.getTotalWealth()+wealth);
          for (int i = 0; i < numRules; i++) {   // create a set of numRules TradingRules
             ruleSet[i] = new TradingRule(useClassifier, techTrader, checkRules );   // true = ruleCheck

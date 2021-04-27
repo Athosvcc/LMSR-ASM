@@ -206,7 +206,7 @@ public class Agent implements Drawable {
          if (cash < MINCASH) {
             cash = MINCASH;
          }
-         wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*(1-stockLMSR.getPrice());     // update wealth
+         wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*stockLMSR.getPriceNoStock();// update wealth
       } else {
          stock = World.Stocks;
          cash -= numberOfStocks*(World.interestRate*stock.price-stock.getDividend());
@@ -274,7 +274,7 @@ public class Agent implements Drawable {
             if (numberOfNegStocks == 0) { // if agent has no "No" stocks
                pos = true; // agent will buy "Yes" stocks
                optimalDemand = ((forecast-trialPrice)/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation // mudar numero arbitrario
-               order = Math.floor(optimalDemand);
+               order = Math.round(optimalDemand);
                executeOrder();
                // System.out.println("orderPos: " + order);
             } else {
@@ -287,7 +287,7 @@ public class Agent implements Drawable {
             if (numberOfPosStocks == 0) { // if agent has no "Yes" stocks
                pos = false; // agent will buy "No" stocks
                optimalDemand = (((trialPrice-forecast))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation // mudar numero arbitrario
-               order = Math.floor(optimalDemand);
+               order = Math.round(optimalDemand);
                executeOrder();
                // System.out.println("orderNeg: " + order);
             } else { // agent will sell all "Yes" stocks
