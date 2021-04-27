@@ -19,9 +19,9 @@ import java.util.Hashtable;
 
 public class LMSRStock extends Asset implements CustomProbeable, DescriptorContainer   {
 
-   protected final static int OUP = 0 ;
-   protected final static int RANDOMWALK = 1 ;
-   protected final static int LINEARGROWTH = 2 ;
+   protected final static int FIXED = 0 ;
+   protected final static int LOGIT = 1 ;
+   protected final static int RANDOMWALK = 2 ;
    protected final static int LOGNORMAL = 3 ;
    protected final static int CONSTANT = 4;
    protected final static int SQUARE = 5;
@@ -29,7 +29,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected final static int SINUS = 7;
    protected final static double MINDIVIDEND = 0.00005; // in general dividend could be zero, but this causes problems for forecasts. (same value as in SFI-ASM used)
 
-   private int dividendProcess = 0  ; 	// which valueprocess-type, standard AR(1)
+   private int probabilityProcess = 0  ; 	// which valueprocess-type, standard AR(1)
    protected double rho = 0.95;
    protected double dividendMeanTheoretical = 10.0 ;	// theoretical dividend mean of stochastic process, should exceed risk free interestpayment on one unit of capital
    private double tradingVolume = 0;
@@ -57,6 +57,12 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected static double initialQuantity = 10;
    protected double priceNoStock = 0;
 
+   protected double oldProbability = 0;
+   protected double nextProbability = 0;
+   protected double betas = 0;
+   protected double zLogit = 0;
+   protected double RHS = 0;
+
    private double[] pRatios =  {0.25, 0.5, 0.75, 0.875, 1.0, 1.125, 1.25};
    private double[] dRatios =  {0.6, 0.8, 0.9, 1.0, 1.1, 1.12, 1.4};
    private double[] pdRatios = {0.25, 0.5, 0.75, 0.875, 0.95, 1.0, 1.125 }; // ??
@@ -82,15 +88,15 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public LMSRStock() { // constructor to initialize different value processes
-      Hashtable h1 = new Hashtable();
-      h1.put(new Integer(LMSRStock.OUP), "Ohrnst.-Uhlenbeck");
-      h1.put(new Integer(LMSRStock.RANDOMWALK), "Random Walk");
-      h1.put(new Integer(LMSRStock.CONSTANT),"Const. Dividend");
-      h1.put(new Integer(LMSRStock.SQUARE),"Square Wave");
-      h1.put(new Integer(LMSRStock.TRIANGULAR),"Triangular Wave");
-      h1.put(new Integer(LMSRStock.SINUS),"Sinus Wave");
-      ListPropertyDescriptor pd = new ListPropertyDescriptor("DividendProcess", h1);
-      descriptors.put("DividendProcess", pd);
+      Hashtable h2 = new Hashtable();
+      h2.put(new Integer(LMSRStock.FIXED), "Fixed");
+      h2.put(new Integer(LMSRStock.LOGIT), "Logit");
+      h2.put(new Integer(LMSRStock.RANDOMWALK),"Random Walk");
+      h2.put(new Integer(LMSRStock.SQUARE),"Square Wave");
+      h2.put(new Integer(LMSRStock.TRIANGULAR),"Triangular Wave");
+      h2.put(new Integer(LMSRStock.SINUS),"Sinus Wave");
+      ListPropertyDescriptor pd = new ListPropertyDescriptor("ProbabilityProcess", h2);
+      descriptors.put("ProbabilityProcess", pd);
    }  // constructor
 
    protected void initialize() {
@@ -122,13 +128,13 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
          oldDividendMAs[i] = dividend;
       }
       updateState(); // updates the state of the stock, i.e. world state
-      if(dividendProcess >= 5 ) {   // periodical process
+      if(probabilityProcess >= 5 ) {   // periodical process
          waveLength = 50;  // should be smaller than theta and smaller than GA-invocation interval such that agents are able to detect periodicity
-         if (dividendProcess == TRIANGULAR) {
+         if (probabilityProcess == TRIANGULAR) {
             amplitude = dividendMeanTheoretical/waveLength ;
-         } else if (dividendProcess == SQUARE) {
+         } else if (probabilityProcess == SQUARE) {
             amplitude = dividendMeanTheoretical/5 ;
-         } else if (dividendProcess == SINUS) {
+         } else if (probabilityProcess == SINUS) {
             amplitude = dividendMeanTheoretical/15 ;
          }
          // time = waveLength/4;
@@ -190,19 +196,26 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    // Standard-update-process for OUP
-   public void updateDividend() {
-      oldDividend = dividend;
+   public void updateProbability() {
+      oldProbability = probability;
       dividend = nextDividend;      // we could announce nextDividend to some better informed agents, not yet implemented, all use just dividend
-      noise = AsmModel.stockNormal.nextDouble();
-      switch (dividendProcess) {
-         case OUP : // mean-reverting Ohrnstein-Uhlenbeck process with non-iid shocks
-                  nextDividend = Math.max(dividendMeanTheoretical + rho * (dividend - dividendMeanTheoretical) + noise,MINDIVIDEND);
+      noise = AsmModel.LMSRNormal.nextDouble();
+      switch (probabilityProcess) {
+         case FIXED: // mean-reverting Ohrnstein-Uhlenbeck process with non-iid shocks
+                  nextProbability = Math.max(dividendMeanTheoretical + rho * (dividend - dividendMeanTheoretical) + noise,MINDIVIDEND);
                   break;
-         case RANDOMWALK : // simple random walk with iid-shocks, as long as the values does not drop below zero
-                  nextDividend = Math.max(dividend + noise,MINDIVIDEND) ;
+         case LOGIT: // logit specification for event simulation
+                  RHS = betas*zLogit;
+                  nextProbability = Math.exp(RHS)/(1+RHS);
                   break;
-         case LINEARGROWTH :
-                  dividend += 0.1 ;
+         case RANDOMWALK :
+                  nextProbability = probability + noise;
+                  if (nextProbability >= 1) {
+                     nextProbability = 1;
+                  }
+                  if (nextProbability <= 0) {
+                     nextProbability = 0;
+                  }
                   break;
          case LOGNORMAL :
                   nextDividend = Math.max(dividendMeanTheoretical + rho * (dividend - dividendMeanTheoretical) + Random.normal.nextDouble(0,noiseVar),0.0);
@@ -239,6 +252,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
          default:
                   break;
       }	// switch
+      setProbability(nextProbability);
       updateDividendHistory();
       updateState();
    }  // updateValue
@@ -455,11 +469,11 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public boolean getLiquiditySensitive() {
       return liquiditySensitive;
    }
-   public void setDividendProcess(int process) {
-      dividendProcess = process;
+   public void setProbabilityProcess(int process) {
+      probabilityProcess = process;
    }
-   public int getDividendProcess() {
-      return dividendProcess;
+   public int getProbabilityProcess() {
+      return probabilityProcess;
    }
    public double getRho() {
       return rho;
@@ -565,7 +579,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public String[] getProbedProperties() {
-      return new String[] {"initialPrice","probability","probAfterShock","periodShock","dividendProcess", "bLiq", "liquiditySensitive", "alphaLS", "initialQuantity"};
+      return new String[] {"probabilityProcess","initialPrice","probability","probAfterShock","periodShock","bLiq","liquiditySensitive", "alphaLS", "initialQuantity"};
    }
 
 
