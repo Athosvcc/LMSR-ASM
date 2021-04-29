@@ -56,8 +56,8 @@ abstract class ExecutePeriod {
          }
          specialist.setSpecialistLiabilities();
 //            System.out.println("Revenue: " + specialist.getSpecialistRevenue());
-//            System.out.println("Payout: " + specialist.getSpecialistPayout());
-//            System.out.println("MM Loss: " + (specialist.getSpecialistRevenue()-specialist.getSpecialistPayout()));
+//            System.out.println("Payout: " + specialist.getSpecialistLiabilities());
+//            System.out.println("MM Loss: " + (specialist.getSpecialistRevenue()-specialist.getSpecialistLiabilities()));
 //            System.out.println("totalWealth: " + totalWealth);
       } else { // behavior in all other periods
          double totalWealth = 0;

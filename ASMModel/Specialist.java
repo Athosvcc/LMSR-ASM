@@ -87,7 +87,7 @@ class Specialist {
       stockLMSR = World.LMSRStocks;
 
       for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
-         if (stockLMSR.getLiquiditySensitive()) {
+         if (AsmModel.LS_LMSR) {
             stockLMSR.liquiditySensitiveB(stockLMSR.getAlphaLS(), stockLMSR.getQPosLMSR(), stockLMSR.getQNegLMSR());
             // System.out.println("BLS: " + stockLMSR.getBLiq());
          }

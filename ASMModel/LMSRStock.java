@@ -43,9 +43,8 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    private double meanTradingVolumeNo = 0;
    protected double noiseVar = 0.07429;
    protected double noise = 0;
-   protected static double bLiq = 2;
+   protected static double bLiq = 10;
    protected static double alphaLS = 0.15; // used in Othman (2013): 0.05 // 0.15 corresponds to a "vig" of 20%
-   protected static boolean liquiditySensitive = true;
    protected static double probability = 0.8;
    protected static double initialPrice = 0.5;
    protected static double probAfterShock = 0.2;
@@ -465,12 +464,6 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected void finalize() throws Throwable {
       super.finalize();
    }
-   public void setLiquiditySensitive(boolean sensitive) {
-      liquiditySensitive = sensitive;
-   }
-   public boolean getLiquiditySensitive() {
-      return liquiditySensitive;
-   }
    public void setProbabilityProcess(int process) {
       probabilityProcess = process;
    }
@@ -581,7 +574,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    }
 
    public String[] getProbedProperties() {
-      return new String[] {"probabilityProcess","initialPrice","probability","probAfterShock","periodShock","bLiq","liquiditySensitive", "alphaLS", "initialQuantity"};
+      return new String[] {"probabilityProcess","initialPrice","probability","probAfterShock","periodShock","bLiq", "alphaLS", "initialQuantity"};
    }
 
 

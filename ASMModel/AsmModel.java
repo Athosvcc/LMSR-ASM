@@ -52,7 +52,7 @@ public class AsmModel extends SimModelImpl {
    protected static boolean showDisplays = true;
    protected static boolean recordData = false ;
    private static String recorderParamFile = "recorder.pf" ;
-   protected static boolean LMSR = true ; //mudar
+   protected static boolean LS_LMSR = false ;
    protected static OpenSequenceGraph priceGraph;
    protected static OpenSequenceGraph volumeGraph;
    protected static OpenSequenceGraph wealthGraph;
@@ -474,9 +474,9 @@ public class AsmModel extends SimModelImpl {
    public void setRecordData(boolean recordData) {
       this.recordData = recordData;
    }
-   public boolean getLMSR() { return LMSR; }
-   public void setLMSR(boolean LMSR) {
-      this.LMSR = LMSR;
+   public boolean getLS_LMSR() { return LS_LMSR; }
+   public void setLS_LMSR(boolean LS_LMSR) {
+      this.LS_LMSR = LS_LMSR;
    }
 
    public int getNumberOfPeriods() { return world.numberOfPeriods; }
@@ -522,8 +522,6 @@ public class AsmModel extends SimModelImpl {
    public double getInitialPrice() {return LMSRStock.initialPrice ;}
    public double getInitialQuantity() { return LMSRStock.initialQuantity; }
    public void setInitialQuantity(double val) { LMSRStock.initialQuantity = val; }
-   public void setLiquiditySensitive(boolean val) { LMSRStock.liquiditySensitive = val; }
-   public boolean getLiquiditySensitive() { return LMSRStock.liquiditySensitive ; }
    public void setPeriodShock(double val) { LMSRStock.periodShock = val; }
    public double getPeriodShock() { return LMSRStock.periodShock ; }
    public void setProbAfterShock(double val) { LMSRStock.probAfterShock = val;}
@@ -540,13 +538,13 @@ public class AsmModel extends SimModelImpl {
          String[] params = {"numberOfLMSRAgents","numberOfPeriods","recordData","interestRate","memory",
          "showDisplays","riskAversion","recorderParamFile","recorderOutputFile",
          "selectionMethod","reInitializeAt",
-         "LMSR","alphaLS","bLiq","initialPrice","initialQuantity","liquiditySensitive", // mudar
+         "LS_LMSR","alphaLS","bLiq","initialPrice","initialQuantity",
          "periodShock","probAfterShock","probability"
          };
          return params;
       } else {
          Controller.ALPHA_ORDER= false;   // show the variable not in alphabetical order but in the order as they are in the string array.
-         String[] params = {"LMSRAgent","numberOfLMSRAgents","selectionMethod","numberOfPeriods","interestRate","memory","LMSR",
+         String[] params = {"LMSRAgent","numberOfLMSRAgents","selectionMethod","numberOfPeriods","interestRate","memory","LS_LMSR",
                  "stockLMSR","showDisplays","observer","recordData","recorderOptions","reInitializeAt"};
          return params;
       }
