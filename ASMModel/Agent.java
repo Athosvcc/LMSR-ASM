@@ -195,7 +195,7 @@ public class Agent implements Drawable {
      if (forecast > trialPrice) { // if the agent thinks the probability is higher than the current price
         if (numberOfNegStocks == 0) { // if agent has no "No" stocks
            pos = true; // agent will buy "Yes" stocks
-           optimalDemand = ((forecast-(World.interestRatep1*trialPrice))/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation
+           optimalDemand = (((forecast-(World.interestRatep1*trialPrice)))/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation
            order = Math.round(optimalDemand);
            executeOrder();
 //           System.out.println("orderPos: " + order);
@@ -208,7 +208,7 @@ public class Agent implements Drawable {
      } else { // if the agent thinks the probability is lower than the current price
         if (numberOfPosStocks == 0) { // if agent has no "Yes" stocks
            pos = false; // agent will buy "No" stocks
-           optimalDemand = (((trialPrice-forecast))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation
+           optimalDemand = ((((World.interestRatep1*trialPrice)-forecast))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation
            order = Math.round(optimalDemand);
            executeOrder();
 //           System.out.println("orderNeg: " + order);
