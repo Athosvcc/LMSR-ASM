@@ -28,7 +28,7 @@ public class ObserverOptions implements CustomProbeable {
    protected boolean showMarketMakerRevenue = true;
    protected boolean showMarketMakerLiabilities = true;
    protected boolean showMarketMakerProfit = true;
-   protected boolean showBLiq = true;
+   protected boolean showBLiq = false;
    protected boolean showProbability = true;
 
    protected static int displayTo = 0;

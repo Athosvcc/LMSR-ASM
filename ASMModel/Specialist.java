@@ -94,7 +94,6 @@ class Specialist {
          agent = World.Agents[i];
          priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
          stockLMSR.setPrice(priceLMSR);
-         // stock.setPrice(priceLMSR); //mudar // o display usa esse preço
          agent.setDemandAndSlope(priceLMSR);
          if (agent.pos) {
             tradeMatrix[i][0] = agent.getDemand();

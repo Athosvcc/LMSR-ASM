@@ -190,33 +190,33 @@ public class Agent implements Drawable {
       order = 0;     // if trader don't trade in that stock, then
       stockLMSR = World.LMSRStocks;
       offset = AsmModel.LMSRNormal.nextDouble();
-      divisor = stockLMSR.getProbability()*(1-stockLMSR.getProbability());
+      divisor = riskAversion*stockLMSR.getProbability()*(1-stockLMSR.getProbability());
      forecast = stockLMSR.getProbability() + offset; // gets the real probability and adds own perception
      if (forecast > trialPrice) { // if the agent thinks the probability is higher than the current price
         if (numberOfNegStocks == 0) { // if agent has no "No" stocks
            pos = true; // agent will buy "Yes" stocks
-           optimalDemand = ((forecast-trialPrice)/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation // mudar numero arbitrario
+           optimalDemand = ((forecast-(World.interestRatep1*trialPrice))/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation
            order = Math.round(optimalDemand);
            executeOrder();
-           // System.out.println("orderPos: " + order);
+//           System.out.println("orderPos: " + order);
         } else {
            pos = false;
            order = -numberOfNegStocks; // sells all No stocks
            executeOrder();
-           // System.out.println("orderPos: " + order);
+//           System.out.println("orderPos: " + order);
         }
      } else { // if the agent thinks the probability is lower than the current price
         if (numberOfPosStocks == 0) { // if agent has no "Yes" stocks
            pos = false; // agent will buy "No" stocks
-           optimalDemand = (((trialPrice-forecast))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation // mudar numero arbitrario
+           optimalDemand = (((trialPrice-forecast))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation
            order = Math.round(optimalDemand);
            executeOrder();
-           // System.out.println("orderNeg: " + order);
+//           System.out.println("orderNeg: " + order);
         } else { // agent will sell all "Yes" stocks
            pos = true;
            order = -numberOfPosStocks; // sells all Yes stocks
            executeOrder();
-           // System.out.println("orderNeg: " + order);
+//           System.out.println("orderNeg: " + order);
         }
      }
      // System.out.println("trial price: " + trialPrice);

@@ -228,6 +228,7 @@ public class AsmModel extends SimModelImpl {
             priceGraph = new OpenSequenceGraph("Prices and MA's", this);
             priceGraph.setYRange(0 , 1.2);
             priceGraph.setYIncrement(2.5);
+            priceGraph.setXRange(0 , 1.0);
             if(observer.showPrice) {
                priceGraph.addSequence("Price of Yes Stocks", new Sequence() {
                   public double getSValue() {
@@ -253,6 +254,7 @@ public class AsmModel extends SimModelImpl {
             this.registerMediaProducer("Volume over Time ", volumeGraph );
             volumeGraph.setYRange(0 , 45);
             volumeGraph.setYIncrement(1);
+            volumeGraph.setXRange(0 , 1.0);
             volumeGraph.addSequence("Volume of Yes Stocks", new Sequence() {
                public double getSValue() {
                   return stockLMSR.getTradingVolumeYes();
@@ -269,6 +271,7 @@ public class AsmModel extends SimModelImpl {
             this.registerMediaProducer("Market Maker Cash Flow ", MMGraph );
             MMGraph.setYRange(0 , 20);
             MMGraph.setYIncrement(1);
+            MMGraph.setXRange(0 , 1.0);
             if (observer.getShowMarketMakerRevenue()) {
                MMGraph.addSequence("Market Maker Revenue", new Sequence() {
                   public double getSValue() {
@@ -296,6 +299,7 @@ public class AsmModel extends SimModelImpl {
             this.registerMediaProducer("LMSR Settings ", LMSRGraph );
             LMSRGraph.setYRange(0 , 10);
             LMSRGraph.setYIncrement(1);
+            LMSRGraph.setXRange(0 , 1.0);
             LMSRGraph.addSequence("bLiq", new Sequence() {
                public double getSValue() {
                   return stockLMSR.getBLiq();
