@@ -79,18 +79,16 @@ public class AsmModel extends SimModelImpl {
       // adds boolean checkboxes to the NESFI-Settings windows
       BooleanPropertyDescriptor bd2 = new BooleanPropertyDescriptor("RecordData", true);
       descriptors.put("RecordData", bd2);
-      BooleanPropertyDescriptor bd4 = new BooleanPropertyDescriptor("StopAtZeroBit", true);
-      descriptors.put("stopAtZeroBit", bd4);
       BooleanPropertyDescriptor bd5 = new BooleanPropertyDescriptor("LMSR", true);
       descriptors.put("LMSR", bd5); // mudar
 
       // adds a List to choose an option
       Hashtable h3 = new Hashtable();
-      h3.put(new Integer(Agent.SELECT_BEST),    "Select Best Rule");
-      h3.put(new Integer(Agent.SELECT_AVERAGE), "Select Average");
-      h3.put(new Integer(Agent.SELECT_ROULETTE),"Roulette-Wheel");
-      ListPropertyDescriptor pd3 = new ListPropertyDescriptor("SelectionMethod", h3);
-      descriptors.put("SelectionMethod", pd3);
+      h3.put(new Integer(Specialist.SELECT_2DIGITS),    "Round 2 Digits");
+      h3.put(new Integer(Specialist.SELECT_6DIGITS), "Round 6 Digits");
+      h3.put(new Integer(Specialist.SELECT_FLOAT),"Use Float");
+      ListPropertyDescriptor pd3 = new ListPropertyDescriptor("MarketMakerMethod", h3);
+      descriptors.put("MarketMakerMethod", pd3);
 
       // create objects only for the sake of getting these options out of the main
       // NESFI-Settings windows. Repast requires actual objects that can be probed.
@@ -487,8 +485,8 @@ public class AsmModel extends SimModelImpl {
    public void setNumberOfPeriods(int numberOfPeriods) { world.numberOfPeriods = numberOfPeriods;   }
    public double getInterestRate() { return World.interestRate; }
    public void setInterestRate(double interestRate) { World.interestRate = interestRate; }
-   public void setSelectionMethod(int selectionMethod) { Agent.selectionMethod = selectionMethod; }
-   public int getSelectionMethod() { return Agent.selectionMethod ; }
+   public void setMarketMakerMethod(int MMMethod) { Specialist.selectionMethod = MMMethod; }
+   public int getMarketMakerMethod() { return Specialist.selectionMethod ; }
    public void setMemory(int memory) { Asset.setMemory(memory); }
    public int getMemory() { return Asset.getMemory() ; }
 
@@ -541,14 +539,14 @@ public class AsmModel extends SimModelImpl {
       if(this.getController().isBatch()) {
          String[] params = {"numberOfLMSRAgents","numberOfPeriods","recordData","interestRate","memory",
          "showDisplays","riskAversion","recorderParamFile","recorderOutputFile",
-         "selectionMethod","reInitializeAt",
+         "MarketMakerMethod","reInitializeAt",
          "LS_LMSR","alphaLS","bLiq","initialPrice","initialQuantity",
          "periodShock","probAfterShock","probability"
          };
          return params;
       } else {
          Controller.ALPHA_ORDER= false;   // show the variable not in alphabetical order but in the order as they are in the string array.
-         String[] params = {"LMSRAgent","numberOfLMSRAgents","selectionMethod","numberOfPeriods","interestRate","memory","LS_LMSR",
+         String[] params = {"LMSRAgent","numberOfLMSRAgents","MarketMakerMethod","numberOfPeriods","interestRate","memory","LS_LMSR",
                  "stockLMSR","showDisplays","observer","recordData","recorderOptions","reInitializeAt"};
          return params;
       }

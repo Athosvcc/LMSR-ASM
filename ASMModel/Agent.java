@@ -25,21 +25,6 @@ import uchicago.src.sim.engine.CustomProbeable;
  */
 public class Agent implements Drawable {
 
-   // static class variables
-   // coding for selection method for the trading rules
-   protected static final int SELECT_BEST = 0;
-   protected static final int SELECT_AVERAGE = 1;
-   protected static final int SELECT_ROULETTE = 2;
-   protected static final int SELECT_RANDOM = 3;
-   public static int selectionMethod = SELECT_BEST;
-
-   protected boolean selectedAverageOld = false;  // need both variable to check whether last period was selectAverage
-   protected boolean selectedAverage = false;     // need that for updatePerformance
-   protected static int selectAverageCounter = 0;  // for SFIagents, compare how often select average and whether there is any connection to wealth levels
-   /* These variables are set if the primary selection mechanism is not selectAverage, yet
-   *  select average was effectively used since there were no or to few rules activated.
-   *  Then, the performance of all rules are updated.
-   */
    protected boolean staticAgent = false;
    protected static double MAXHOLDINGS = 1000000000; // no one can own or owe more than the absolute number of stocks available in the economy
    protected static int traders = 0;   // needed for ID-initialization in constructor
@@ -70,8 +55,6 @@ public class Agent implements Drawable {
    protected double medFitness, meanFitness, meanVariance ;
 
    public Agent() {
-      selectAverageCounter=0;
-      // traders = 0;
    }
 
    public Agent(int type) {
@@ -187,7 +170,7 @@ public class Agent implements Drawable {
    }
 
    public void setDemandAndSlope(double trialPrice) {
-      order = 0;     // if trader don't trade in that stock, then
+      order = 0;
       stockLMSR = World.LMSRStocks;
       offset = AsmModel.LMSRNormal.nextDouble();
       divisor = riskAversion*stockLMSR.getProbability()*(1-stockLMSR.getProbability());

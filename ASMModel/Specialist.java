@@ -27,6 +27,10 @@ class Specialist {
    public static double specialistRevenue = 0;
    public static double specialistPayout = 0;
    public static double specialistLiabilities = 0;
+   protected static final int SELECT_2DIGITS = 0;
+   protected static final int SELECT_6DIGITS = 1;
+   protected static final int SELECT_FLOAT = 2;
+   public static int selectionMethod = SELECT_2DIGITS;
 
    public static final int LMSRSPECIALIST = 0 ;
 
@@ -64,13 +68,30 @@ class Specialist {
       costFunctionPost = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR()+orderpos)/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR()+orderneg)/stockLMSR.getBLiq()));
       orderCost = costFunctionPost - costFunction;
 
-      if (order > 0) { // rounds the cost up when buying and down when selling
-         BigDecimal bd = new BigDecimal(orderCost+0.01).setScale(2, BigDecimal.ROUND_DOWN);
-         orderCost = bd.doubleValue();
-      } else {
-         BigDecimal bd = new BigDecimal(orderCost).setScale(2, BigDecimal.ROUND_DOWN);
-         orderCost = bd.doubleValue();
+      switch(selectionMethod){
+         case SELECT_2DIGITS: // rounds to nearest two digits
+            if (order > 0) { // rounds the cost up when buying and down when selling
+               BigDecimal bd = new BigDecimal(orderCost).setScale(2, BigDecimal.ROUND_UP);
+               orderCost = bd.doubleValue();
+            } else {
+               BigDecimal bd = new BigDecimal(orderCost).setScale(2, BigDecimal.ROUND_DOWN);
+               orderCost = bd.doubleValue();
+            }
+            break;
+         case SELECT_6DIGITS: // rounds to nearest six digits
+            if (order > 0) { // rounds the cost up when buying and down when selling
+               BigDecimal bd = new BigDecimal(orderCost).setScale(6, BigDecimal.ROUND_UP);
+               orderCost = bd.doubleValue();
+            } else {
+               BigDecimal bd = new BigDecimal(orderCost).setScale(6, BigDecimal.ROUND_DOWN);
+               orderCost = bd.doubleValue();
+            }
+            break;
+         case SELECT_FLOAT: // uses float values
+            break;
       }
+
+
       return orderCost;
    }
 
