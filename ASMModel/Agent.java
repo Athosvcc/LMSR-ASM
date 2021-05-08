@@ -26,7 +26,6 @@ import uchicago.src.sim.engine.CustomProbeable;
 public class Agent implements Drawable {
 
    protected boolean staticAgent = false;
-   protected static double MAXHOLDINGS = 1000000000; // no one can own or owe more than the absolute number of stocks available in the economy
    protected static int traders = 0;   // needed for ID-initialization in constructor
 
    protected static double riskAversion = 0.3;
@@ -40,19 +39,17 @@ public class Agent implements Drawable {
 
    protected boolean pos;
    protected double optimalDemand;
-   protected double order ; // = new double[World.differentStocks];
+   protected double order ;
    protected double numberOfPosStocks;
    protected double numberOfNegStocks;
-  protected double fcVar ; // = new double[World.differentStocks];
-   protected double divisor ; // = new double[World.differentStocks];
+   protected double divisor ;
    protected LMSRStock stockLMSR;
    protected Specialist specialist;
    protected int x;  // for graphical display
    protected int y;  // for graphical display
 
-   protected double pdCoeff, offset ;
+   protected double offset ;
    protected double forecast ;
-   protected double medFitness, meanFitness, meanVariance ;
 
    public Agent() {
    }

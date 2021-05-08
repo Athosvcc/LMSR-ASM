@@ -125,17 +125,7 @@ public class ObserverOptions implements CustomProbeable {
     */
    public String[] getProbedProperties() {
       return new String[] {"showAgentGrid",
-         "showBitDistribution","showBitFractions","showFundamentalBits","showTechnicalBits",
-         "showDividend","showDivMean","showCrudePrice","showHreeMean",
-         "showPrice","showHreePrice","showHreePrice_Price","showPriceValueCorr",
-         "showPriceMean","showPriceMA5","showPriceMA25","showPriceMA50","showPriceMA100",
-         "showLogReturns","showVolume",
-         "showWealthSFIAgents","showWealthNESFIAgents",
-         "showWealthClassifierAgents","showWealthNoClassifierAgents",
-         "showWealthFundamentalTraders","showWealthTechnicalTraders",
-         "showWealthNormalLearner","showWealthFastLearner",
-         "showWealthZeroBitAgents","showWealthNonZeroBitAgents",
-         "showBaseWealth","showLongTermHreeBaseWealth",
+         "showPrice","showVolume",
          "showMarketMakerRevenue","ShowMarketMakerLiabilities","ShowMarketMakerProfit",
          "ShowBLiq","ShowProbability",
          "updateFrequency"
