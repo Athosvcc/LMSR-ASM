@@ -90,6 +90,14 @@ public class AsmModel extends SimModelImpl {
       ListPropertyDescriptor pd3 = new ListPropertyDescriptor("MarketMakerMethod", h3);
       descriptors.put("MarketMakerMethod", pd3);
 
+      Hashtable h4 = new Hashtable();
+      h4.put(new Integer(Agent.IDEAL), "Ideal");
+      h4.put(new Integer(Agent.LOGIT), "Logit");
+      h4.put(new Integer(Agent.RANDOMWALK),"Random Walk");
+      ListPropertyDescriptor pd4 = new ListPropertyDescriptor("AgentType", h4);
+      descriptors.put("AgentType", pd4);
+
+
       // create objects only for the sake of getting these options out of the main
       // NESFI-Settings windows. Repast requires actual objects that can be probed.
       observer = new ObserverOptions();
@@ -487,6 +495,8 @@ public class AsmModel extends SimModelImpl {
    public void setInterestRate(double interestRate) { World.interestRate = interestRate; }
    public void setMarketMakerMethod(int MMMethod) { Specialist.selectionMethod = MMMethod; }
    public int getMarketMakerMethod() { return Specialist.selectionMethod ; }
+   public void setAgentType(int agentType) { LMSRAgent.agentType = agentType; }
+   public int getAgentType() { return LMSRAgent.agentType ; }
    public void setMemory(int memory) { Asset.setMemory(memory); }
    public int getMemory() { return Asset.getMemory() ; }
 
@@ -541,14 +551,15 @@ public class AsmModel extends SimModelImpl {
       if(this.getController().isBatch()) {
          String[] params = {"numberOfLMSRAgents","numberOfPeriods","recordData","interestRate","memory",
          "showDisplays","riskAversion","recorderParamFile","recorderOutputFile",
-         "MarketMakerMethod","reInitializeAt",
+         "MarketMakerMethod","AgentType","reInitializeAt",
          "LS_LMSR","alphaLS","bLiq","initialPrice","initialQuantity",
          "periodShock","probAfterShock","probability"
          };
          return params;
       } else {
          Controller.ALPHA_ORDER= false;   // show the variable not in alphabetical order but in the order as they are in the string array.
-         String[] params = {"LMSRAgent","numberOfLMSRAgents","MarketMakerMethod","numberOfPeriods","interestRate","memory","LS_LMSR",
+         String[] params = {"LMSRAgent","numberOfLMSRAgents","MarketMakerMethod","AgentType",
+                 "numberOfPeriods","interestRate","memory","LS_LMSR",
                  "stockLMSR","showDisplays","observer","recordData","recorderOptions","reInitializeAt"};
          return params;
       }

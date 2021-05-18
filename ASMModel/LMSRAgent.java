@@ -9,10 +9,12 @@
 
 package ASMModel;
 
+import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.sim.engine.CustomProbeable;
 import uchicago.src.sim.util.Random;
 
 import java.util.Arrays;
+import java.util.Hashtable;
 
 
 /**
@@ -33,21 +35,17 @@ public class LMSRAgent extends Agent implements CustomProbeable {
          staticAgent = true;
          // no endowment with stocks
       }
+
    }  // constructor
 
 
    public String[] getProbedProperties() {
       if (!staticAgent) {
-               return new String[] {"ID","wealth","meanFitness","minFitness","maxFitness","fundamentalBitsSet","technicalBitsSet","cash","numberOfStock"};
+               return new String[] {"ID","wealth","cash"};
          } else { // set static properties for all properties with this actual instance of a trader
-             return new String[] {"numRules","initialCash","minCash","riskAversion","replaceXXRules","probCrossover","minActiveRules","checkRules"};
+             return new String[] {"initialCash","riskAversion"};
          }
    }
-
-
-//   public String getName() {
-//      return "NESFI-Agent";
-//   }
 
 
 }
