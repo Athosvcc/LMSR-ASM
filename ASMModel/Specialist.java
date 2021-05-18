@@ -52,20 +52,20 @@ class Specialist {
       double costFunction;
       double costFunctionPost;
       double orderCost;
-      double orderpos;
-      double orderneg;
+      double orderPos;
+      double orderNeg;
       stockLMSR = World.LMSRStocks;
 
       if (pos) {
-         orderneg = 0;
-         orderpos = order;
+         orderNeg = 0;
+         orderPos = order;
       } else {
-         orderneg = order;
-         orderpos = 0;
+         orderNeg = order;
+         orderPos = 0;
       }
 
       costFunction = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR())/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR())/stockLMSR.getBLiq()));
-      costFunctionPost = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR()+orderpos)/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR()+orderneg)/stockLMSR.getBLiq()));
+      costFunctionPost = stockLMSR.getBLiq()*Math.log(Math.exp((stockLMSR.getQPosLMSR()+orderPos)/stockLMSR.getBLiq())+Math.exp((stockLMSR.getQNegLMSR()+orderNeg)/stockLMSR.getBLiq()));
       orderCost = costFunctionPost - costFunction;
 
       switch(selectionMethod){
@@ -95,16 +95,22 @@ class Specialist {
       return orderCost;
    }
 
+   public double getLastPriceLMSR(double order, boolean pos, boolean buy) { // calculates price of the last stock in an order
+      double priceStock;
+      if (buy) {
+         priceStock = getCostLMSR(order, pos) - getCostLMSR(order-1, pos);
+      } else {
+         priceStock = getCostLMSR(order-1, pos) - getCostLMSR(order, pos);
+      }
+      return priceStock;
+   }
+
    public void adjustPricePrediction() { // price adjustment for LMSR, determined by cost function
       Agent agent;
-      int iteration;
-      boolean done;
       double priceLMSR = 0;
       double priceYesLMSR = 0;
       double priceNoLMSR = 0;
 
-      iteration = 0;
-      done = false;
       stockLMSR = World.LMSRStocks;
 
       for (int i = 0 ; i < World.numberOfLMSRAgents ; i++) {
@@ -115,7 +121,7 @@ class Specialist {
          agent = World.Agents[i];
          priceLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
          stockLMSR.setPrice(priceLMSR);
-         agent.setDemandAndSlope(priceLMSR);
+         agent.setDemandAndSlope();
          if (agent.pos) {
             tradeMatrix[i][0] = agent.getDemand();
             volumePos += tradeMatrix[i][0];

@@ -125,7 +125,7 @@ public class Agent implements Drawable {
      wealth = cash + numberOfPosStocks*stockLMSR.getPrice() + numberOfNegStocks*stockLMSR.getPriceNoStock();// update wealth
    } // receiveInterestAndDividend
 
-   public void setPayout() { // mudar // adicionar boolean pra acao que se realizou?
+   public void setPayout() {
       stockLMSR = World.LMSRStocks;
       specialist = AsmModel.specialist;
       if (stockLMSR.probability > 0.5) { // if stock probability is over 0.5 at the last period, "Yes" stocks pay
@@ -166,35 +166,57 @@ public class Agent implements Drawable {
      this.y = y;
    }
 
-   public void setDemandAndSlope(double trialPrice) {
+   public void setDemandAndSlope() {
+
       order = 0;
       stockLMSR = World.LMSRStocks;
+      specialist = AsmModel.specialist;
       offset = AsmModel.LMSRNormal.nextDouble();
       divisor = riskAversion*stockLMSR.getProbability()*(1-stockLMSR.getProbability());
-     forecast = stockLMSR.getProbability() + offset; // gets the real probability and adds own perception
+      forecast = stockLMSR.getProbability() + offset; // gets the real probability and adds own perception
+      double trialPrice = specialist.getLastPriceLMSR(1, true, true);
      if (forecast > trialPrice) { // if the agent thinks the probability is higher than the current price
         if (numberOfNegStocks == 0) { // if agent has no "No" stocks
            pos = true; // agent will buy "Yes" stocks
            optimalDemand = (((forecast-(World.interestRatep1*trialPrice)))/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation
-           order = Math.round(optimalDemand);
+           while (forecast > trialPrice & order <= optimalDemand) {
+              order++;
+              trialPrice = specialist.getLastPriceLMSR(order, pos, true);
+              System.out.println("trialPrice1: " + trialPrice);
+           }
            executeOrder();
 //           System.out.println("orderPos: " + order);
-        } else {
+        } else { // agent will sell "No" stocks
            pos = false;
-           order = -numberOfNegStocks; // sells all No stocks
+           trialPrice = -specialist.getLastPriceLMSR(1, pos, false); // evaluates price of "No" stock
+           while (trialPrice > 1-forecast & -order <= numberOfNegStocks) {
+              order--;
+              trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
+              System.out.println("trialPrice2: " + trialPrice);
+           }
            executeOrder();
 //           System.out.println("orderPos: " + order);
         }
      } else { // if the agent thinks the probability is lower than the current price
         if (numberOfPosStocks == 0) { // if agent has no "Yes" stocks
            pos = false; // agent will buy "No" stocks
-           optimalDemand = ((((World.interestRatep1*trialPrice)-forecast))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation
-           order = Math.round(optimalDemand);
+           trialPrice = specialist.getLastPriceLMSR(1, pos, true);
+           optimalDemand = ((((1-forecast)-(World.interestRatep1*trialPrice)))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation
+           while (1-forecast > trialPrice & order <= optimalDemand) {
+              order++;
+              trialPrice = specialist.getLastPriceLMSR(order, pos, true);
+              System.out.println("trialPrice3: " + trialPrice);
+           }
            executeOrder();
 //           System.out.println("orderNeg: " + order);
-        } else { // agent will sell all "Yes" stocks
+        } else { // agent will sell "Yes" stocks
            pos = true;
-           order = -numberOfPosStocks; // sells all Yes stocks
+           trialPrice = -specialist.getLastPriceLMSR(0, pos, false); // evaluates price of "Yes" stock
+           while (forecast < trialPrice & -order <= numberOfPosStocks) {
+              order--;
+              trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
+              System.out.println("trialPrice4: " + trialPrice);
+           }
            executeOrder();
 //           System.out.println("orderNeg: " + order);
         }
