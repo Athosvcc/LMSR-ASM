@@ -34,8 +34,6 @@ public class RecorderParamFileReader {
    private static final int STARTFROMPERIOD = 23;
    private static final int RECORDALLFROMPERIOD = 24;
    private static final int RECORDALLTOPERIOD = 25;
-//   private static final int AVERAGEWEALTHOFSFIAGENTS = 33;
-//   private static final int AVERAGEWEALTHOFNESFIAGENTS = 34;
    private static final int BASEWEALTH = 42;
    private static final int MARKETMAKERREVENUE = 48;
    private static final int MARKETMAKERLIABILITIES = 49;
@@ -135,30 +133,6 @@ public class RecorderParamFileReader {
                            System.out.println("Error while parsing line number "+lineNumber);
                         }
                         break;
-//                     case AVERAGEWEALTHOFSFIAGENTS: // mudar
-//                        option = BooleanLexer(st.nextToken().toString());
-//                        if(option>-1) {
-//                           if(option==0) {
-//                              AsmModel.recorderOptions.setAverageWealthOfSFIAgents(false);
-//                           } else {
-//                              AsmModel.recorderOptions.setAverageWealthOfSFIAgents(true);
-//                           }
-//                        } else {
-//                           System.out.println("Error while parsing line number "+lineNumber);
-//                        }
-//                        break;
-//                     case AVERAGEWEALTHOFNESFIAGENTS:
-//                        option = BooleanLexer(st.nextToken().toString());
-//                        if(option>-1) {
-//                           if(option==0) {
-//                              AsmModel.recorderOptions.setAverageWealthOfNESFIAgents(false);
-//                           } else {
-//                              AsmModel.recorderOptions.setAverageWealthOfNESFIAgents(true);
-//                           }
-//                        } else {
-//                           System.out.println("Error while parsing line number "+lineNumber);
-//                        }
-//                        break;
                      case OUTPUTFILE:   // filename for output file
                         AsmModel.recorderOptions.setRecorderOutputFile(st.nextToken().toString());
                         break;

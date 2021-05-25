@@ -23,8 +23,6 @@ public class ObserverOptions implements CustomProbeable {
    protected boolean showStocks = false;
    protected boolean showPrice = true;
    protected boolean showVolume = true;
-//   protected boolean showWealthSFIAgents = false;
-//   protected boolean showWealthNESFIAgents = false;
    protected boolean showMarketMakerRevenue = true;
    protected boolean showMarketMakerLiabilities = true;
    protected boolean showMarketMakerProfit = true;
@@ -72,18 +70,6 @@ public class ObserverOptions implements CustomProbeable {
       }
    }
 
-//   public boolean getShowWealthSFIAgents() {
-//      return showWealthSFIAgents;
-//   }
-//   public void setShowWealthSFIAgents(boolean val) {
-//      showWealthSFIAgents = val;
-//   }
-//   public boolean getShowWealthNESFIAgents() {
-//      return showWealthNESFIAgents;
-//   }
-//   public void setShowWealthNESFIAgents(boolean val) {
-//      showWealthNESFIAgents = val;
-//   }
    public boolean getShowMarketMakerRevenue() {
       return showMarketMakerRevenue;
    }

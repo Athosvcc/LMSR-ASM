@@ -12,7 +12,6 @@ package ASMModel;
 import uchicago.src.reflector.DescriptorContainer;
 import uchicago.src.reflector.ListPropertyDescriptor;
 import uchicago.src.sim.engine.CustomProbeable;
-import uchicago.src.sim.util.Random;
 
 import java.util.Hashtable;
 
@@ -141,10 +140,10 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
          case LOGIT: // logit specification for event simulation
                   pLagged2 = pLagged1;
                   pLagged1 = probability;
-                  RHS = 1 + beta1*(World.period) + beta2*pLagged1 + beta3*pLagged2;
-                  // System.out.println("RHS: " + RHS);
+                  RHS = beta1*(World.period) + beta2*pLagged1 + beta3*pLagged2;
+//                  System.out.println("RHS: " + RHS);
                   nextProbability = Math.exp(RHS)/(1+Math.exp(RHS));
-                  // System.out.println("nextProbability: " + nextProbability);
+//                  System.out.println("nextProbability: " + nextProbability);
                   break;
          case RANDOMWALK:
                   nextProbability = probability + noise;
@@ -212,13 +211,13 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public double getInitialQuantity() { return initialQuantity; }
    public void setInitialQuantity(double value) {
       this.initialQuantity = value;
-   } // mudar com double funciona sl pq
+   }
    public double getProbAfterShock() { return probAfterShock; }
    public void setProbAfterShock(double value) {
       this.probAfterShock = value;
    }
    public double getPeriodShock() { return periodShock; }
-   public void setPeriodShock(double value) { this.periodShock = value; } // mudar com double funciona sl pq
+   public void setPeriodShock(double value) { this.periodShock = value; }
    public double getQPosLMSR() { return qPosLMSR; }
    public void setQPosLMSR(double value) { this.qPosLMSR += value; }
    public double getQNegLMSR() { return qNegLMSR; }

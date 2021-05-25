@@ -17,10 +17,6 @@ import java.util.Arrays;
 import java.util.Hashtable;
 
 
-/**
- * Some methods that differ between agents are invokeGA() or chooseRule(), for instance.
- * Thus, they are overwritten here.
- */
 public class LMSRAgent extends Agent implements CustomProbeable {
 
    public LMSRAgent(int traderType) {

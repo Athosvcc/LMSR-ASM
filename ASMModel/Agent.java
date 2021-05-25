@@ -107,22 +107,7 @@ public class Agent implements Drawable {
      }
    }  // executeOrder()
 
-   /**
-    * This is done in each period after the new dividend is declared.  It is
-    * not normally overridden by subclases.  The taxes are assessed on the
-    * previous wealth at a rate so that there's no net effect on an agent
-    * with position = 0.
-    * Taxes are introduced to avoid explosive wealth behavior since interest
-    * payments would cause the cash position to rise exponentially. For long
-    * simulation runs, this means trouble.
-    *
-    * In principle we do:
-    *	wealth = cash + price*numberOfStocks;			// previous wealth
-    *	cash += interestRate*cash + numberOfStocks*dividend;	// earnings
-    *	cash -= wealth*interestRate;				// taxes
-    * but we cut directly to the cash:
-    *	cash -= numberOfStocks*(interestRate*price - dividend)
-    */
+
    public void getEarningsAndPayTaxes() {
      stockLMSR = World.LMSRStocks;
      if (cash < MINCASH) {
@@ -230,9 +215,13 @@ public class Agent implements Drawable {
             break; // end of FIXED
          case LOGIT: // logit specification for event prediction
             double RHS;
-            RHS = 1 + (-2) * (World.period / World.numberOfPeriods) + 2 * Math.cos(2 * Math.PI * World.period / 6) + (-2) * Math.sin(2 * Math.PI * World.period / 6);
-            // System.out.println("RHS: " + RHS);
+            double beta1 = stockLMSR.beta1;
+            double beta2 = stockLMSR.beta2;
+            double beta3 = stockLMSR.beta3;
+            RHS =  beta1*(World.period) + beta2*stockLMSR.pLagged1 + beta3*stockLMSR.pLagged2;;
+//            System.out.println("RHSAg: " + RHS);
             forecast = Math.exp(RHS) / (1 + Math.exp(RHS));
+//            System.out.println("Forecast: " + forecast);
             trialPrice = specialist.getLastPriceLMSR(1, true, true);
             if (forecast > trialPrice) { // if the agent thinks the probability is higher than the current price
                if (numberOfNegStocks == 0) { // if agent has no "No" stocks
@@ -339,11 +328,6 @@ public class Agent implements Drawable {
 
    }	 // setDemandAndSlope
 
-
-   /**
-    * Constrains demand such that neither MINCASH nor MAXBID are violated for one single stock
-    * This applies only if there is one stock to check.
-   */
    public void constrainDemand(double trialPrice) {
      specialist = AsmModel.specialist;
      while (specialist.getCostLMSR(order, pos) > (cash - MINCASH)) {

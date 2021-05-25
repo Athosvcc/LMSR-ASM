@@ -12,17 +12,12 @@ package ASMModel;
 import java.math.BigDecimal;
 
 /**
- * The specialist handles market clearing. There is one instance created and the object
- * finds a market clearing price. From the various types of the original SFI-ASM,
- * only the hree-specialist and the slope specialist have been implemented.
+ * The specialist handles market clearing.
  */
 class Specialist {
 
-   private static double[][] tradeMatrix;       // holds individual demands and slopes of individual agents
+   private static double[][] tradeMatrix;       // holds individual demands
    private LMSRStock stockLMSR;
-   private double minExcess = 0.1;
-   // private double eta = 0.0005;  // for price-adjustment
-   protected static final int MAXITERATIONS = 10;
    public static double volumeNeg, volumePos;
    public static double specialistRevenue = 0;
    public static double specialistPayout = 0;
@@ -32,20 +27,11 @@ class Specialist {
    protected static final int SELECT_FLOAT = 2;
    public static int selectionMethod = SELECT_2DIGITS;
 
-   public static final int LMSRSPECIALIST = 0 ;
-
 
    public Specialist() { // constructor
       World.numberOfAgents = World.numberOfLMSRAgents;
       tradeMatrix = new double[World.numberOfAgents][2];
-
-      /* Now determine the hree-forecast parameters. They are highly on the dividend process and agent
-         forecast types. To figure out how these formulas were are actually derived, please
-         refer to the appendix.
-      */
-
       stockLMSR = World.LMSRStocks;
-      // System.out.println("f= "+reF+ "   g= "+reG+ "   a= "+reA+ "   b= "+reB);
    }  // end of constructor
 
    public double getCostLMSR(double order, boolean pos) { // calculates cost function, used for price setting

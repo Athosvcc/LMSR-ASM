@@ -42,7 +42,7 @@ import cern.jet.math.Functions.*;
 
 
 /**
- * This is the main file of the NESFI-ASM. It has all the Repast specific stuff in it
+ * This is the main file of the LMSR-ASM. It has all the Repast specific stuff in it
  * and controls the model.
  */
 public class AsmModel extends SimModelImpl {
@@ -67,7 +67,6 @@ public class AsmModel extends SimModelImpl {
 
    protected static ObserverOptions observer;
    private Schedule schedule;
-   protected static Normal normalNormal;
    protected static Normal LMSRNormal;
    private static long rngSeed;
    private static RandomElement generator;
@@ -99,7 +98,7 @@ public class AsmModel extends SimModelImpl {
 
 
       // create objects only for the sake of getting these options out of the main
-      // NESFI-Settings windows. Repast requires actual objects that can be probed.
+      // settings windows. Repast requires actual objects that can be probed.
       observer = new ObserverOptions();
       recorderOptions = new RecorderOptions();
       try {
@@ -118,13 +117,9 @@ public class AsmModel extends SimModelImpl {
 
    private void buildModel() {
 
-      // now create 3 Random-Generators,
-      // Uniform is heavily used in the GA
-      // stockNormal creates the noise for the dividend-process
-      // normalNormal is used when trading rules are created
+      // LMSRNormal creates the noise for the probability process
       // rngSeed is set by the gui
       Random.createUniform();
-      normalNormal = new Normal(0.0, 1.0, new MersenneTwister((int)getRngSeed()) );
       LMSRNormal = new Normal(0.0, 0.05, new MersenneTwister((int)getRngSeed()) ); // as set in Prediction Market Liquidity
       stockLMSR.initialize();
 
@@ -209,21 +204,6 @@ public class AsmModel extends SimModelImpl {
             }
             recorder.addNumericDataSource("Average Wealth", new WriteAverageWealth(), 7, DIGITS);
          } // if scheduled to record the average wealth of agents in the economy
-//         if (recorderOptions.getForecastParameterA()) {
-//            class forecastParameterA implements NumericDataSource {
-//               public double execute() {
-//                  return World.getForecastMeanA();
-//               }
-//            }
-//            recorder.addNumericDataSource("ForecastMean", new forecastParameterA(), 7, 6);
-//
-//            class MeanVarianceEstimate implements NumericDataSource {
-//               public double execute() {
-//                  return World.getVarianceMean();
-//               }
-//            }
-//            recorder.addNumericDataSource("VarEstimateMean", new MeanVarianceEstimate(), 6, 4);
-//         } // if scheduled
       }  // if record
    }  // buildModel
 
@@ -356,12 +336,6 @@ public class AsmModel extends SimModelImpl {
       } 	// buildSchedule
 
       public void reInitialize() {
-         // System.out.println(NESFIAgent.numRulesNESFIAgent+" "+NESFIAgent.newTR);
-//         for (int i = 0; i < World.numberOfAgents ; i++) {
-//            World.Agents[i].wealth = averageWealth;
-//            World.Agents[i].numberOfStocks=1d;
-//            World.Agents[i].cash = averageWealth - stockLMSR.price; //mudar
-//         }
       }
 
       public void conditionalStop() {
@@ -373,13 +347,6 @@ public class AsmModel extends SimModelImpl {
       buildModel();
       if(showDisplays) {
           buildDisplay();
-/*        // I had this in the RePast 1.4 version which caused a run time error with RePast 2.0
-          // If I remember correctly this was just for a correct display of the first period and is not
-          // necessarily needed.
-          if (observer.showPrice && observer.showStocks ) {
-            priceGraph.step();
-          }
-*/
       }
       buildSchedule();
       if (showDisplays) {
@@ -451,7 +418,6 @@ public class AsmModel extends SimModelImpl {
             World.Agents[i] = null;
          }
          specialist = null;
-         normalNormal = null;
          World.period=0;
          stockLMSR.setResetLMSRStocks();
       }  // reRun
@@ -555,7 +521,7 @@ public class AsmModel extends SimModelImpl {
          "showDisplays","riskAversion","recorderParamFile","recorderOutputFile",
          "MarketMakerMethod","AgentType","reInitializeAt",
          "LS_LMSR","alphaLS","bLiq","initialPrice","initialQuantity",
-         "periodShock","probAfterShock","probability"
+         "periodShock","probAfterShock","probability", "probabilityProcess"
          };
          return params;
       } else {
@@ -566,12 +532,6 @@ public class AsmModel extends SimModelImpl {
          return params;
       }
    }  // getInitParam()
-
-
-   /**
-    * This procedure just updates the console such that the model doesn't look like stuck if
-    * it is in batch-mode. It is scheduled in buildSchedule and can easily be deleted.
-   */
 
 } 	// AsmModel
 

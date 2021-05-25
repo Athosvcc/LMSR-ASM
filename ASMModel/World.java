@@ -20,8 +20,7 @@ import org.jfree.data.DefaultCategoryDataset;
  * There is one world object created in the buildModel() method. It holds certain
  * parameters that describe the economic environment of the model, e.g., interest
  * rate, periods to run, how many agents of what kind, etc. It also has some methods
- * to gather and report data that make only sense on a "world" level, e.g.,
- * total number or fractions of bits set, total wealth level, trading volume etc.
+ * to gather and report data that make only sense on a "world" level.
  */
 class World {
 
@@ -77,28 +76,6 @@ class World {
       // System.out.println("Average Wealth of agents in the economy :"+totalWealth/World.numberOfAgents );
       return totalWealth/World.numberOfAgents;
    }  // getAverageWealth
-
-
-//   protected static double getWealthOfSFIAgents() {
-//      double wealth = 0d;
-//      int traders=0;
-//      for (int i = 0 ; i < numberOfSFIAgents ; i++) {
-//         traders++;
-//         wealth += Agents[i].getWealth();
-//      }
-//      if (traders==0) return 0d; else return wealth/traders;
-//   }
-//
-//   protected static double getWealthOfNESFIAgents() {
-//      double wealth = 0d;
-//      int traders=0;
-//      for (int i = numberOfSFIAgents ; i < numberOfAgents ; i++) {
-//         traders++;
-//         wealth += Agents[i].getWealth();
-//      }
-//      if (traders==0) return 0d; else return wealth/traders;
-//   }
-
 
    protected static double getBaseWealth() {
       return baseWealth;

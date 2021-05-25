@@ -17,8 +17,8 @@ package ASMModel;
 
 /**
  * This class allows to switch data recording options on or off over the GUI.
- * In order to have it not included in the main NESFI-Settings window, a separate
- * object is created which then can be probed from the NESFI-Settings windows.
+ * In order to have it not included in the main settings window, a separate
+ * object is created which then can be probed from the settings windows.
  * RecorderOptions basically holds Boolean values which can be set through their
  * appropriate get- and set accessor methods. If a parameter file exists, the
  * preset values in the source code can be overwritten. The variable names for
@@ -36,8 +36,6 @@ public class RecorderOptions implements CustomProbeable {
    private static boolean price = true;
    private static boolean averageWealth = false;
    private static boolean tradingVolume = false;
-//   private static boolean wealthOfSFIAgents = false; // mudar
-//   private static boolean wealthOfNESFIAgents = false;
    private static boolean baseWealth = false;
    private static boolean quantityLMSR = true;
    private static boolean probability = true;
@@ -113,18 +111,7 @@ public class RecorderOptions implements CustomProbeable {
    public int getRecordAllToPeriod() {
       return recordAllToPeriod;
    }
-//   public boolean getAverageWealthOfSFIAgents() { // mudar
-//      return this.wealthOfSFIAgents;
-//   }
-//   public void setAverageWealthOfSFIAgents(boolean val) {
-//      this.wealthOfSFIAgents = val;
-//   }
-//   public boolean getAverageWealthOfNESFIAgents() {
-//      return this.wealthOfNESFIAgents;
-//   }
-//   public void setAverageWealthOfNESFIAgents(boolean val) {
-//      this.wealthOfNESFIAgents = val;
-//   }
+
    public void setRecorderOutputFile(String val) { recorderOutputFile = val; }
    public String getRecorderOutputFile() { return recorderOutputFile; }
 

@@ -17,12 +17,6 @@ import java.io.*;
 import uchicago.src.sim.util.Random;
 import cern.jet.random.*;
 
-/**
- * It contains all basic methods for different assets. The structure with an abstract
- * asset class and one single derived class is due to the initial design of a multi-asset
- * model. In fact, this version has been stripped down from an existing two stock version
- * in which I create two stocks from the stock class, and an index, that also extends asset.
- */
 public abstract class Asset {
 
    private static int memory = 2500;    // how many values are used for statistics last memory prices, dividends etc.
