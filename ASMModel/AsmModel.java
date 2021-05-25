@@ -528,6 +528,8 @@ public class AsmModel extends SimModelImpl {
    */
    public void setRiskAversion(double val) { staticLMSRAgent.riskAversion = val; }   // need it for Batch-runs
    public double getRiskAversion() { return staticLMSRAgent.riskAversion ; }
+   public void setProbabilityProcess(int probabilityProcess) { LMSRStock.probabilityProcess = probabilityProcess; }
+   public int getProbabilityProcess() { return LMSRStock.probabilityProcess; }
    public void setAlphaLS(double val) { LMSRStock.alphaLS = val; }
    public double getAlphaLS() { return LMSRStock.alphaLS ; }
    public void setBLiq(double val) { LMSRStock.bLiq = val; }

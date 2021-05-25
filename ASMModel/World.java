@@ -37,7 +37,7 @@ class World {
    public static int numberOfAgents = numberOfLMSRAgents;
    private static double baseWealth = 0;
 
-   public static int numberOfPeriods = 100 ;
+   public static int numberOfPeriods = 500 ;
    private static double totalWealth = 0 ;
 
    public World() { // constructor

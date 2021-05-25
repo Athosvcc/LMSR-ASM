@@ -23,7 +23,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected final static int LOGIT = 1 ;
    protected final static int RANDOMWALK = 2 ;
 
-   private int probabilityProcess = 0  ; 	//
+   public static int probabilityProcess = 1  ; 	// sets which probability process is chosen according to previous values
    protected double rho = 0.95;
    protected double dividendMeanTheoretical = 10.0 ;	// theoretical dividend mean of stochastic process, should exceed risk free interestpayment on one unit of capital
    private double tradingVolume = 0;
@@ -39,10 +39,10 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double noise = 0;
    protected static double bLiq = 10;
    protected static double alphaLS = 0.15; // used in Othman (2013): 0.05 // 0.15 corresponds to a "vig" of 20%
-   protected static double probability = 0.8;
+   protected static double probability = 0.5;
    protected static double initialPrice = 0.5;
    protected static double probAfterShock = 0.2;
-   protected static double periodShock = 50;
+   protected static double periodShock = 0;
    protected int qPosLMSR = 0;
    protected int qNegLMSR = 0;
    protected double qPosInitial = 0;
@@ -50,10 +50,12 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected static double initialQuantity = 10;
    protected double priceNoStock = 0;
 
-   protected double oldProbability = 0;
    protected double nextProbability = 0;
-   protected double betas = 0;
-   protected double zLogit = 0;
+   protected double pLagged1 = probability;
+   protected double pLagged2 = probability;
+   protected double beta1 = 0.02044511;
+   protected double beta2 = -1.21038522;
+   protected double beta3 = -1.50537449;
    protected double RHS = 0;
 
    private Hashtable descriptors = new Hashtable();
@@ -131,14 +133,15 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
 
    // Standard-update-process for OUP
    public void updateProbability() {
-      oldProbability = probability;
       noise = AsmModel.LMSRNormal.nextDouble();
       switch (probabilityProcess) {
          case FIXED: // a fixed probability, subject only to shocks
                   nextProbability = probability;
                   break;
          case LOGIT: // logit specification for event simulation
-                  RHS = 1 + (-2)*(World.period/World.numberOfPeriods) + 2*Math.cos(2*Math.PI*World.period/6) + (-2)*Math.sin(2*Math.PI*World.period/6);
+                  pLagged2 = pLagged1;
+                  pLagged1 = probability;
+                  RHS = 1 + beta1*(World.period) + beta2*pLagged1 + beta3*pLagged2;
                   // System.out.println("RHS: " + RHS);
                   nextProbability = Math.exp(RHS)/(1+Math.exp(RHS));
                   // System.out.println("nextProbability: " + nextProbability);
