@@ -140,8 +140,12 @@ public class AsmModel extends SimModelImpl {
             class WriteNoPrice implements NumericDataSource {
                public double execute() { return stockLMSR.getPriceNoStock(); }
             }
+            class WritePriceSum implements NumericDataSource {
+               public double execute() { return stockLMSR.getPriceSum(); }
+            }   
             recorder.addNumericDataSource("Price of Yes Stock", new WriteYesPrice(), 3, 2);
             recorder.addNumericDataSource("Price of No Stock", new WriteNoPrice(), 3, 2);
+            recorder.addNumericDataSource("Sum of All Prices", new WritePriceSum(), 3, 2);
          } // if scheduled to record stock price(s)
          if (recorderOptions.getQuantityLMSR()) {
             class WriteYesQuantity implements NumericDataSource {
@@ -211,7 +215,7 @@ public class AsmModel extends SimModelImpl {
       if(showDisplays) {
          final LMSRStock stockLMSR = World.LMSRStocks;
          if(observer.showStocks) {
-            priceGraph = new OpenSequenceGraph("Prices and MA's", this);
+            priceGraph = new OpenSequenceGraph("Prices", this);
             priceGraph.setYRange(0 , 1.2);
             priceGraph.setYIncrement(2.5);
             priceGraph.setXRange(0 , 1.0);
@@ -224,6 +228,11 @@ public class AsmModel extends SimModelImpl {
                priceGraph.addSequence("Price of No Stocks", new Sequence() {
                   public double getSValue() {
                      return stockLMSR.getPriceNoStock();
+                  }
+               });
+               priceGraph.addSequence("Sum of All Prices", new Sequence() {
+                  public double getSValue() {
+                     return stockLMSR.getPriceSum();
                   }
                });
             }  // if showPrice

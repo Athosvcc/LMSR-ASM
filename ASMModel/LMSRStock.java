@@ -48,6 +48,7 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    protected double qNegInitial = 0;
    protected static double initialQuantity = 10;
    protected double priceNoStock = 0;
+   protected double priceSum = 0;
 
    protected double nextProbability = 0;
    protected double pLagged1 = probability;
@@ -228,6 +229,8 @@ public class LMSRStock extends Asset implements CustomProbeable, DescriptorConta
    public void setQNegInitial(double value) { this.qNegInitial = value; }
    public double getPriceNoStock() {return priceNoStock; }
    public void setPriceNoStock(double value) { this.priceNoStock = value; }
+   public double getPriceSum() {return priceSum; }
+   public void setPriceSum(double value) { this.priceSum = value; }
 
 
    public double getTradingVolume() {

@@ -115,10 +115,6 @@ abstract class ExecutePeriod {
          if(AsmModel.observer.getShowBLiq() ) {
             AsmModel.LMSRGraph.record();
          }
-//         if(AsmModel.observer.getShowWealthSFIAgents() ) {
-//            AsmModel.wealthGraph.record();
-//         } else if (AsmModel.observer.getShowWealthNESFIAgents() ) { // mudar
-//            AsmModel.wealthGraph.record(); }
 
          if (displayPeriod == updateDisplayPeriod ) { // updating the display at longer time interval, saves time
             if(AsmModel.observer.showStocks) {
@@ -127,9 +123,6 @@ abstract class ExecutePeriod {
             if(AsmModel.observer.getShowVolume() && (World.period > 2)) {
                AsmModel.volumeGraph.updateGraph();
             }
-//            if(AsmModel.observer.getShowWealthSFIAgents() || AsmModel.observer.getShowWealthNESFIAgents()) {
-//               AsmModel.wealthGraph.updateGraph(); // mudar
-//            }
             if(AsmModel.observer.getShowMarketMakerRevenue() || AsmModel.observer.getShowMarketMakerLiabilities() || AsmModel.observer.getShowMarketMakerProfit() ) {
                AsmModel.MMGraph.updateGraph();
             }

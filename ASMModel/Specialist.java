@@ -120,6 +120,7 @@ class Specialist {
       }  // while
       priceYesLMSR = getCostLMSR(1, true) - getCostLMSR(0, true);
       priceNoLMSR = getCostLMSR(1, false) - getCostLMSR(0, false);
+      stockLMSR.setPriceSum(priceYesLMSR + priceNoLMSR);
       stockLMSR.setPrice(priceYesLMSR);
       stockLMSR.setPriceNoStock(priceNoLMSR);
 //      if (stockLMSR.getLiquiditySensitive()) {
