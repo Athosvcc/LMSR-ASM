@@ -37,7 +37,7 @@ public class LMSRAgent extends Agent implements CustomProbeable {
 
    public String[] getProbedProperties() {
       if (!staticAgent) {
-               return new String[] {"ID","wealth","cash"};
+               return new String[] {"ID","wealth","cash","numberOfNegStocks","numberOfPosStocks"};
          } else { // set static properties for all properties with this actual instance of a trader
              return new String[] {"initialCash","riskAversion"};
          }

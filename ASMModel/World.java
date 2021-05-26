@@ -25,7 +25,7 @@ import org.jfree.data.DefaultCategoryDataset;
 class World {
 
    // static class variables
-   public static double interestRate = 0.1;
+   public static double interestRate = 0.0;
    public static double interestRatep1 = interestRate + 1.0;
    public static int period = 0 ;
 
@@ -36,7 +36,7 @@ class World {
    public static int numberOfAgents = numberOfLMSRAgents;
    private static double baseWealth = 0;
 
-   public static int numberOfPeriods = 500 ;
+   public static int numberOfPeriods = 200 ;
    private static double totalWealth = 0 ;
 
    public World() { // constructor

@@ -10,6 +10,7 @@
 package ASMModel;
 
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.util.*;
 import java.lang.*;
 import java.io.*;
@@ -41,7 +42,7 @@ public class Agent implements Drawable {
    protected final static int LOGIT = 1 ;
    protected final static int RANDOMWALK = 2 ;
 
-   public static int agentType = 2  ; // defines agent behavior
+   public static int agentType = 0  ; // defines agent behavior
 
    protected boolean pos;
    protected double optimalDemand;
@@ -81,6 +82,12 @@ public class Agent implements Drawable {
    public double getInitialCash() {
       return initialCash;
    }
+   public double getNumberOfPosStocks() {
+      return numberOfPosStocks;
+   }
+   public double getNumberOfNegStocks() {
+      return numberOfNegStocks;
+   }
    public void setInitialCash(double val) {
       this.initialCash = val;
    }
@@ -97,11 +104,13 @@ public class Agent implements Drawable {
      if (pos) { // if agent will buy or sell positive stocks
         stockLMSR.setQPosLMSR(order); // adds or subtracts to the total of positive stocks in the system
         numberOfPosStocks += order; // adds or subtracts to total of positive stocks the agent holds
+//        System.out.println("YesStocks: " + numberOfPosStocks);
         specialist.setSpecialistRevenue(costLMSR); // adds to Market Maker revenue
         cash -= costLMSR; // subtracts the cost of the order from the agent's cash
      } else { // if agent will buy or sell negative stocks
         stockLMSR.setQNegLMSR(order); // adds or subtracts to the total of positive stocks in the system
         numberOfNegStocks += order; // adds or subtracts to total of positive stocks the agent holds
+//        System.out.println("NoStocks: " + numberOfNegStocks);
         specialist.setSpecialistRevenue(costLMSR); // adds to Market Maker revenue
         cash -= costLMSR; // subtracts the cost of the order from the agent's cash
      }
@@ -123,19 +132,19 @@ public class Agent implements Drawable {
          if (numberOfPosStocks > 0) {
             wealth = cash + numberOfPosStocks*1;
             // specialist.setSpecialistPayout(numberOfPosStocks*1);
-            numberOfPosStocks = 0;
+//            numberOfPosStocks = 0;
          } else { // if they aren't, stock is value 0
             wealth = cash; // Yes stocks pay 0
-            numberOfPosStocks = 0;
+//            numberOfPosStocks = 0;
          }
       } else { // if stock probability is less than 0.5 at the last period, "No" stocks pay
          if (numberOfNegStocks > 0) {
             wealth = cash + numberOfNegStocks * 1;
             // specialist.setSpecialistPayout(numberOfNegStocks*1);
-            numberOfNegStocks = 0;
+//            numberOfNegStocks = 0;
          } else { // if they aren't, stock is value 0
             wealth = cash; // No stocks pay 0
-            numberOfNegStocks = 0;
+//            numberOfNegStocks = 0;
          }
       }
    }
@@ -167,6 +176,7 @@ public class Agent implements Drawable {
       switch (agentType) {
          case IDEAL: // traders with perfect forecast, used as baseline
             forecast = stockLMSR.getProbability();
+//            System.out.println("forecast: " + forecast);
             trialPrice = specialist.getLastPriceLMSR(1, true, true);
             if (forecast > trialPrice) { // if the agent thinks the probability is higher than the current price
                if (numberOfNegStocks == 0) { // if agent has no "No" stocks
@@ -181,7 +191,7 @@ public class Agent implements Drawable {
                } else { // agent will sell "No" stocks
                   pos = false;
                   trialPrice = -specialist.getLastPriceLMSR(1, pos, false); // evaluates price of "No" stock
-                  while (trialPrice > 1-forecast & -order <= numberOfNegStocks) {
+                  while (trialPrice > 1-forecast & -order < numberOfNegStocks) {
                      order--;
                      trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
 //                     System.out.println("trialPrice2: " + trialPrice);
@@ -203,7 +213,7 @@ public class Agent implements Drawable {
                } else { // agent will sell "Yes" stocks
                   pos = true;
                   trialPrice = -specialist.getLastPriceLMSR(0, pos, false); // evaluates price of "Yes" stock
-                  while (forecast < trialPrice & -order <= numberOfPosStocks) {
+                  while (forecast < trialPrice & -order < numberOfPosStocks) {
                      order--;
                      trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
 //                     System.out.println("trialPrice4: " + trialPrice);
@@ -212,7 +222,7 @@ public class Agent implements Drawable {
 //           System.out.println("orderNeg: " + order);
                }
             }
-            break; // end of FIXED
+            break; // end of IDEAL
          case LOGIT: // logit specification for event prediction
             double RHS;
             double beta1 = stockLMSR.beta1;
@@ -227,7 +237,7 @@ public class Agent implements Drawable {
                if (numberOfNegStocks == 0) { // if agent has no "No" stocks
                   pos = true; // agent will buy "Yes" stocks
                   optimalDemand = (((forecast-(World.interestRatep1*trialPrice)))/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation
-                  while (forecast > trialPrice & order <= optimalDemand) {
+                  while (forecast > trialPrice & order < optimalDemand) {
                      order++;
                      trialPrice = specialist.getLastPriceLMSR(order, pos, true);
 //                     System.out.println("trialPrice1: " + trialPrice);
@@ -237,7 +247,7 @@ public class Agent implements Drawable {
                } else { // agent will sell "No" stocks
                   pos = false;
                   trialPrice = -specialist.getLastPriceLMSR(1, pos, false); // evaluates price of "No" stock
-                  while (trialPrice > 1-forecast & -order <= numberOfNegStocks) {
+                  while (trialPrice > 1-forecast & -order < numberOfNegStocks) {
                      order--;
                      trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
 //                     System.out.println("trialPrice2: " + trialPrice);
@@ -250,7 +260,7 @@ public class Agent implements Drawable {
                   pos = false; // agent will buy "No" stocks
                   trialPrice = specialist.getLastPriceLMSR(1, pos, true);
                   optimalDemand = ((((1-forecast)-(World.interestRatep1*trialPrice)))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation
-                  while (1-forecast > trialPrice & order <= optimalDemand) {
+                  while (1-forecast > trialPrice & order < optimalDemand) {
                      order++;
                      trialPrice = specialist.getLastPriceLMSR(order, pos, true);
 //                     System.out.println("trialPrice3: " + trialPrice);
@@ -260,7 +270,7 @@ public class Agent implements Drawable {
                } else { // agent will sell "Yes" stocks
                   pos = true;
                   trialPrice = -specialist.getLastPriceLMSR(0, pos, false); // evaluates price of "Yes" stock
-                  while (forecast < trialPrice & -order <= numberOfPosStocks) {
+                  while (forecast < trialPrice & -order < numberOfPosStocks) {
                      order--;
                      trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
 //                     System.out.println("trialPrice4: " + trialPrice);
@@ -278,7 +288,7 @@ public class Agent implements Drawable {
                if (numberOfNegStocks == 0) { // if agent has no "No" stocks
                   pos = true; // agent will buy "Yes" stocks
                   optimalDemand = (((forecast-(World.interestRatep1*trialPrice)))/(divisor) - numberOfPosStocks); // optimal CARA demand and Bernoulli standard deviation
-                  while (forecast > trialPrice & order <= optimalDemand) {
+                  while (forecast > trialPrice & order < optimalDemand) {
                      order++;
                      trialPrice = specialist.getLastPriceLMSR(order, pos, true);
 //                     System.out.println("trialPrice1: " + trialPrice);
@@ -288,7 +298,7 @@ public class Agent implements Drawable {
                } else { // agent will sell "No" stocks
                   pos = false;
                   trialPrice = -specialist.getLastPriceLMSR(1, pos, false); // evaluates price of "No" stock
-                  while (trialPrice > 1-forecast & -order <= numberOfNegStocks) {
+                  while (trialPrice > 1-forecast & -order < numberOfNegStocks) {
                      order--;
                      trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
 //                     System.out.println("trialPrice2: " + trialPrice);
@@ -301,7 +311,7 @@ public class Agent implements Drawable {
                   pos = false; // agent will buy "No" stocks
                   trialPrice = specialist.getLastPriceLMSR(1, pos, true);
                   optimalDemand = ((((1-forecast)-(World.interestRatep1*trialPrice)))/(divisor) - numberOfNegStocks); // optimal CARA demand and Bernoulli standard deviation
-                  while (1-forecast > trialPrice & order <= optimalDemand) {
+                  while (1-forecast > trialPrice & order < optimalDemand) {
                      order++;
                      trialPrice = specialist.getLastPriceLMSR(order, pos, true);
 //                     System.out.println("trialPrice3: " + trialPrice);
@@ -311,7 +321,7 @@ public class Agent implements Drawable {
                } else { // agent will sell "Yes" stocks
                   pos = true;
                   trialPrice = -specialist.getLastPriceLMSR(0, pos, false); // evaluates price of "Yes" stock
-                  while (forecast < trialPrice & -order <= numberOfPosStocks) {
+                  while (forecast < trialPrice & -order < numberOfPosStocks) {
                      order--;
                      trialPrice = -specialist.getLastPriceLMSR(order, pos, false);
 //                     System.out.println("trialPrice4: " + trialPrice);
