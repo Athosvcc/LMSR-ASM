@@ -175,6 +175,8 @@ public class Agent implements Drawable {
       double trialPrice;
       switch (agentType) {
          case IDEAL: // traders with perfect forecast, used as baseline
+//            BigDecimal bd = new BigDecimal(stockLMSR.getProbability()).setScale(6, BigDecimal.ROUND_DOWN);
+//            forecast = bd.doubleValue();
             forecast = stockLMSR.getProbability();
 //            System.out.println("forecast: " + forecast);
             trialPrice = specialist.getLastPriceLMSR(1, true, true);

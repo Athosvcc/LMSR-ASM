@@ -29,7 +29,7 @@ abstract class ExecutePeriod {
 
    public static void execute() {
       Specialist specialist = AsmModel.specialist;
-      // System.out.println("PERIODO: " + World.period);
+//       System.out.println("PERIODO: " + World.period);
       stockLMSR = World.LMSRStocks;
       if (World.period == 0) { // at period 0, create artificial stocks necessary for initial price
          stockLMSR.baseQLMSR(stockLMSR.getInitialQuantity());
