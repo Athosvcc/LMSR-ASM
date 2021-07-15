@@ -1,11 +1,15 @@
 /*
- * The NESFI-ASM 1.0 (Norman Ehrentreich's Santa Fe Institute Artificial Stock Market)
+ * The LMSR-ASM (Logarithmic Market Scoring Rule Artificial Stock Market)
+ * Copyright (C) Athos Carvalho 2021 under a under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * https://creativecommons.org/licenses/by-nc-sa/4.0/
+ *
+ * Based on the NESFI-ASM 1.0 (Norman Ehrentreich's Santa Fe Institute Artificial Stock Market)
  * Copyright (C) Norman Ehrentreich 2002 & The Santa Fe Institute 1995
  *
  * No warranty implied;
  *
- * Implementation of the RecorderOptions Class
-*/
+ * Implementation of the Agent Class
+ */
 
 package ASMModel;
 
