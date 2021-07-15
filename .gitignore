@@ -1,5 +1,7 @@
 .idea
+.gitignore
 NESFI-ASM-LMSR.iml
+NESFI-LSMR
 <<<<<<< HEAD
 lib
 out
@@ -9,6 +11,7 @@ out
 /ASMModel/.classpath
 ||||||| parent of 4b1ac49 (Update .gitignore)
 lib
+runfiles
 =======
 lib
 out
