@@ -6,7 +6,7 @@ Based on Norman Ehrentreich's version of the Santa-Fe Institute Automatic Stock 
 Dependencies: Java SE 8; Repast J 1.4; jfreechart 0.9.10
 
 A detailed introduction and user guide can be found in "An Agent-Based Framework for Prediction Markets".
-A brief overview of the code's files are in the How to Get Started document.
+A brief overview of the code's files are in the Guide to LMSR-ASM document.
 
 An easy to use .jar release is also provided.
 
