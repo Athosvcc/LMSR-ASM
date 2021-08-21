@@ -1,4 +1,0 @@
-Abrir cmd na pasta ASMModel
-
-
-javac -d "D:\NESFI-ASM-LMSR\classes" -classpath  .;d:/NESFI-ASM-LMSR/lib/repast.jar;d:/NESFI-ASM-LMSR/lib/colt.jar;d:/NESFI-ASM-LMSR/lib/jgl3.1.0.jar;d:/NESFI-ASM-LMSR/lib/plot.jar;d:/NESFI-ASM-LMSR/lib/jmf.jar;d:/NESFI-ASM-LMSR/lib/jfreechart-0.9.10.jar;d:/NESFI-ASM-LMSR/lib/jcommon-0.8.5.jar;d:/NESFI-ASM-LMSR/lib/junit.jar;d:/NESFI-ASM-LMSR/lib/servlet.jar;d:/NESFI-ASM-LMSR/lib/jcchart.jar *.java
